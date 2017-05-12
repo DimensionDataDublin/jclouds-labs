@@ -304,7 +304,7 @@ public class NetworkApiMockTest extends BaseAccountAwareCloudControlMockTest {
    }
 
    public void testListFirewallRules() throws Exception {
-      server.enqueue(new MockResponse().setBody(payloadFromResource("/fireWallRules.json")));
+      server.enqueue(new MockResponse().setBody(payloadFromResource("/firewallRules.json")));
       api.getNetworkApi().listFirewallRules("12345").concat().toList();
       assertSent(GET, "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/network/firewallRule?networkDomainId=12345");
    }
