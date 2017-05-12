@@ -16,28 +16,36 @@
  */
 package org.jclouds.azurecompute.arm.compute.extensions;
 
-import static org.jclouds.compute.options.TemplateOptions.Builder.authorizePublicKey;
+import static org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions.Builder.resourceGroup;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
+import static org.jclouds.compute.options.RunScriptOptions.Builder.wrapInInitScript;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
+import java.net.URI;
 import java.util.Map;
 import java.util.Properties;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
-import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
 import org.jclouds.compute.ComputeTestUtils;
+import org.jclouds.compute.domain.ExecResponse;
+import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.extensions.internal.BaseImageExtensionLiveTest;
 import org.jclouds.domain.Location;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.google.common.cache.LoadingCache;
+import com.google.common.base.Predicate;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
+import com.google.inject.name.Names;
 
 /**
  * Live tests for the {@link org.jclouds.compute.extensions.ImageExtension}
@@ -45,36 +53,46 @@ import com.google.inject.TypeLiteral;
  */
 @Test(groups = "live", singleThreaded = true, testName = "AzureComputeImageExtensionLiveTest")
 public class AzureComputeImageExtensionLiveTest extends BaseImageExtensionLiveTest {
-   
-   public static final String NAME_PREFIX = "%s";
-   
-   private LoadingCache<String, ResourceGroup> resourceGroupMap;
 
+   private Predicate<URI> resourceDeleted;
+   private String resourceGroupName;
+   
    public AzureComputeImageExtensionLiveTest() {
       provider = "azurecompute-arm";
+      resourceGroupName = getClass().getSimpleName().toLowerCase();
    }
-
-   @Override
-   public void initializeContext() {
-      super.initializeContext();
-      resourceGroupMap = context.utils().injector()
-            .getInstance(Key.get(new TypeLiteral<LoadingCache<String, ResourceGroup>>() {
-            }));
+   
+   @BeforeClass(groups = { "integration", "live" })
+   public void setupContext() {
+      super.setupContext();
+      resourceDeleted = context.utils().injector().getInstance(Key.get(new TypeLiteral<Predicate<URI>>() {
+      }, Names.named(TIMEOUT_RESOURCE_DELETED)));
+      createResourceGroup(resourceGroupName);
    }
-
+   
+   @AfterClass(groups = { "integration", "live" })
    @Override
-   @AfterClass(groups = "live", alwaysRun = true)
    protected void tearDownContext() {
       try {
-         Location location = getNodeTemplate().build().getLocation();
-         ResourceGroup rg = resourceGroupMap.getIfPresent(location.getId());
-         if (rg != null) {
-            AzureComputeApi api = view.unwrapApi(AzureComputeApi.class);
-            api.getResourceGroupApi().delete(rg.name());
+         URI uri = view.unwrapApi(AzureComputeApi.class).getResourceGroupApi().delete(resourceGroupName);
+         if (uri != null) {
+            assertTrue(resourceDeleted.apply(uri),
+                  String.format("Resource %s was not terminated in the configured timeout", uri));
          }
       } finally {
          super.tearDownContext();
       }
+   }
+
+   @Override
+   protected void prepareNodeBeforeCreatingImage(NodeMetadata node) {
+      // Don't wrap in the init-script, since the comand will clear the user
+      // config, and jclouds won't be able to execute more than one command
+      // (won't be able to poll for the execution status of the command when
+      // running with the init-script)
+      ExecResponse result = view.getComputeService().runScriptOnNode(node.getId(), "waagent -deprovision+user -force",
+            wrapInInitScript(false));
+      assertEquals(result.getExitStatus(), 0);
    }
 
    @Override
@@ -99,9 +117,12 @@ public class AzureComputeImageExtensionLiveTest extends BaseImageExtensionLiveTe
    public TemplateBuilder getNodeTemplate() {
       Map<String, String> keyPair = ComputeTestUtils.setupKeyPair();
       return super.getNodeTemplate().options(
-            authorizePublicKey(keyPair.get("public"))
-            .overrideLoginPrivateKey(keyPair.get("private")));
+            resourceGroup(resourceGroupName).authorizePublicKey(keyPair.get("public")).overrideLoginPrivateKey(
+                  keyPair.get("private")));
    }
 
-
+   private void createResourceGroup(String name) {
+      Location location = getNodeTemplate().build().getLocation();
+      view.unwrapApi(AzureComputeApi.class).getResourceGroupApi().create(name, location.getId(), null);
+   }
 }

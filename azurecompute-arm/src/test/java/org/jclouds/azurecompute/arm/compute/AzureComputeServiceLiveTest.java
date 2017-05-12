@@ -16,13 +16,15 @@
  */
 package org.jclouds.azurecompute.arm.compute;
 
-import static org.jclouds.compute.options.TemplateOptions.Builder.authorizePublicKey;
+import static org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions.Builder.resourceGroup;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
+import static org.testng.Assert.assertTrue;
 
+import java.net.URI;
 import java.util.Properties;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
-import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
@@ -38,10 +40,11 @@ import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
-import com.google.common.cache.LoadingCache;
+import com.google.common.base.Predicate;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
+import com.google.inject.name.Names;
 
 /**
  * Live tests for the {@link org.jclouds.compute.ComputeService} integration.
@@ -49,30 +52,29 @@ import com.google.inject.TypeLiteral;
 @Test(groups = "live", singleThreaded = true, testName = "AzureComputeServiceLiveTest")
 public class AzureComputeServiceLiveTest extends BaseComputeServiceLiveTest {
    
-   private LoadingCache<String, ResourceGroup> resourceGroupMap;
+   private Predicate<URI> resourceDeleted;
+   private String resourceGroupName;
 
    public AzureComputeServiceLiveTest() {
       provider = "azurecompute-arm";
+      resourceGroupName = getClass().getSimpleName().toLowerCase();
    }
 
    @Override
    public void initializeContext() {
       super.initializeContext();
-      resourceGroupMap = context.utils().injector()
-            .getInstance(Key.get(new TypeLiteral<LoadingCache<String, ResourceGroup>>() {
-            }));
+      resourceDeleted = context.utils().injector().getInstance(Key.get(new TypeLiteral<Predicate<URI>>() {
+      }, Names.named(TIMEOUT_RESOURCE_DELETED)));
    }
 
    @Override
    @AfterClass(groups = "live", alwaysRun = true)
    protected void tearDownContext() {
       try {
-         if (template != null) {
-            ResourceGroup rg = resourceGroupMap.getIfPresent(template.getLocation().getId());
-            if (rg != null) {
-               AzureComputeApi api = view.unwrapApi(AzureComputeApi.class);
-               api.getResourceGroupApi().delete(rg.name());
-            }
+         URI uri = view.unwrapApi(AzureComputeApi.class).getResourceGroupApi().delete(resourceGroupName);
+         if (uri != null) {
+            assertTrue(resourceDeleted.apply(uri),
+                  String.format("Resource %s was not terminated in the configured timeout", uri));
          }
       } finally {
          super.tearDownContext();
@@ -105,7 +107,8 @@ public class AzureComputeServiceLiveTest extends BaseComputeServiceLiveTest {
    @Override
    protected TemplateBuilder templateBuilder() {
       return super.templateBuilder().options(
-            authorizePublicKey(keyPair.get("public")).overrideLoginPrivateKey(keyPair.get("private")));
+            resourceGroup(resourceGroupName).authorizePublicKey(keyPair.get("public")).overrideLoginPrivateKey(
+                  keyPair.get("private")));
    }
 
    @Override

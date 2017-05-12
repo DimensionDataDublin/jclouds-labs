@@ -16,6 +16,9 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.azurecompute.arm.util.VMImages.isCustom;
+
 import org.jclouds.azurecompute.arm.domain.Version.VersionProperties;
 import org.jclouds.javax.annotation.Nullable;
 
@@ -54,11 +57,6 @@ public abstract class VMImage {
    public abstract String location();
 
    /**
-    * Specifies if this image is globally available
-    */
-   public abstract boolean globallyAvailable();
-
-   /**
     * The group of the custom image
     */
    @Nullable
@@ -87,41 +85,59 @@ public abstract class VMImage {
     */
    @Nullable
    public abstract String name();
-
+   
    /**
     * True if custom image
     */
    public abstract boolean custom();
+
+   /**
+    * The id of the custom image template.
+    */
+   @Nullable
+   public abstract String customImageId();
    
+   /**
+    * The resource group for the image in case of custom images.
+    * @return
+    */
+   @Nullable
+   public abstract String resourceGroup();
+
    /**
     * Extended version properties.
     */
    @Nullable
    public abstract VersionProperties versionProperties();
    
-   public static Builder builder() {
+   private static Builder builder() {
       return new AutoValue_VMImage.Builder();
    }
    
    public static Builder azureImage() {
-      return new AutoValue_VMImage.Builder().globallyAvailable(false).custom(false);
+      return builder().custom(false);
    }
    
    public static Builder customImage() {
-      return new AutoValue_VMImage.Builder().globallyAvailable(false).custom(true);
+      return builder().custom(true);
+   }
+   
+   VMImage() {
+      
    }
    
    public abstract Builder toBuilder();
    
    @AutoValue.Builder
    public abstract static class Builder {
-      
+
+      public abstract Builder customImageId(String id);
+      public abstract Builder resourceGroup(String resourceGroup);
       public abstract Builder publisher(String published);
       public abstract Builder offer(String offer);
       public abstract Builder sku(String sku);
       public abstract Builder version(String version);
       public abstract Builder location(String location);
-      public abstract Builder globallyAvailable(boolean globallyAvailable);
       public abstract Builder group(String group);
       public abstract Builder storage(String storage);
       public abstract Builder vhd1(String vhd1);
@@ -131,5 +147,36 @@ public abstract class VMImage {
       public abstract Builder versionProperties(VersionProperties versionProperties);
       
       public abstract VMImage build();
+   }
+
+   public String encodeFieldsToUniqueId() {
+      return String.format("%s/%s/%s/%s", location(), publisher(), offer(), sku());
+   }
+
+   public String encodeFieldsToUniqueIdCustom() {
+      return String.format("%s/%s/%s", resourceGroup(), location(), name());
+   }
+
+   public static VMImage decodeFieldsFromUniqueId(final String id) {
+      VMImage vmImage;
+      String[] fields = checkNotNull(id, "id").split("/");
+      if (isCustom(id)) {
+         /* id fields indexes
+         0: imageReference.resourceGroup
+         1: imageReference.location + "/" +
+         2: imageReference.name
+         */
+         vmImage = VMImage.customImage().resourceGroup(fields[0]).location(fields[1]).name(fields[2]).build();
+      } else {
+         /* id fields indexes
+         0: imageReference.location + "/" +
+         1: imageReference.publisher + "/" +
+         2: imageReference.offer + "/" +
+         3: imageReference.sku + "/" +
+         */
+         vmImage = VMImage.azureImage().location(fields[0]).publisher(fields[1]).offer(fields[2]).sku(fields[3])
+               .build();
+      }
+      return vmImage;
    }
 }

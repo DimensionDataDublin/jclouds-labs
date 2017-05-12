@@ -20,10 +20,11 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.base.Predicates.notNull;
 import static com.google.common.collect.Iterables.any;
-import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
+import static org.jclouds.azurecompute.arm.domain.IdReference.extractName;
+import static org.jclouds.azurecompute.arm.domain.IdReference.extractResourceGroup;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -36,8 +37,9 @@ import javax.inject.Named;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.SecurityGroupAvailablePredicateFactory;
-import org.jclouds.azurecompute.arm.domain.IdReference;
+import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
+import org.jclouds.azurecompute.arm.domain.NetworkProfile.NetworkInterface;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroupProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRule;
@@ -45,17 +47,16 @@ import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties.Access;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties.Direction;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties.Protocol;
-import org.jclouds.azurecompute.arm.domain.RegionAndId;
 import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
 import org.jclouds.azurecompute.arm.features.NetworkSecurityRuleApi;
-import org.jclouds.collect.Memoized;
 import org.jclouds.compute.domain.SecurityGroup;
 import org.jclouds.compute.domain.SecurityGroupBuilder;
 import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.domain.Location;
+import org.jclouds.location.Region;
 import org.jclouds.logging.Logger;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
@@ -63,11 +64,9 @@ import org.jclouds.net.domain.IpProtocol;
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Ordering;
 
@@ -78,40 +77,52 @@ public class AzureComputeSecurityGroupExtension implements SecurityGroupExtensio
 
    private final AzureComputeApi api;
    private final Function<NetworkSecurityGroup, SecurityGroup> securityGroupConverter;
-   private final Supplier<Set<? extends Location>> locations;
    private final SecurityGroupAvailablePredicateFactory securityGroupAvailable;
    private final Predicate<URI> resourceDeleted;
-   private final LoadingCache<String, ResourceGroup> resourceGroupMap;
+   private final LoadingCache<String, ResourceGroup> defaultResourceGroup;
+   private final Supplier<Set<String>> regionIds;
 
    @Inject
-   AzureComputeSecurityGroupExtension(AzureComputeApi api, @Memoized Supplier<Set<? extends Location>> locations,
+   AzureComputeSecurityGroupExtension(AzureComputeApi api,
          Function<NetworkSecurityGroup, SecurityGroup> groupConverter,
          SecurityGroupAvailablePredicateFactory securityRuleAvailable,
          @Named(TIMEOUT_RESOURCE_DELETED) Predicate<URI> resourceDeleted,
-         LoadingCache<String, ResourceGroup> resourceGroupMap) {
+         LoadingCache<String, ResourceGroup> defaultResourceGroup,
+         @Region Supplier<Set<String>> regionIds) {
       this.api = api;
-      this.locations = locations;
       this.securityGroupConverter = groupConverter;
       this.securityGroupAvailable = securityRuleAvailable;
       this.resourceDeleted = resourceDeleted;
-      this.resourceGroupMap = resourceGroupMap;
-   }
-
-   @Override
-   public Set<SecurityGroup> listSecurityGroups() {
-      return ImmutableSet.copyOf(concat(transform(locations.get(), new Function<Location, Set<SecurityGroup>>() {
-         @Override
-         public Set<SecurityGroup> apply(Location input) {
-            return listSecurityGroupsInLocation(input);
-         }
-      })));
+      this.defaultResourceGroup = defaultResourceGroup;
+      this.regionIds = regionIds;
    }
 
    @Override
    public Set<SecurityGroup> listSecurityGroupsInLocation(Location location) {
-      logger.debug(">> getting security groups for %s...", location);
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(location.getId());
-      List<NetworkSecurityGroup> networkGroups = api.getNetworkSecurityGroupApi(resourceGroup.name()).list();
+      return securityGroupsInLocations(ImmutableSet.of(location.getId()));
+   }
+
+   @Override
+   public Set<SecurityGroup> listSecurityGroups() {
+      return securityGroupsInLocations(regionIds.get());
+   }
+
+   private Set<SecurityGroup> securityGroupsInLocations(final Set<String> locations) {
+      List<SecurityGroup> securityGroups = new ArrayList<SecurityGroup>();
+      for (ResourceGroup rg : api.getResourceGroupApi().list()) {
+         securityGroups.addAll(securityGroupsInResourceGroup(rg.name()));
+      }
+      
+      return ImmutableSet.copyOf(filter(securityGroups, new Predicate<SecurityGroup>() {
+         @Override
+         public boolean apply(SecurityGroup input) {
+            return locations.contains(input.getLocation().getId());
+         }
+      }));
+   }
+
+   private Set<SecurityGroup> securityGroupsInResourceGroup(String resourceGroup) {
+      List<NetworkSecurityGroup> networkGroups = api.getNetworkSecurityGroupApi(resourceGroup).list();
       return ImmutableSet.copyOf(transform(filter(networkGroups, notNull()), securityGroupConverter));
    }
 
@@ -119,23 +130,24 @@ public class AzureComputeSecurityGroupExtension implements SecurityGroupExtensio
    public Set<SecurityGroup> listSecurityGroupsForNode(String nodeId) {
       logger.debug(">> getting security groups for node %s...", nodeId);
 
-      final RegionAndId regionAndId = RegionAndId.fromSlashEncoded(nodeId);
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(regionAndId.region());
+      final ResourceGroupAndName resourceGroupAndName = ResourceGroupAndName.fromSlashEncoded(nodeId);
 
-      VirtualMachine vm = api.getVirtualMachineApi(resourceGroup.name()).get(regionAndId.id());
+      VirtualMachine vm = api.getVirtualMachineApi(resourceGroupAndName.resourceGroup()).get(
+            resourceGroupAndName.name());
       if (vm == null) {
-         throw new IllegalArgumentException("Node " + regionAndId.id() + " was not found");
+         throw new IllegalArgumentException("Node " + nodeId + " was not found");
       }
-      List<IdReference> networkInterfacesIdReferences = vm.properties().networkProfile().networkInterfaces();
+      List<NetworkInterface> networkInterfaces = vm.properties().networkProfile().networkInterfaces();
       List<NetworkSecurityGroup> networkGroups = new ArrayList<NetworkSecurityGroup>();
 
-      for (IdReference networkInterfaceCardIdReference : networkInterfacesIdReferences) {
-         String nicName = Iterables.getLast(Splitter.on("/").split(networkInterfaceCardIdReference.id()));
-         NetworkInterfaceCard card = api.getNetworkInterfaceCardApi(resourceGroup.name()).get(nicName);
+      for (NetworkInterface networkInterfaceCardIdReference : networkInterfaces) {
+         String nicName = extractName(networkInterfaceCardIdReference.id());
+         String nicResourceGroup = extractResourceGroup(networkInterfaceCardIdReference.id());
+         NetworkInterfaceCard card = api.getNetworkInterfaceCardApi(nicResourceGroup).get(nicName);
          if (card != null && card.properties().networkSecurityGroup() != null) {
-            String secGroupName = Iterables.getLast(Splitter.on("/").split(
-                  card.properties().networkSecurityGroup().id()));
-            NetworkSecurityGroup group = api.getNetworkSecurityGroupApi(resourceGroup.name()).get(secGroupName);
+            String secGroupName = card.properties().networkSecurityGroup().name();
+            String sgResourceGroup = card.properties().networkSecurityGroup().resourceGroup();
+            NetworkSecurityGroup group = api.getNetworkSecurityGroupApi(sgResourceGroup).get(secGroupName);
             networkGroups.add(group);
          }
       }
@@ -146,33 +158,38 @@ public class AzureComputeSecurityGroupExtension implements SecurityGroupExtensio
    @Override
    public SecurityGroup getSecurityGroupById(String id) {
       logger.debug(">> getting security group %s...", id);
-      final RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(regionAndId.region());
-      NetworkSecurityGroup securityGroup = api.getNetworkSecurityGroupApi(resourceGroup.name()).get(regionAndId.id());
+      final ResourceGroupAndName resourceGroupAndName = ResourceGroupAndName.fromSlashEncoded(id);
+      NetworkSecurityGroup securityGroup = api.getNetworkSecurityGroupApi(resourceGroupAndName.resourceGroup()).get(
+            resourceGroupAndName.name());
       return securityGroup == null ? null : securityGroupConverter.apply(securityGroup);
    }
 
    @Override
    public SecurityGroup createSecurityGroup(String name, Location location) {
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(location.getId());
+      ResourceGroup resourceGroup = defaultResourceGroup.getUnchecked(location.getId());
 
       logger.debug(">> creating security group %s in %s...", name, location);
 
       SecurityGroupBuilder builder = new SecurityGroupBuilder();
       builder.name(name);
       builder.location(location);
+      
+      NetworkSecurityGroup sg = api.getNetworkSecurityGroupApi(resourceGroup.name()).createOrUpdate(name,
+            location.getId(), null, NetworkSecurityGroupProperties.builder().build());
+      
+      checkState(securityGroupAvailable.create(resourceGroup.name()).apply(name),
+            "Security group was not created in the configured timeout");
 
-      return securityGroupConverter.apply(api.getNetworkSecurityGroupApi(resourceGroup.name()).createOrUpdate(name,
-            location.getId(), null, NetworkSecurityGroupProperties.builder().build()));
+      return securityGroupConverter.apply(sg);
    }
 
    @Override
    public boolean removeSecurityGroup(String id) {
       logger.debug(">> deleting security group %s...", id);
 
-      final RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(regionAndId.region());
-      URI uri = api.getNetworkSecurityGroupApi(resourceGroup.name()).delete(regionAndId.id());
+      final ResourceGroupAndName resourceGroupAndName = ResourceGroupAndName.fromSlashEncoded(id);
+      URI uri = api.getNetworkSecurityGroupApi(resourceGroupAndName.resourceGroup())
+            .delete(resourceGroupAndName.name());
       return resourceDeleted.apply(uri);
    }
 
@@ -199,17 +216,16 @@ public class AzureComputeSecurityGroupExtension implements SecurityGroupExtensio
 
       // TODO: Support Azure network tags somehow?
 
-      final RegionAndId regionAndId = RegionAndId.fromSlashEncoded(group.getId());
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(regionAndId.region());
+      final ResourceGroupAndName resourceGroupAndName = ResourceGroupAndName.fromSlashEncoded(group.getId());
 
-      NetworkSecurityGroupApi groupApi = api.getNetworkSecurityGroupApi(resourceGroup.name());
-      NetworkSecurityGroup networkSecurityGroup = groupApi.get(regionAndId.id());
+      NetworkSecurityGroupApi groupApi = api.getNetworkSecurityGroupApi(resourceGroupAndName.resourceGroup());
+      NetworkSecurityGroup networkSecurityGroup = groupApi.get(resourceGroupAndName.name());
 
       if (networkSecurityGroup == null) {
          throw new IllegalArgumentException("Security group " + group.getName() + " was not found");
       }
 
-      NetworkSecurityRuleApi ruleApi = api.getNetworkSecurityRuleApi(resourceGroup.name(), networkSecurityGroup.name());
+      NetworkSecurityRuleApi ruleApi = api.getNetworkSecurityRuleApi(resourceGroupAndName.resourceGroup(), networkSecurityGroup.name());
       int nextPriority = getRuleStartingPriority(networkSecurityGroup);
 
       for (String ipRange : ipRanges) {
@@ -228,7 +244,8 @@ public class AzureComputeSecurityGroupExtension implements SecurityGroupExtensio
 
          ruleApi.createOrUpdate(ruleName, properties);
 
-         checkState(securityGroupAvailable.create(resourceGroup.name()).apply(networkSecurityGroup.name()),
+         checkState(
+               securityGroupAvailable.create(resourceGroupAndName.resourceGroup()).apply(networkSecurityGroup.name()),
                "Security group was not updated in the configured timeout");
       }
 
@@ -244,17 +261,17 @@ public class AzureComputeSecurityGroupExtension implements SecurityGroupExtensio
 
       logger.debug(">> deleting ip permissions matching [%s] from %s...", ruleName, group.getName());
 
-      final RegionAndId regionAndId = RegionAndId.fromSlashEncoded(group.getId());
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(regionAndId.region());
+      final ResourceGroupAndName resourceGroupAndName = ResourceGroupAndName.fromSlashEncoded(group.getId());
 
-      NetworkSecurityGroupApi groupApi = api.getNetworkSecurityGroupApi(resourceGroup.name());
-      NetworkSecurityGroup networkSecurityGroup = groupApi.get(regionAndId.id());
+      NetworkSecurityGroupApi groupApi = api.getNetworkSecurityGroupApi(resourceGroupAndName.resourceGroup());
+      NetworkSecurityGroup networkSecurityGroup = groupApi.get(resourceGroupAndName.name());
 
       if (networkSecurityGroup == null) {
          throw new IllegalArgumentException("Security group " + group.getName() + " was not found");
       }
 
-      NetworkSecurityRuleApi ruleApi = api.getNetworkSecurityRuleApi(resourceGroup.name(), networkSecurityGroup.name());
+      NetworkSecurityRuleApi ruleApi = api.getNetworkSecurityRuleApi(resourceGroupAndName.resourceGroup(),
+            networkSecurityGroup.name());
       Iterable<NetworkSecurityRule> rules = filter(ruleApi.list(), new Predicate<NetworkSecurityRule>() {
          @Override
          public boolean apply(NetworkSecurityRule input) {
@@ -270,7 +287,8 @@ public class AzureComputeSecurityGroupExtension implements SecurityGroupExtensio
       for (NetworkSecurityRule matchingRule : rules) {
          logger.debug(">> deleting network security rule %s from %s...", matchingRule.name(), group.getName());
          ruleApi.delete(matchingRule.name());
-         checkState(securityGroupAvailable.create(resourceGroup.name()).apply(networkSecurityGroup.name()),
+         checkState(
+               securityGroupAvailable.create(resourceGroupAndName.resourceGroup()).apply(networkSecurityGroup.name()),
                "Security group was not updated in the configured timeout");
       }
 
