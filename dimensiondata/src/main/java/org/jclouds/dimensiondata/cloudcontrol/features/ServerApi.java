@@ -142,6 +142,7 @@ public interface ServerApi {
    @MapBinder(BindToJsonPayload.class)
    @Fallback(Fallbacks.VoidOnNotFoundOr404.class)
       // TODO Add 404 tests
+      // TODO add live test
    void reconfigureServer(@PayloadParam("id") String id, @PayloadParam("cpuCount") int cpuCount,
          @PayloadParam("cpuSpeed") String cpuSpeed, @PayloadParam("coresPerSocket") int coresPerSocket);
 
@@ -153,6 +154,24 @@ public interface ServerApi {
    @ResponseParser(ImageId.class)
    String cloneServer(@PayloadParam("id") String id, @PayloadParam("imageName") String imageName,
          CloneServerOptions cloneServerOptions);
+
+   @Named("server:start")
+   @POST
+   @Path("/startServer")
+   @Produces(MediaType.APPLICATION_JSON)
+   @Fallback(Fallbacks.VoidOnNotFoundOr404.class)
+   @MapBinder(BindToJsonPayload.class)
+      // TODO Add 404 tests
+   void startServer(@PayloadParam("id") String id);
+
+   @Named("server:shutdown")
+   @POST
+   @Path("/shutdownServer")
+   @Produces(MediaType.APPLICATION_JSON)
+   @Fallback(Fallbacks.VoidOnNotFoundOr404.class)
+   @MapBinder(BindToJsonPayload.class)
+      // TODO Add 404 tests
+   void shutdownServer(@PayloadParam("id") String id);
 
    @Singleton
    final class ParseServers extends ParseJson<Servers> {

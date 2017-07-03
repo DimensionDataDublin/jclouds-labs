@@ -123,6 +123,7 @@ public class ServerApiMockTest extends BaseAccountAwareCloudControlMockTest {
       Server found = serverApi().getServer("12345");
       assertSent(GET, "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/server/12345");
       assertNotNull(found);
+      assertNotNull(found.guest().vmTools());
    }
 
    public void testDeleteServer() throws Exception {

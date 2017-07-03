@@ -22,6 +22,7 @@ import org.jclouds.dimensiondata.cloudcontrol.features.ServerApi;
 import org.jclouds.dimensiondata.cloudcontrol.predicates.NetworkDomainState;
 import org.jclouds.dimensiondata.cloudcontrol.predicates.ServerState;
 import org.jclouds.dimensiondata.cloudcontrol.predicates.ServerStatus;
+import org.jclouds.dimensiondata.cloudcontrol.predicates.VMToolsRunningStatus;
 import org.jclouds.dimensiondata.cloudcontrol.predicates.VlanState;
 
 import static org.jclouds.util.Predicates2.retry;
@@ -63,6 +64,13 @@ public class DimensionDataCloudControlResponseUtils {
          long timeoutMillis, String message) {
       boolean isServerInState = retry(new ServerStatus(api, started, deployed), timeoutMillis).apply(serverId);
       if (!isServerInState) {
+         throw new IllegalStateException(message);
+      }
+   }
+
+   public static void waitForVmToolsRunning(ServerApi api, String serverId, long timeoutMillis, String message) {
+      boolean vmwareToolsRunning = retry(new VMToolsRunningStatus(api), timeoutMillis).apply(serverId);
+      if (!vmwareToolsRunning) {
          throw new IllegalStateException(message);
       }
    }

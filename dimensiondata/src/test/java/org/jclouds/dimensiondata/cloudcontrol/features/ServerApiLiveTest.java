@@ -23,7 +23,6 @@ import org.jclouds.dimensiondata.cloudcontrol.domain.NIC;
 import org.jclouds.dimensiondata.cloudcontrol.domain.NetworkInfo;
 import org.jclouds.dimensiondata.cloudcontrol.domain.Server;
 import org.jclouds.dimensiondata.cloudcontrol.domain.State;
-import org.jclouds.dimensiondata.cloudcontrol.domain.options.CloneServerOptions;
 import org.jclouds.dimensiondata.cloudcontrol.internal.BaseDimensionDataCloudControlApiLiveTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
@@ -32,51 +31,79 @@ import java.util.List;
 
 import static org.jclouds.dimensiondata.cloudcontrol.utils.DimensionDataCloudControlResponseUtils.waitForServerState;
 import static org.jclouds.dimensiondata.cloudcontrol.utils.DimensionDataCloudControlResponseUtils.waitForServerStatus;
+import static org.jclouds.dimensiondata.cloudcontrol.utils.DimensionDataCloudControlResponseUtils.waitForVmToolsRunning;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 @Test(groups = "live", testName = "ServerApiLiveTest", singleThreaded = true)
 public class ServerApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest {
 
    private String serverId;
-   private String imageId;
+   private String cloneImageId;
 
    @Test(dependsOnMethods = "testDeployAndStartServer")
    public void testListServers() {
       List<Server> servers = api().listServers().concat().toList();
       assertNotNull(servers);
+      boolean foundDeployedServer = false;
       for (Server s : servers) {
          assertNotNull(s);
+         if (s.name().equals(ServerApiLiveTest.class.getSimpleName())) {
+            foundDeployedServer = true;
+         }
       }
-      // TODO assert that serverId is contained.
+      assertTrue(foundDeployedServer, "Did not find deployed server " + ServerApiLiveTest.class.getSimpleName());
    }
 
    @Test
    public void testDeployAndStartServer() {
       Boolean started = Boolean.TRUE;
-      NetworkInfo networkInfo = NetworkInfo.create("690de302-bb80-49c6-b401-8c02bbefb945",
-            NIC.builder().vlanId("6b25b02e-d3a2-4e69-8ca7-9bab605deebd").build(), Lists.<NIC>newArrayList());
+      NetworkInfo networkInfo = NetworkInfo
+            .create(NETWORK_DOMAIN_ID, NIC.builder().vlanId(VLAN_ID).build(), Lists.<NIC>newArrayList());
       List<Disk> disks = ImmutableList.of(Disk.builder().scsiId(0).speed("STANDARD").build());
       serverId = api()
-            .deployServer(ServerApiLiveTest.class.getSimpleName(), "4c02126c-32fc-4b4c-9466-9824c1b5aa0f", started,
-                  networkInfo, "P$$ssWwrrdGoDd!", disks, null);
+            .deployServer(ServerApiLiveTest.class.getSimpleName(), IMAGE_ID, started, networkInfo, "P$$ssWwrrdGoDd!",
+                  disks, null);
       assertNotNull(serverId);
       waitForServerStatus(api(), serverId, true, true, 30 * 60 * 1000, "Error");
+      waitForServerState(api(), serverId, State.NORMAL, 30 * 60 * 1000, "Error");
    }
 
    @Test(dependsOnMethods = "testDeployAndStartServer")
+   public void testRebootServer() {
+      api().rebootServer(serverId);
+      waitForServerState(api(), serverId, State.PENDING_CHANGE, 30 * 60 * 1000, "Error");
+      waitForServerState(api(), serverId, State.NORMAL, 30 * 60 * 1000, "Error");
+   }
+
+   @Test(dependsOnMethods = "testRebootServer")
    public void testPowerOffServer() {
       api().powerOffServer(serverId);
       waitForServerStatus(api(), serverId, false, true, 30 * 60 * 1000, "Error");
    }
 
-   @Test
-   public void testCloneServer() {
-      CloneServerOptions options = CloneServerOptions.builder().clusterId("").description("")
-            .guestOsCustomization(false).build();
-
-      imageId = api().cloneServer(serverId, "ServerApiLiveTest", options);
-      assertNotNull(imageId);
+   @Test(dependsOnMethods = "testPowerOffServer")
+   public void testStartServer() {
+      api().startServer(serverId);
+      waitForServerStatus(api(), serverId, true, true, 30 * 60 * 1000, "Error");
+      waitForVmToolsRunning(api(), serverId, 30 * 60 * 1000, "Error");
    }
+
+   @Test(dependsOnMethods = "testStartServer")
+   public void testShutdownServer() {
+      api().shutdownServer(serverId);
+      waitForServerStatus(api(), serverId, false, true, 30 * 60 * 1000, "Error");
+   }
+
+   //   @Test
+   //   public void testCloneServer() {
+   //      CloneServerOptions options = CloneServerOptions.builder().clusterId("").description("")
+   //            .guestOsCustomization(false).build();
+   //
+   //      cloneImageId = api().cloneServer(serverId, "ServerApiLiveTest", options);
+   //      assertNotNull(cloneImageId);
+   // waitForServerState(api(), serverId, State.NORMAL, 30 * 60 * 1000, "Error");
+   //   }
 
    @AfterClass
    public void testDeleteServer() {

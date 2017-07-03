@@ -40,8 +40,6 @@ import static org.testng.Assert.assertNotNull;
 @Test(groups = "live", testName = "NetworkApiLiveTest", singleThreaded = true)
 public class NetworkApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest {
 
-   private static final String DATACENTER = "NW20-EPC-LAB04";
-
    private static final String DEFAULT_PRIVATE_IPV4_BASE_ADDRESS = "10.0.0.0";
    private static final Integer DEFAULT_PRIVATE_IPV4_PREFIX_SIZE = 24;
    private static final String DEFAULT_PROTOCOL = "TCP";

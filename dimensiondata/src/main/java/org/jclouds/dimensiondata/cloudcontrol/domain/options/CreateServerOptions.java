@@ -17,6 +17,7 @@
 package org.jclouds.dimensiondata.cloudcontrol.domain.options;
 
 import com.google.auto.value.AutoValue;
+import com.google.inject.Inject;
 import org.jclouds.dimensiondata.cloudcontrol.domain.CPU;
 import org.jclouds.dimensiondata.cloudcontrol.domain.Disk;
 import org.jclouds.dimensiondata.cloudcontrol.domain.NetworkInfo;
@@ -26,7 +27,6 @@ import org.jclouds.json.SerializedNames;
 import org.jclouds.rest.MapBinder;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 
@@ -40,14 +40,18 @@ public class CreateServerOptions implements MapBinder {
    @Inject
    private BindToJsonPayload jsonBinder;
 
-   private final String description;
-   private final CPU cpu;
-   private final Integer memoryGb;
-   private final String primaryDns;
-   private final String secondaryDns;
-   private final String microsoftTimeZone;
+   private String description;
+   private CPU cpu;
+   private Integer memoryGb;
+   private String primaryDns;
+   private String secondaryDns;
+   private String microsoftTimeZone;
 
-   private CreateServerOptions(String description, CPU cpu, Integer memoryGb, String primaryDns, String secondaryDns,
+   public CreateServerOptions() {
+
+   }
+
+   CreateServerOptions(String description, CPU cpu, Integer memoryGb, String primaryDns, String secondaryDns,
          String microsoftTimeZone) {
       this.description = description;
       this.cpu = cpu;
