@@ -84,7 +84,6 @@ public interface ServerApi {
    @GET
    @Path("/server/{id}")
    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
-      // TODO Add 404 tests
    Server getServer(@PathParam("id") String id);
 
    @Named("server:deploy")
@@ -114,7 +113,6 @@ public interface ServerApi {
    @Produces(MediaType.APPLICATION_JSON)
    @Fallback(Fallbacks.VoidOnNotFoundOr404.class)
    @MapBinder(BindToJsonPayload.class)
-      // TODO Add 404 tests
    void deleteServer(@PayloadParam("id") String id);
 
    @Named("server:powerOff")
@@ -123,7 +121,6 @@ public interface ServerApi {
    @Produces(MediaType.APPLICATION_JSON)
    @MapBinder(BindToJsonPayload.class)
    @Fallback(Fallbacks.VoidOnNotFoundOr404.class)
-      // TODO Add 404 tests
    void powerOffServer(@PayloadParam("id") String id);
 
    @Named("server:reboot")
@@ -132,7 +129,6 @@ public interface ServerApi {
    @Produces(MediaType.APPLICATION_JSON)
    @MapBinder(BindToJsonPayload.class)
    @Fallback(Fallbacks.VoidOnNotFoundOr404.class)
-      // TODO Add 404 tests
    void rebootServer(@PayloadParam("id") String id);
 
    @Named("server:reconfigure")
@@ -141,7 +137,6 @@ public interface ServerApi {
    @Produces(MediaType.APPLICATION_JSON)
    @MapBinder(BindToJsonPayload.class)
    @Fallback(Fallbacks.VoidOnNotFoundOr404.class)
-      // TODO Add 404 tests
       // TODO add live test
    void reconfigureServer(@PayloadParam("id") String id, @PayloadParam("cpuCount") int cpuCount,
          @PayloadParam("cpuSpeed") String cpuSpeed, @PayloadParam("coresPerSocket") int coresPerSocket);
@@ -161,7 +156,6 @@ public interface ServerApi {
    @Produces(MediaType.APPLICATION_JSON)
    @Fallback(Fallbacks.VoidOnNotFoundOr404.class)
    @MapBinder(BindToJsonPayload.class)
-      // TODO Add 404 tests
    void startServer(@PayloadParam("id") String id);
 
    @Named("server:shutdown")
@@ -170,7 +164,6 @@ public interface ServerApi {
    @Produces(MediaType.APPLICATION_JSON)
    @Fallback(Fallbacks.VoidOnNotFoundOr404.class)
    @MapBinder(BindToJsonPayload.class)
-      // TODO Add 404 tests
    void shutdownServer(@PayloadParam("id") String id);
 
    @Singleton

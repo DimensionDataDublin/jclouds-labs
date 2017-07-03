@@ -126,36 +126,101 @@ public class ServerApiMockTest extends BaseAccountAwareCloudControlMockTest {
       assertNotNull(found.guest().vmTools());
    }
 
+   public void testGetServer_404() throws Exception {
+      server.enqueue(response404());
+      serverApi().getServer("12345");
+      assertSent(GET, "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/server/12345");
+   }
+
    public void testDeleteServer() throws Exception {
       server.enqueue(jsonResponse("/deleteServer.json"));
       serverApi().deleteServer("12345");
-      assertSent(POST, "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/deleteServer");
+      final RecordedRequest recordedRequest = assertSent(POST,
+            "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/deleteServer");
+      assertBodyContains(recordedRequest, "{\"id\":\"12345\"}");
+   }
 
-      // TODO assertBodyContains
+   public void testDeleteServer_404() throws Exception {
+      server.enqueue(response404());
+      serverApi().deleteServer("12345");
+      assertSent(POST, "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/deleteServer");
    }
 
    public void testPowerOffServer() throws Exception {
       server.enqueue(jsonResponse("/powerOffServer.json"));
-      serverApi().powerOffServer("12235");
-      assertSent(POST, "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/powerOffServer");
+      serverApi().powerOffServer("12345");
+      final RecordedRequest recordedRequest = assertSent(POST,
+            "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/powerOffServer");
+      assertBodyContains(recordedRequest, "{\"id\":\"12345\"}");
+   }
 
-      // TODO assertBodyContains
+   public void testPowerOffServer_404() throws Exception {
+      server.enqueue(response404());
+      serverApi().powerOffServer("12345");
+      assertSent(POST, "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/powerOffServer");
    }
 
    public void testRebootServer() throws Exception {
       server.enqueue(jsonResponse("/rebootServer.json"));
-      serverApi().rebootServer("12235");
-      assertSent(POST, "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/rebootServer");
+      serverApi().rebootServer("12345");
+      final RecordedRequest recordedRequest = assertSent(POST,
+            "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/rebootServer");
+      assertBodyContains(recordedRequest, "{\"id\":\"12345\"}");
+   }
 
-      // TODO assertBodyContains
+   public void testRebootServer_404() throws Exception {
+      server.enqueue(response404());
+      serverApi().rebootServer("12345");
+      final RecordedRequest recordedRequest = assertSent(POST,
+            "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/rebootServer");
+      assertBodyContains(recordedRequest, "{\"id\":\"12345\"}");
    }
 
    public void testReconfigureServer() throws Exception {
       server.enqueue(jsonResponse("/reconfigureServer.json"));
-      serverApi().reconfigureServer("12235", 2, "STANDARD", 2);
-      assertSent(POST, "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/reconfigureServer");
+      serverApi().reconfigureServer("12345", 2, "STANDARD", 2);
+      final RecordedRequest recordedRequest = assertSent(POST,
+            "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/reconfigureServer");
+      assertBodyContains(recordedRequest,
+            "{\"id\":\"12345\",\"cpuCount\":2,\"cpuSpeed\":\"STANDARD\",\"coresPerSocket\":2}");
+   }
 
-      // TODO assertBodyContains
+   public void testReconfigureServer_404() throws Exception {
+      server.enqueue(response404());
+      serverApi().reconfigureServer("12345", 2, "STANDARD", 2);
+      assertSent(POST, "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/reconfigureServer");
+   }
+
+   public void testShutdownServer() throws Exception {
+      server.enqueue(jsonResponse("/rebootServer.json"));
+      serverApi().shutdownServer("12345");
+      final RecordedRequest recordedRequest = assertSent(POST,
+            "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/shutdownServer");
+      assertBodyContains(recordedRequest, "{\"id\":\"12345\"}");
+   }
+
+   public void testShutdownServer_404() throws Exception {
+      server.enqueue(response404());
+      serverApi().shutdownServer("12345");
+      final RecordedRequest recordedRequest = assertSent(POST,
+            "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/shutdownServer");
+      assertBodyContains(recordedRequest, "{\"id\":\"12345\"}");
+   }
+
+   public void testStartServer() throws Exception {
+      server.enqueue(jsonResponse("/rebootServer.json"));
+      serverApi().startServer("12345");
+      final RecordedRequest recordedRequest = assertSent(POST,
+            "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/startServer");
+      assertBodyContains(recordedRequest, "{\"id\":\"12345\"}");
+   }
+
+   public void testStartServer_404() throws Exception {
+      server.enqueue(response404());
+      serverApi().startServer("12345");
+      final RecordedRequest recordedRequest = assertSent(POST,
+            "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/startServer");
+      assertBodyContains(recordedRequest, "{\"id\":\"12345\"}");
    }
 
    private ServerApi serverApi() {
