@@ -18,11 +18,13 @@ package org.jclouds.dimensiondata.cloudcontrol.features;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import org.jclouds.dimensiondata.cloudcontrol.domain.CpuSpeed;
 import org.jclouds.dimensiondata.cloudcontrol.domain.Disk;
 import org.jclouds.dimensiondata.cloudcontrol.domain.NIC;
 import org.jclouds.dimensiondata.cloudcontrol.domain.NetworkInfo;
 import org.jclouds.dimensiondata.cloudcontrol.domain.Server;
 import org.jclouds.dimensiondata.cloudcontrol.domain.State;
+import org.jclouds.dimensiondata.cloudcontrol.domain.options.CloneServerOptions;
 import org.jclouds.dimensiondata.cloudcontrol.internal.BaseDimensionDataCloudControlApiLiveTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
@@ -70,6 +72,13 @@ public class ServerApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest 
    }
 
    @Test(dependsOnMethods = "testDeployAndStartServer")
+   public void testReconfigureServer() {
+      api().reconfigureServer(serverId, 4, CpuSpeed.HIGHPERFORMANCE.name(), 1);
+      waitForServerState(api(), serverId, State.PENDING_CHANGE, 30 * 60 * 1000, "Error");
+      waitForServerState(api(), serverId, State.NORMAL, 30 * 60 * 1000, "Error");
+   }
+
+   @Test(dependsOnMethods = "testDeployAndStartServer")
    public void testRebootServer() {
       api().rebootServer(serverId);
       waitForServerState(api(), serverId, State.PENDING_CHANGE, 30 * 60 * 1000, "Error");
@@ -95,15 +104,14 @@ public class ServerApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest 
       waitForServerStatus(api(), serverId, false, true, 30 * 60 * 1000, "Error");
    }
 
-   //   @Test
-   //   public void testCloneServer() {
-   //      CloneServerOptions options = CloneServerOptions.builder().clusterId("").description("")
-   //            .guestOsCustomization(false).build();
-   //
-   //      cloneImageId = api().cloneServer(serverId, "ServerApiLiveTest", options);
-   //      assertNotNull(cloneImageId);
-   // waitForServerState(api(), serverId, State.NORMAL, 30 * 60 * 1000, "Error");
-   //   }
+   @Test
+   public void testCloneServer() {
+      CloneServerOptions options = CloneServerOptions.builder().clusterId("").description("")
+            .guestOsCustomization(false).build();
+      cloneImageId = api().cloneServer(serverId, "ServerApiLiveTest", options);
+      assertNotNull(cloneImageId);
+      waitForServerState(api(), serverId, State.NORMAL, 30 * 60 * 1000, "Error");
+   }
 
    @AfterClass
    public void testDeleteServer() {

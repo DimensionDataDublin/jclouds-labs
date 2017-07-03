@@ -137,7 +137,6 @@ public interface ServerApi {
    @Produces(MediaType.APPLICATION_JSON)
    @MapBinder(BindToJsonPayload.class)
    @Fallback(Fallbacks.VoidOnNotFoundOr404.class)
-      // TODO add live test
    void reconfigureServer(@PayloadParam("id") String id, @PayloadParam("cpuCount") int cpuCount,
          @PayloadParam("cpuSpeed") String cpuSpeed, @PayloadParam("coresPerSocket") int coresPerSocket);
 
