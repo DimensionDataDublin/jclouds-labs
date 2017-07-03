@@ -104,7 +104,7 @@ public class ServerApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest 
       waitForServerStatus(api(), serverId, false, true, 30 * 60 * 1000, "Error");
    }
 
-   @Test
+   @Test(dependsOnMethods = "testDeployAndStartServer")
    public void testCloneServer() {
       CloneServerOptions options = CloneServerOptions.builder().clusterId("").description("")
             .guestOsCustomization(false).build();
