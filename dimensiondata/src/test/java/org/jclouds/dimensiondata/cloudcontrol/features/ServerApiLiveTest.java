@@ -42,6 +42,7 @@ public class ServerApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest 
 
    private String serverId;
    private String cloneImageId;
+   private final String deployedServerName = ServerApiLiveTest.class.getSimpleName() + System.currentTimeMillis();
 
    @Test(dependsOnMethods = "testDeployAndStartServer")
    public void testListServers() {
@@ -50,11 +51,11 @@ public class ServerApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest 
       boolean foundDeployedServer = false;
       for (Server s : servers) {
          assertNotNull(s);
-         if (s.name().equals(ServerApiLiveTest.class.getSimpleName())) {
+         if (s.name().equals(deployedServerName)) {
             foundDeployedServer = true;
          }
       }
-      assertTrue(foundDeployedServer, "Did not find deployed server " + ServerApiLiveTest.class.getSimpleName());
+      assertTrue(foundDeployedServer, "Did not find deployed server " + deployedServerName);
    }
 
    @Test
@@ -63,9 +64,7 @@ public class ServerApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest 
       NetworkInfo networkInfo = NetworkInfo
             .create(NETWORK_DOMAIN_ID, NIC.builder().vlanId(VLAN_ID).build(), Lists.<NIC>newArrayList());
       List<Disk> disks = ImmutableList.of(Disk.builder().scsiId(0).speed("STANDARD").build());
-      serverId = api()
-            .deployServer(ServerApiLiveTest.class.getSimpleName(), IMAGE_ID, started, networkInfo, "P$$ssWwrrdGoDd!",
-                  disks, null);
+      serverId = api().deployServer(deployedServerName, IMAGE_ID, started, networkInfo, "P$$ssWwrrdGoDd!", disks, null);
       assertNotNull(serverId);
       waitForServerStatus(api(), serverId, true, true, 30 * 60 * 1000, "Error");
       waitForServerState(api(), serverId, State.NORMAL, 30 * 60 * 1000, "Error");
@@ -83,6 +82,7 @@ public class ServerApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest 
       api().rebootServer(serverId);
       waitForServerState(api(), serverId, State.PENDING_CHANGE, 30 * 60 * 1000, "Error");
       waitForServerState(api(), serverId, State.NORMAL, 30 * 60 * 1000, "Error");
+      waitForVmToolsRunning(api(), serverId, 30 * 60 * 1000, "Error");
    }
 
    @Test(dependsOnMethods = "testRebootServer")
@@ -104,11 +104,11 @@ public class ServerApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest 
       waitForServerStatus(api(), serverId, false, true, 30 * 60 * 1000, "Error");
    }
 
-   @Test(dependsOnMethods = "testDeployAndStartServer")
+   @Test(dependsOnMethods = "testShutdownServer")
    public void testCloneServer() {
       CloneServerOptions options = CloneServerOptions.builder().clusterId("").description("")
             .guestOsCustomization(false).build();
-      cloneImageId = api().cloneServer(serverId, "ServerApiLiveTest", options);
+      cloneImageId = api().cloneServer(serverId, "ServerApiLiveTest-" + System.currentTimeMillis(), options);
       assertNotNull(cloneImageId);
       waitForServerState(api(), serverId, State.NORMAL, 30 * 60 * 1000, "Error");
    }
