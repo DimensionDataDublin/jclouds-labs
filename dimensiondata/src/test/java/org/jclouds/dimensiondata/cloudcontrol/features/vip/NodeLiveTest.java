@@ -14,31 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.dimensiondata.cloudcontrol;
+package org.jclouds.dimensiondata.cloudcontrol.features.vip;
 
-import org.jclouds.dimensiondata.cloudcontrol.features.AccountApi;
-import org.jclouds.dimensiondata.cloudcontrol.features.InfrastructureApi;
-import org.jclouds.dimensiondata.cloudcontrol.features.NetworkApi;
-import org.jclouds.dimensiondata.cloudcontrol.features.vip.NodeApi;
-import org.jclouds.dimensiondata.cloudcontrol.features.ServerImageApi;
-import org.jclouds.rest.annotations.Delegate;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
 
-import java.io.Closeable;
+import org.jclouds.dimensiondata.cloudcontrol.domain.vip.Node;
+import org.jclouds.dimensiondata.cloudcontrol.internal.BaseDimensionDataCloudControlApiLiveTest;
+import org.testng.annotations.Test;
 
-public interface DimensionDataCloudControlApi extends Closeable {
+import com.google.common.collect.FluentIterable;
 
-   @Delegate
-   AccountApi getAccountApi();
+@Test(groups = "live", testName = "NodeApiLiveTest", singleThreaded = true)
+public class NodeLiveTest extends BaseDimensionDataCloudControlApiLiveTest {
 
-   @Delegate
-   InfrastructureApi getInfrastructureApi();
+   public void testListNodes() throws Exception {
+      FluentIterable<Node> nodes = api.getNodeApi().listNodes().concat();
+      assertFalse(nodes.isEmpty());
+      for (Node node : nodes) {
+         assertNotNull(node);
+      }
+   }
 
-   @Delegate
-   ServerImageApi getServerImageApi();
-
-   @Delegate
-   NetworkApi getNetworkApi();
-
-   @Delegate
-   NodeApi getNodeApi();
 }

@@ -14,31 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.dimensiondata.cloudcontrol;
+package org.jclouds.dimensiondata.cloudcontrol.domain.vip;
 
-import org.jclouds.dimensiondata.cloudcontrol.features.AccountApi;
-import org.jclouds.dimensiondata.cloudcontrol.features.InfrastructureApi;
-import org.jclouds.dimensiondata.cloudcontrol.features.NetworkApi;
-import org.jclouds.dimensiondata.cloudcontrol.features.vip.NodeApi;
-import org.jclouds.dimensiondata.cloudcontrol.features.ServerImageApi;
-import org.jclouds.rest.annotations.Delegate;
+import java.beans.ConstructorProperties;
+import java.util.List;
 
-import java.io.Closeable;
+import org.jclouds.dimensiondata.cloudcontrol.domain.PaginatedCollection;
 
-public interface DimensionDataCloudControlApi extends Closeable {
+/**
+ * A collection of Node
+ */
+public class Nodes extends PaginatedCollection<Node> {
 
-   @Delegate
-   AccountApi getAccountApi();
-
-   @Delegate
-   InfrastructureApi getInfrastructureApi();
-
-   @Delegate
-   ServerImageApi getServerImageApi();
-
-   @Delegate
-   NetworkApi getNetworkApi();
-
-   @Delegate
-   NodeApi getNodeApi();
+   @ConstructorProperties({ "node", "pageNumber", "pageCount", "totalCount", "pageSize" })
+   public Nodes(List<Node> content, Integer pageNumber, Integer pageCount, Integer totalCount, Integer pageSize) {
+      super(content, pageNumber, pageCount, totalCount, pageSize);
+   }
 }

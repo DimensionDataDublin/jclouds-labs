@@ -1,0 +1,23 @@
+{
+  "node": [
+    {
+      "networkDomainId": "553f26b6-2a73-42c3-a78b-6116f11291d0",
+      "name": "ProductionNode.3",
+      "description": "Production Server 3",
+      "ipv4Address": "10.10.10.102",
+      "state": "PENDING_DELETE",
+      "status": "FORCED_OFFLINE",
+      "healthMonitor": {
+        "id": "1168b83b-a488-21e5-811e-105056806aaa",
+        "name": "hMonitor"
+      },
+      "createTime": "2015-05-27T13:56:14.000Z",
+      "id": "nodeIdFrom2ndPage",
+      "datacenterId": "NA9"
+    }
+  ],
+  "pageNumber": 2,
+  "pageCount": 1,
+  "totalCount": 2,
+  "pageSize": 1
+}

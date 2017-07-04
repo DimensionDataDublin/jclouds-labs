@@ -16,12 +16,20 @@
  */
 package org.jclouds.dimensiondata.cloudcontrol.internal;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.io.Resources;
-import com.google.gson.JsonParser;
-import com.google.inject.Module;
+import static com.google.common.collect.Iterables.size;
+import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.jclouds.util.Strings2.toStringAndClose;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
+
+import java.io.IOException;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
@@ -31,6 +39,7 @@ import org.jclouds.dimensiondata.cloudcontrol.DimensionDataCloudControlApi;
 import org.jclouds.dimensiondata.cloudcontrol.DimensionDataCloudControlProviderMetadata;
 import org.jclouds.http.Uris;
 import org.jclouds.json.Json;
+import org.jclouds.location.suppliers.ZoneIdsSupplier;
 import org.jclouds.rest.ApiContext;
 import org.testng.IHookCallBack;
 import org.testng.IHookable;
@@ -38,18 +47,12 @@ import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import java.io.IOException;
-import java.util.Properties;
-import java.util.Set;
-
-import static com.google.common.collect.Iterables.size;
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.jclouds.util.Strings2.toStringAndClose;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.fail;
+import com.google.common.base.Charsets;
+import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.io.Resources;
+import com.google.gson.JsonParser;
+import com.google.inject.Module;
 
 /**
  * Base class for all DimensionDataCloudController mock tests.
@@ -190,7 +193,8 @@ public class BaseDimensionDataCloudControlMockTest implements IHookable {
    }
 
    /**
-    * Consumes the supplied iterable, checking that it contained the expected number of items, and that the expected
+    * Consumes the supplied iterable, which results in server requests being made until all pages are read,
+    * checking that it contained the expected number of items, and that the expected
     * number of additional page requests were made in doing so.
     *
     * @param iterable                         the iterable to be consumed.
@@ -201,8 +205,12 @@ public class BaseDimensionDataCloudControlMockTest implements IHookable {
    protected <T> void consumeIterableAndAssertAdditionalPagesRequested(Iterable<T> iterable, int expectedSize,
          int expectedAdditionalPagesRequested) {
       int initialRequestCount = server.getRequestCount();
-      assertEquals(size(iterable), expectedSize);
+      assertEquals(consumeIteratorAndReturnSize(iterable), expectedSize);
       assertEquals(server.getRequestCount() - initialRequestCount, expectedAdditionalPagesRequested);
+   }
+
+   protected <T> int consumeIteratorAndReturnSize(Iterable<T> iterable) {
+      return size(iterable);
    }
 
    protected Uris.UriBuilder addPageNumberToUriBuilder(Uris.UriBuilder uriBuilder, int pageNumber) {
@@ -215,6 +223,17 @@ public class BaseDimensionDataCloudControlMockTest implements IHookable {
          return toStringAndClose(getClass().getResourceAsStream(resource)).getBytes(Charsets.UTF_8);
       } catch (IOException e) {
          throw Throwables.propagate(e);
+      }
+   }
+
+   protected Uris.UriBuilder getBasicApiUri(String uri) {
+      return Uris.uriBuilder("/caas/" + VERSION + "/6ac1e746-b1ea-4da5-a24e-caf1a978789d/" + uri);
+   }
+
+   protected void addDatacenterFilters(Uris.UriBuilder uriBuilder) {
+      Set<String> zones = ctx.utils().injector().getInstance(ZoneIdsSupplier.class).get();
+      for (String zone : zones) {
+         uriBuilder.addQuery("datacenterId", zone);
       }
    }
 }

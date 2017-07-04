@@ -1,0 +1,25 @@
+{
+  "node": [
+    {
+      "networkDomainId": "553f26b6-2a73-42c3-a78b-6116f11291d0",
+      "name": "ProductionNode.2",
+      "description": "Production Server 2",
+      "ipv4Address": "10.10.10.101",
+      "state": "NORMAL",
+      "status": "ENABLED",
+      "healthMonitor": {
+        "id": "0168b83a-d487-11e4-811f-005056806999",
+        "name": "ICMP"
+      },
+      "connectionLimit": 10000,
+      "connectionRateLimit": 2000,
+      "createTime": "2015-05-27T13:56:13.000Z",
+      "id": "nodeIdFrom1stPage",
+      "datacenterId": "NA9"
+    }
+  ],
+  "pageNumber": 1,
+  "pageCount": 1,
+  "totalCount": 2,
+  "pageSize": 1
+}
