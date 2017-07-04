@@ -1,5 +1,5 @@
 {
-  "operation": "POWER_OFF_SERVER",
+  "operation": "RECONFIGURE_SERVER",
   "responseCode": "IN_PROGRESS",
   "message": "Request to power off Server 'Production Server' has been and is being processed.",
   "info": [],

@@ -1,5 +1,5 @@
 {
-  "operation": "RECONFIGURE_SERVER",
+  "operation": "REBOOT_SERVER",
   "responseCode": "IN_PROGRESS",
   "message": "Request reconfigure Server 'Production Server' has been and is being processed.",
   "info": [],
