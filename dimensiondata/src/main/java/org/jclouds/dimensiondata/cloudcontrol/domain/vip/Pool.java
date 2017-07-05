@@ -17,6 +17,7 @@
 package org.jclouds.dimensiondata.cloudcontrol.domain.vip;
 
 import java.util.Date;
+import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
@@ -24,63 +25,54 @@ import org.jclouds.json.SerializedNames;
 import com.google.auto.value.AutoValue;
 
 @AutoValue
-public abstract class Node {
-   Node() {
+public abstract class Pool {
+   Pool() {
    }
 
    public static Builder builder() {
-      return new AutoValue_Node.Builder();
+      return new AutoValue_Pool.Builder();
    }
 
    @SerializedNames({
-           "id",
-           "datacenterId",
            "networkDomainId",
            "name",
            "description",
-           "ipv4Address",
-           "state",
-           "status",
+           "loadBalanceMethod",
            "healthMonitor",
-           "connectionLimit",
-           "connectionRateLimit",
+           "serviceDownAction",
+           "slowRampTime",
+           "state",
            "createTime",
-           "loggingEnabled"})
-   public static Node create(
-           String id,
-           String datacenterId,
+           "id",
+           "datacenterId"})
+   public static Pool create(
            String networkDomainId,
            String name,
            @Nullable String description,
-           String ipv4Address,
-           State state,
-           Status status,
-           @Nullable HealthMonitor healthMonitor,
-           @Nullable Integer connectionLimit,
-           @Nullable Integer connectionRateLimit,
+           LoadBalanceMethod loadBalanceMethod,
+           @Nullable List<HealthMonitor> healthMonitor,
+           String serviceDownAction,
+           int slowRampTime,
+           String state,
            Date createTime,
-           @Nullable Boolean loggingEnabled) {
+           String id,
+           String datacenterId
+   ) {
 
       return builder()
-              .id(id)
-              .datacenterId(datacenterId)
               .networkDomainId(networkDomainId)
               .name(name)
               .description(description)
-              .ipv4Address(ipv4Address)
-              .state(state)
-              .status(status)
+              .loadBalanceMethod(loadBalanceMethod)
               .healthMonitor(healthMonitor)
-              .connectionLimit(connectionLimit)
-              .connectionRateLimit(connectionRateLimit)
+              .serviceDownAction(serviceDownAction)
+              .slowRampTime(slowRampTime)
+              .state(state)
               .createTime(createTime)
-              .loggingEnabled(loggingEnabled)
+              .id(id)
+              .datacenterId(datacenterId)
               .build();
    }
-
-   public abstract String id();
-
-   public abstract String datacenterId();
 
    public abstract String networkDomainId();
 
@@ -89,29 +81,22 @@ public abstract class Node {
    @Nullable
    public abstract String description();
 
-   public abstract String ipv4Address();
-
-   public abstract State state();
-
-   public abstract Status status();
+   public abstract LoadBalanceMethod loadBalanceMethod();
 
    @Nullable
-   public abstract HealthMonitor healthMonitor();
+   public abstract List<HealthMonitor> healthMonitor();
 
-   @Nullable
-   public abstract Integer connectionLimit();
+   public abstract String serviceDownAction();
 
-   @Nullable
-   public abstract Integer connectionRateLimit();
+   public abstract int slowRampTime();
+
+   public abstract String state();
 
    public abstract Date createTime();
 
-   @Nullable
-   public abstract Boolean loggingEnabled();
+   public abstract String id();
 
-   public boolean isEnabled() {
-      return status() == Status.ENABLED;
-   }
+   public abstract String datacenterId();
 
    public abstract Builder toBuilder();
 
@@ -122,16 +107,18 @@ public abstract class Node {
       REQUIRES_SUPPORT
    }
 
-   public enum Status {
-      ENABLED, DISABLED, FORCED_OFFLINE
+   public enum LoadBalanceMethod {
+      ROUND_ROBIN,
+      LEAST_CONNECTIONS_MEMBER,
+      LEAST_CONNECTIONS_NODE,
+      OBSERVED_MEMBER,
+      OBSERVED_NODE,
+      PREDICTIVE_MEMBER,
+      PREDICTIVE_NODE
    }
 
    @AutoValue.Builder
    interface Builder {
-      Builder id(String id);
-
-      Builder datacenterId(String datacenterId);
-
       Builder networkDomainId(String networkDomainId);
 
       Builder name(String name);
@@ -139,27 +126,23 @@ public abstract class Node {
       @Nullable
       Builder description(String description);
 
-      Builder ipv4Address(String ipv4Address);
-
-      Builder state(State state);
-
-      Builder status(Status status);
+      Builder loadBalanceMethod(LoadBalanceMethod loadBalanceMethod);
 
       @Nullable
-      Builder healthMonitor(HealthMonitor healthMonitor);
+      Builder healthMonitor(List<HealthMonitor> healthMonitor);
 
-      @Nullable
-      Builder connectionLimit(Integer connectionLimit);
+      Builder serviceDownAction(String serviceDownAction);
 
-      @Nullable
-      Builder connectionRateLimit(Integer connectionRateLimit);
+      Builder slowRampTime(int slowRampTime);
+
+      Builder state(String state);
 
       Builder createTime(Date createTime);
 
-      @Nullable
-      Builder loggingEnabled(Boolean loggingEnabled);
+      Builder id(String id);
 
-      Node build();
+      Builder datacenterId(String datacenterId);
+
+      Pool build();
    }
-
 }
