@@ -54,16 +54,16 @@ public class DimensionDataCloudControlResponseUtils {
 
    public static void waitForServerState(ServerApi api, String serverId, State state, long timeoutMillis,
          String message) {
-      boolean isVlanInState = retry(new ServerState(api, state), timeoutMillis).apply(serverId);
-      if (!isVlanInState) {
+      boolean isServerInState = retry(new ServerState(api, state), timeoutMillis).apply(serverId);
+      if (!isServerInState) {
          throw new IllegalStateException(message);
       }
    }
 
    public static void waitForServerStatus(ServerApi api, String serverId, boolean started, boolean deployed,
          long timeoutMillis, String message) {
-      boolean isServerInState = retry(new ServerStatus(api, started, deployed), timeoutMillis).apply(serverId);
-      if (!isServerInState) {
+      boolean serverHasStatus = retry(new ServerStatus(api, started, deployed), timeoutMillis).apply(serverId);
+      if (!serverHasStatus) {
          throw new IllegalStateException(message);
       }
    }
