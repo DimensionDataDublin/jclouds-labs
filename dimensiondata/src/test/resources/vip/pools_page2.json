@@ -1,0 +1,19 @@
+{
+  "pool": [
+    {
+      "networkDomainId": "553f26b6-2a73-42c3-a78b-6116f11291d0",
+      "name": "myDevelopmentPool.2",
+      "loadBalanceMethod": "ROUND_ROBIN",
+      "serviceDownAction": "RESELECT",
+      "slowRampTime": 10,
+      "state": "NORMAL",
+      "createTime": "2015-06-04T09:15:07.000Z",
+      "id": "poolIdFrom2ndPage",
+      "datacenterId": "NA9"
+    }
+  ],
+  "pageNumber": 2,
+  "pageCount": 1,
+  "totalCount": 2,
+  "pageSize": 1
+}

@@ -1,0 +1,22 @@
+{
+  "networkDomainId": "553f26b6-2a73-42c3-a78b-6116f11291d0",
+  "name": "myDevelopmentPool.1",
+  "description": "Pool for load balancing development application servers.",
+  "loadBalanceMethod": "ROUND_ROBIN",
+  "healthMonitor": [
+    {
+      "id": "01683574-d487-11e4-811f-005056806999",
+      "name": "CCDEFAULT.Http"
+    },
+    {
+      "id": "0168546c-d487-11e4-811f-005056806999",
+      "name": "CCDEFAULT.Https"
+    }
+  ],
+  "serviceDownAction": "RESELECT",
+  "slowRampTime": 10,
+  "state": "NORMAL",
+  "createTime": "2015-06-04T09:15:07.000Z",
+  "id": "4d360b1f-bc2c-4ab7-9884-1f03ba2768f7",
+  "datacenterId": "NA9"
+}
