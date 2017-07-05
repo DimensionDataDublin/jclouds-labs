@@ -66,9 +66,9 @@ public class DimensionDataCloudControlErrorHandler implements HttpErrorHandler {
             exception = new AuthorizationException(message, exception);
             break;
          case 404:
-            if (!command.getCurrentRequest().getMethod().equals("DELETE")) {
-               exception = new ResourceNotFoundException(message, exception);
-            }
+            // CloudControl uses error code 400 with RESOURCE_NOT_FOUND to report missing assets
+            // 404 means malformed URI only
+            exception = new IllegalStateException(message, exception);
             break;
       }
       command.setException(exception);
