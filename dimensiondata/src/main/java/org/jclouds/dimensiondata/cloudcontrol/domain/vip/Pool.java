@@ -19,6 +19,7 @@ package org.jclouds.dimensiondata.cloudcontrol.domain.vip;
 import java.util.Date;
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
@@ -117,31 +118,38 @@ public abstract class Pool {
    }
 
    @AutoValue.Builder
-   interface Builder {
-      Builder networkDomainId(String networkDomainId);
+   public abstract static class Builder {
+      public abstract Builder networkDomainId(String networkDomainId);
 
-      Builder name(String name);
-
-      @Nullable
-      Builder description(String description);
-
-      Builder loadBalanceMethod(LoadBalanceMethod loadBalanceMethod);
+      public abstract Builder name(String name);
 
       @Nullable
-      Builder healthMonitor(List<HealthMonitor> healthMonitor);
+      public abstract Builder description(String description);
 
-      Builder serviceDownAction(String serviceDownAction);
+      public abstract Builder loadBalanceMethod(LoadBalanceMethod loadBalanceMethod);
 
-      Builder slowRampTime(int slowRampTime);
+      @Nullable
+      public abstract Builder healthMonitor(List<HealthMonitor> healthMonitor);
 
-      Builder state(String state);
+      public abstract List<HealthMonitor> healthMonitor();
 
-      Builder createTime(Date createTime);
+      public abstract Builder serviceDownAction(String serviceDownAction);
 
-      Builder id(String id);
+      public abstract Builder slowRampTime(int slowRampTime);
 
-      Builder datacenterId(String datacenterId);
+      public abstract Builder state(String state);
 
-      Pool build();
+      public abstract Builder createTime(Date createTime);
+
+      public abstract Builder id(String id);
+
+      public abstract Builder datacenterId(String datacenterId);
+
+      abstract Pool autoBuild();
+
+      Pool build() {
+         healthMonitor(healthMonitor() != null ? ImmutableList.copyOf(healthMonitor()) : ImmutableList.<HealthMonitor>of());
+         return autoBuild();
+      }
    }
 }
