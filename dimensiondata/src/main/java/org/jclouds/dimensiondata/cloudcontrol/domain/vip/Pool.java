@@ -35,43 +35,43 @@ public abstract class Pool {
    }
 
    @SerializedNames({
-           "networkDomainId",
-           "name",
-           "description",
-           "loadBalanceMethod",
-           "healthMonitor",
-           "serviceDownAction",
-           "slowRampTime",
-           "state",
-           "createTime",
-           "id",
-           "datacenterId"})
+         "networkDomainId",
+         "name",
+         "description",
+         "loadBalanceMethod",
+         "healthMonitor",
+         "serviceDownAction",
+         "slowRampTime",
+         "state",
+         "createTime",
+         "id",
+         "datacenterId" })
    public static Pool create(
-           String networkDomainId,
-           String name,
-           @Nullable String description,
-           LoadBalanceMethod loadBalanceMethod,
-           @Nullable List<HealthMonitor> healthMonitor,
-           String serviceDownAction,
-           int slowRampTime,
-           String state,
-           Date createTime,
-           String id,
-           String datacenterId
+         String networkDomainId,
+         String name,
+         @Nullable String description,
+         LoadBalanceMethod loadBalanceMethod,
+         @Nullable List<HealthMonitor> healthMonitor,
+         String serviceDownAction,
+         int slowRampTime,
+         State state,
+         Date createTime,
+         String id,
+         String datacenterId
    ) {
       return builder()
-              .networkDomainId(networkDomainId)
-              .name(name)
-              .description(description)
-              .loadBalanceMethod(loadBalanceMethod)
-              .healthMonitor(healthMonitor)
-              .serviceDownAction(serviceDownAction)
-              .slowRampTime(slowRampTime)
-              .state(state)
-              .createTime(createTime)
-              .id(id)
-              .datacenterId(datacenterId)
-              .build();
+            .networkDomainId(networkDomainId)
+            .name(name)
+            .description(description)
+            .loadBalanceMethod(loadBalanceMethod)
+            .healthMonitor(healthMonitor)
+            .serviceDownAction(serviceDownAction)
+            .slowRampTime(slowRampTime)
+            .state(state)
+            .createTime(createTime)
+            .id(id)
+            .datacenterId(datacenterId)
+            .build();
    }
 
    public abstract String networkDomainId();
@@ -90,7 +90,7 @@ public abstract class Pool {
 
    public abstract int slowRampTime();
 
-   public abstract String state();
+   public abstract State state();
 
    public abstract Date createTime();
 
@@ -131,13 +131,13 @@ public abstract class Pool {
       @Nullable
       public abstract Builder healthMonitor(List<HealthMonitor> healthMonitor);
 
-      public abstract List<HealthMonitor> healthMonitor();
+      abstract List<HealthMonitor> healthMonitor();
 
       public abstract Builder serviceDownAction(String serviceDownAction);
 
       public abstract Builder slowRampTime(int slowRampTime);
 
-      public abstract Builder state(String state);
+      public abstract Builder state(State state);
 
       public abstract Builder createTime(Date createTime);
 
@@ -147,8 +147,9 @@ public abstract class Pool {
 
       abstract Pool autoBuild();
 
-      Pool build() {
-         healthMonitor(healthMonitor() != null ? ImmutableList.copyOf(healthMonitor()) : ImmutableList.<HealthMonitor>of());
+      public Pool build() {
+         healthMonitor(
+               healthMonitor() != null ? ImmutableList.copyOf(healthMonitor()) : ImmutableList.<HealthMonitor>of());
          return autoBuild();
       }
    }

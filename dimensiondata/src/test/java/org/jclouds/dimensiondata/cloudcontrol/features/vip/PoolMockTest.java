@@ -16,26 +16,65 @@
  */
 package org.jclouds.dimensiondata.cloudcontrol.features.vip;
 
-import static org.testng.Assert.assertEquals;
-
-import javax.ws.rs.HttpMethod;
-
+import com.google.common.collect.ImmutableList;
 import org.jclouds.dimensiondata.cloudcontrol.domain.PaginatedCollection;
+import org.jclouds.dimensiondata.cloudcontrol.domain.vip.HealthMonitor;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.Pool;
 import org.jclouds.dimensiondata.cloudcontrol.internal.BaseAccountAwareCloudControlMockTest;
 import org.jclouds.dimensiondata.cloudcontrol.options.PaginationOptions;
 import org.jclouds.http.Uris;
 import org.testng.annotations.Test;
 
+import javax.ws.rs.HttpMethod;
+
+import static javax.ws.rs.HttpMethod.GET;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
+
 @Test(groups = "live", testName = "PoolApiLiveTest", singleThreaded = true)
 public class PoolMockTest extends BaseAccountAwareCloudControlMockTest {
+
+   @Test
+   public void testGetPool() throws InterruptedException {
+      server.enqueue(jsonResponse("/vip/pool.json"));
+      Pool pool = api.getPoolApi().getPool("12345");
+      assertSent(GET, getBasicApiUri("networkDomainVip/pool/12345").toString());
+      assertEquals(pool, Pool.builder()
+            .networkDomainId("553f26b6-2a73-42c3-a78b-6116f11291d0")
+            .name("myDevelopmentPool.1")
+            .description("Pool for load balancing development application servers.")
+            .loadBalanceMethod(Pool.LoadBalanceMethod.ROUND_ROBIN)
+            .healthMonitor(ImmutableList.<HealthMonitor>of(
+                  HealthMonitor.builder()
+                        .id("01683574-d487-11e4-811f-005056806999")
+                        .name("CCDEFAULT.Http")
+                        .build(),
+                  HealthMonitor.builder()
+                        .id("0168546c-d487-11e4-811f-005056806999")
+                        .name("CCDEFAULT.Https")
+                        .build()))
+            .serviceDownAction("RESELECT")
+            .slowRampTime(10)
+            .state(Pool.State.NORMAL)
+            .createTime(pool.createTime())
+            .id("4d360b1f-bc2c-4ab7-9884-1f03ba2768f7")
+            .datacenterId("NA9")
+            .build());
+   }
+
+   @Test
+   public void testGetPoolResourceNotFound() throws InterruptedException {
+      server.enqueue(responseResourceNotFound());
+      Pool found = api.getPoolApi().getPool("12345");
+      assertNull(found);
+   }
 
    @Test
    public void testListPools_ReadAll() throws Exception {
       server.enqueue(jsonResponse("/vip/pools.json"));
       Iterable<Pool> pools = api.getPoolApi().listPools().concat();
       assertEquals(consumeIteratorAndReturnSize(pools), 2,
-              "should return all pools defined in enqueued response");
+            "should return all pools defined in enqueued response");
 
       Uris.UriBuilder uriBuilder = getBasicApiUri("networkDomainVip/pool");
       addDatacenterFilters(uriBuilder);
@@ -46,7 +85,7 @@ public class PoolMockTest extends BaseAccountAwareCloudControlMockTest {
    public void testListPools_WithPagination() throws Exception {
       server.enqueue(jsonResponse("/vip/pools_page2.json"));
       PaginatedCollection<Pool> pools = api.getPoolApi().listPools(
-              new PaginationOptions().pageNumber(2).pageSize(1));
+            new PaginationOptions().pageNumber(2).pageSize(1));
       assertEquals(pools.size(), 1, "should only return 2nd element");
       assertEquals(pools.get(0).id(), "poolIdFrom2ndPage", "Should return 2nd element (from 2nd page).");
 

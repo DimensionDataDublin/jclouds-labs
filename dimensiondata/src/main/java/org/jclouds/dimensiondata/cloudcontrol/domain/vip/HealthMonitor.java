@@ -37,7 +37,7 @@ public abstract class HealthMonitor {
    public abstract String name();
 
    @AutoValue.Builder
-   interface Builder {
+   public interface Builder {
       Builder id(String id);
 
       Builder name(String name);
