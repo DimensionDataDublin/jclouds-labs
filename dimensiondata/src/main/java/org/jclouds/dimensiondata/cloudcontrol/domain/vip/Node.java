@@ -127,7 +127,7 @@ public abstract class Node {
    }
 
    @AutoValue.Builder
-   interface Builder {
+   public interface Builder {
       Builder id(String id);
 
       Builder datacenterId(String datacenterId);
