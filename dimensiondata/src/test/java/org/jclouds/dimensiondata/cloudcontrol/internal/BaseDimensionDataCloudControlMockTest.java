@@ -16,20 +16,12 @@
  */
 package org.jclouds.dimensiondata.cloudcontrol.internal;
 
-import static com.google.common.collect.Iterables.size;
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.jclouds.util.Strings2.toStringAndClose;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.fail;
-
-import java.io.IOException;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-
+import com.google.common.base.Charsets;
+import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.io.Resources;
+import com.google.gson.JsonParser;
+import com.google.inject.Module;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
@@ -47,12 +39,18 @@ import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.io.Resources;
-import com.google.gson.JsonParser;
-import com.google.inject.Module;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.util.Properties;
+import java.util.Set;
+
+import static com.google.common.collect.Iterables.size;
+import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.jclouds.util.Strings2.toStringAndClose;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
 /**
  * Base class for all DimensionDataCloudController mock tests.

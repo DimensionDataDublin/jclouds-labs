@@ -17,6 +17,7 @@
 package org.jclouds.dimensiondata.cloudcontrol.features.vip;
 
 import org.jclouds.dimensiondata.cloudcontrol.domain.PaginatedCollection;
+import org.jclouds.dimensiondata.cloudcontrol.domain.vip.CreateNode;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.Node;
 import org.jclouds.dimensiondata.cloudcontrol.internal.BaseAccountAwareCloudControlMockTest;
 import org.jclouds.dimensiondata.cloudcontrol.options.PaginationOptions;
@@ -24,12 +25,31 @@ import org.jclouds.http.Uris;
 import org.testng.annotations.Test;
 
 import static javax.ws.rs.HttpMethod.GET;
+import static javax.ws.rs.HttpMethod.POST;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
 @Test(groups = "live", testName = "NodeApiLiveTest", singleThreaded = true)
 public class NodeMockTest extends BaseAccountAwareCloudControlMockTest {
+
+   @Test
+   public void testCreateNode() throws InterruptedException {
+      server.enqueue(jsonResponse("/vip/createNodeResponse.json"));
+      String nodeId = api.getNodeApi().createNode(CreateNode.builder()
+            .networkDomainId("networkDomainId")
+            .name("name")
+            .description("description")
+            .ipv4Address("10.5.2.14")
+            .status(Node.Status.ENABLED)
+            .healthMonitorId("healthMonitorId")
+            .connectionLimit(100)
+            .connectionRateLimit(200)
+            .build());
+      assertEquals(nodeId, "nodeId1");
+      assertSentToCloudControlEndpoint(
+            POST, "networkDomainVip/createNode", stringFromResource("/vip/createNodeRequest.json"));
+   }
 
    @Test
    public void testGetNode() throws InterruptedException {

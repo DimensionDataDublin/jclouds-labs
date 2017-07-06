@@ -1,0 +1,10 @@
+{
+  "networkDomainId": "networkDomainId",
+  "name": "name",
+  "description": "description",
+  "ipv4Address": "10.5.2.14",
+  "status": "ENABLED",
+  "healthMonitorId": "healthMonitorId",
+  "connectionLimit": 100,
+  "connectionRateLimit": 200
+}

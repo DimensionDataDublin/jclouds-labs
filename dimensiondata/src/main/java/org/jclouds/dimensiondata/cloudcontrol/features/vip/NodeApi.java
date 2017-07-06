@@ -30,12 +30,12 @@ import org.jclouds.dimensiondata.cloudcontrol.domain.vip.Nodes;
 import org.jclouds.dimensiondata.cloudcontrol.filters.DatacenterIdFilter;
 import org.jclouds.dimensiondata.cloudcontrol.filters.OrganisationIdFilter;
 import org.jclouds.dimensiondata.cloudcontrol.options.PaginationOptions;
+import org.jclouds.dimensiondata.cloudcontrol.utils.ParseResponse;
 import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.http.functions.ParseJson;
-import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.Json;
+import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
-import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.Transform;
@@ -43,6 +43,7 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -60,8 +61,8 @@ public interface NodeApi {
    @POST
    @Path("/createNode")
    @Produces(MediaType.APPLICATION_JSON)
-   @MapBinder(BindToJsonPayload.class)
-   String createNode(CreateNode createNode);
+   @ResponseParser(NodeId.class)
+   String createNode(@BinderParam(BindToJsonPayload.class) CreateNode createNode);
 
    @Named("node:get")
    @GET
@@ -110,6 +111,14 @@ public interface NodeApi {
                }
             };
          }
+      }
+   }
+
+   @Singleton
+   final class NodeId extends ParseResponse {
+      @Inject
+      NodeId(Json json) {
+         super(json, "nodeId");
       }
    }
 }
