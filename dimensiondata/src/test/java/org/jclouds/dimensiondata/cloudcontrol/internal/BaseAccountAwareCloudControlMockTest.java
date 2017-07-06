@@ -16,10 +16,14 @@
  */
 package org.jclouds.dimensiondata.cloudcontrol.internal;
 
+import com.google.gson.JsonParser;
+import com.squareup.okhttp.mockwebserver.RecordedRequest;
+import org.jclouds.javax.annotation.Nullable;
+import org.testng.annotations.BeforeMethod;
+
 import javax.ws.rs.HttpMethod;
 
-import com.squareup.okhttp.mockwebserver.RecordedRequest;
-import org.testng.annotations.BeforeMethod;
+import static org.testng.Assert.assertEquals;
 
 /**
  * Base class for Dimension Data Cloud Control mock tests for API calls that include account information.
@@ -31,6 +35,9 @@ public class BaseAccountAwareCloudControlMockTest extends BaseDimensionDataCloud
 
    private boolean accountRetrieved;
 
+   // So that we can ignore formatting.
+   private final JsonParser parser = new JsonParser();
+
    @Override
    protected void applyAdditionalServerConfig() {
       server.enqueue(jsonResponse("/account.json"));
@@ -41,7 +48,15 @@ public class BaseAccountAwareCloudControlMockTest extends BaseDimensionDataCloud
       accountRetrieved = false;
    }
 
-   @Override
+   protected void assertSentToCloudControlEndpoint(String method, String path, @Nullable String requestBody)
+         throws InterruptedException {
+      RecordedRequest recordedRequest = assertSent(
+            method, "/caas/" + VERSION + "/6ac1e746-b1ea-4da5-a24e-caf1a978789d/" + path);
+      if (requestBody != null) {
+         assertEquals(parser.parse(recordedRequest.getUtf8Body()), parser.parse(requestBody));
+      }
+   }
+
    protected RecordedRequest assertSent(String method, String path) throws InterruptedException {
       if (!accountRetrieved) {
          super.assertSent(HttpMethod.GET, "/caas/" + VERSION + "/user/myUser");

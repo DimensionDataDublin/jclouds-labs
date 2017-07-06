@@ -1,0 +1,16 @@
+{
+  "requestId": "na9_20160321T074626030-0400_7e9fffe7-190b-46f2-9107-9d52fe57d0ad",
+  "operation": "CREATE_NODE",
+  "responseCode": "OK",
+  "message": "Node 'myProductionNode.1' has been created.",
+  "info": [
+    {
+      "name": "nodeId",
+      "value": "nodeId1"
+    },
+    {
+      "name": "name",
+      "value": "myProductionNode.1"
+    }
+  ]
+}
