@@ -16,19 +16,15 @@
  */
 package org.jclouds.dimensiondata.cloudcontrol.features.vip;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.MediaType;
-
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.inject.TypeLiteral;
 import org.jclouds.Fallbacks;
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.collect.internal.Arg0ToPagedIterable;
 import org.jclouds.dimensiondata.cloudcontrol.DimensionDataCloudControlApi;
+import org.jclouds.dimensiondata.cloudcontrol.domain.vip.CreateNode;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.Node;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.Nodes;
 import org.jclouds.dimensiondata.cloudcontrol.filters.DatacenterIdFilter;
@@ -36,20 +32,36 @@ import org.jclouds.dimensiondata.cloudcontrol.filters.OrganisationIdFilter;
 import org.jclouds.dimensiondata.cloudcontrol.options.PaginationOptions;
 import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.http.functions.ParseJson;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.Json;
 import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.Transform;
+import org.jclouds.rest.binders.BindToJsonPayload;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.inject.TypeLiteral;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 @RequestFilters({ BasicAuthentication.class, OrganisationIdFilter.class })
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/{jclouds.api-version}/networkDomainVip")
 public interface NodeApi {
+
+   @Named("node:create")
+   @POST
+   @Path("/createNode")
+   @Produces(MediaType.APPLICATION_JSON)
+   @MapBinder(BindToJsonPayload.class)
+   String createNode(CreateNode createNode);
 
    @Named("node:get")
    @GET
