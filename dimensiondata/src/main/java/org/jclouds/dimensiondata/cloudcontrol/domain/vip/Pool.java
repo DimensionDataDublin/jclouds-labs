@@ -52,7 +52,7 @@ public abstract class Pool {
          @Nullable String description,
          LoadBalanceMethod loadBalanceMethod,
          @Nullable List<HealthMonitor> healthMonitor,
-         String serviceDownAction,
+         ServiceDownAction serviceDownAction,
          int slowRampTime,
          State state,
          Date createTime,
@@ -87,7 +87,7 @@ public abstract class Pool {
    @Nullable
    public abstract List<HealthMonitor> healthMonitor();
 
-   public abstract String serviceDownAction();
+   public abstract ServiceDownAction serviceDownAction();
 
    public abstract int slowRampTime();
 
@@ -118,6 +118,10 @@ public abstract class Pool {
       PREDICTIVE_NODE
    }
 
+   public enum ServiceDownAction {
+      NONE, DROP, RESELECT
+   }
+
    @AutoValue.Builder
    public abstract static class Builder {
       public abstract Builder networkDomainId(String networkDomainId);
@@ -134,7 +138,7 @@ public abstract class Pool {
 
       abstract List<HealthMonitor> healthMonitor();
 
-      public abstract Builder serviceDownAction(String serviceDownAction);
+      public abstract Builder serviceDownAction(ServiceDownAction serviceDownAction);
 
       public abstract Builder slowRampTime(int slowRampTime);
 

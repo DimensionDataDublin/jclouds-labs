@@ -24,11 +24,7 @@
       "ipv4Address": "10.10.10.102",
       "state": "PENDING_DELETE",
       "status": "FORCED_OFFLINE",
-      "healthMonitor": {
-        "id": "1168b83b-a488-21e5-811e-105056806aaa",
-        "name": "hMonitor"
-      },
-      "createTime": "2015-05-27T13:56:14.000Z",
+      "createTime": "2015-05-28T13:56:14.000Z",
       "id": "45ef7fe7-57b5-5ebf-b864-309e4951d70a",
       "datacenterId": "NA9"
     }
