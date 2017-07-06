@@ -44,7 +44,7 @@ public class PoolsParseTest extends BaseDimensionDataCloudControlParseTest<Pools
                         .name("myDevelopmentPool.1")
                         .description("Pool for load balancing development application servers.")
                         .loadBalanceMethod(Pool.LoadBalanceMethod.ROUND_ROBIN)
-                        .healthMonitor(ImmutableList.of(
+                        .healthMonitors(ImmutableList.of(
                               HealthMonitor.builder()
                                     .id("01683574-d487-11e4-811f-005056806999")
                                     .name("CCDEFAULT.Http")

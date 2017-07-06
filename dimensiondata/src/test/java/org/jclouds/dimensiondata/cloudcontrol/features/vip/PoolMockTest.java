@@ -16,7 +16,9 @@
  */
 package org.jclouds.dimensiondata.cloudcontrol.features.vip;
 
+import com.google.common.collect.ImmutableList;
 import org.jclouds.dimensiondata.cloudcontrol.domain.PaginatedCollection;
+import org.jclouds.dimensiondata.cloudcontrol.domain.vip.CreatePool;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.Pool;
 import org.jclouds.dimensiondata.cloudcontrol.internal.BaseAccountAwareCloudControlMockTest;
 import org.jclouds.dimensiondata.cloudcontrol.options.PaginationOptions;
@@ -26,12 +28,30 @@ import org.testng.annotations.Test;
 import javax.ws.rs.HttpMethod;
 
 import static javax.ws.rs.HttpMethod.GET;
+import static javax.ws.rs.HttpMethod.POST;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
 @Test(groups = "live", testName = "PoolApiLiveTest", singleThreaded = true)
 public class PoolMockTest extends BaseAccountAwareCloudControlMockTest {
+
+   @Test
+   public void testCreatePool() throws InterruptedException {
+      server.enqueue(jsonResponse("/vip/createPoolResponse.json"));
+      String poolId = api.getPoolApi().createPool(CreatePool.builder()
+            .networkDomainId("networkDomainId")
+            .name("name")
+            .description("description")
+            .loadBalanceMethod(Pool.LoadBalanceMethod.ROUND_ROBIN)
+            .healthMonitorIds(ImmutableList.of("healthMonitorId1", "healthMonitorId2"))
+            .serviceDownAction(Pool.ServiceDownAction.RESELECT)
+            .slowRampTime(10)
+            .build());
+      assertEquals(poolId, "poolId1");
+      assertSentToCloudControlEndpoint(
+            POST, "networkDomainVip/createPool", stringFromResource("/vip/createPoolRequest.json"));
+   }
 
    @Test
    public void testGetPool() throws InterruptedException {

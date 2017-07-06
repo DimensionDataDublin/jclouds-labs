@@ -51,7 +51,7 @@ public abstract class Pool {
          String name,
          @Nullable String description,
          LoadBalanceMethod loadBalanceMethod,
-         @Nullable List<HealthMonitor> healthMonitor,
+         @Nullable List<HealthMonitor> healthMonitors,
          ServiceDownAction serviceDownAction,
          int slowRampTime,
          State state,
@@ -64,7 +64,7 @@ public abstract class Pool {
             .name(name)
             .description(description)
             .loadBalanceMethod(loadBalanceMethod)
-            .healthMonitor(healthMonitor)
+            .healthMonitors(healthMonitors)
             .serviceDownAction(serviceDownAction)
             .slowRampTime(slowRampTime)
             .state(state)
@@ -84,7 +84,7 @@ public abstract class Pool {
    public abstract LoadBalanceMethod loadBalanceMethod();
 
    @Nullable
-   public abstract List<HealthMonitor> healthMonitor();
+   public abstract List<HealthMonitor> healthMonitors();
 
    public abstract ServiceDownAction serviceDownAction();
 
@@ -133,9 +133,9 @@ public abstract class Pool {
       public abstract Builder loadBalanceMethod(LoadBalanceMethod loadBalanceMethod);
 
       @Nullable
-      public abstract Builder healthMonitor(List<HealthMonitor> healthMonitor);
+      public abstract Builder healthMonitors(List<HealthMonitor> healthMonitor);
 
-      abstract List<HealthMonitor> healthMonitor();
+      abstract List<HealthMonitor> healthMonitors();
 
       public abstract Builder serviceDownAction(ServiceDownAction serviceDownAction);
 
@@ -152,8 +152,8 @@ public abstract class Pool {
       abstract Pool autoBuild();
 
       public Pool build() {
-         healthMonitor(
-               healthMonitor() == null ? null : ImmutableList.copyOf(healthMonitor()));
+         healthMonitors(
+               healthMonitors() == null ? null : ImmutableList.copyOf(healthMonitors()));
          return autoBuild();
       }
    }

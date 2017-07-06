@@ -66,8 +66,6 @@ public abstract class CreateNode {
             .build();
    }
 
-   //   public abstract String id();
-
    public abstract String networkDomainId();
 
    public abstract String name();

@@ -1,0 +1,12 @@
+{
+  "networkDomainId": "networkDomainId",
+  "name": "name",
+  "description": "description",
+  "loadBalanceMethod": "ROUND_ROBIN",
+  "healthMonitorId": [
+    "healthMonitorId1",
+    "healthMonitorId2"
+  ],
+  "serviceDownAction": "RESELECT",
+  "slowRampTime": 10
+}
