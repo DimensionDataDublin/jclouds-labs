@@ -47,6 +47,6 @@ public class FirewallRulesParseTest extends BaseDimensionDataCloudControlParseTe
                         .port(FirewallRuleTarget.Port.create(587, null)).build()).ruleType("DEFAULT_RULE")
                   .networkDomainId("484174a2-ae74-4658-9e56-50fc90e086cf").enabled(Boolean.TRUE).datacenterId("NA9")
                   .build());
-      return new FirewallRules(firewallRules, 1, 2, 2, 250);
+      return new FirewallRules(firewallRules, 1, 4, 4, 50);
    }
 }

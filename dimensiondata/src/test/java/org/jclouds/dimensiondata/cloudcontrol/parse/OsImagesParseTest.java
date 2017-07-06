@@ -58,6 +58,6 @@ public class OsImagesParseTest extends BaseDimensionDataCloudControlParseTest<Os
             .cluster(Cluster.builder().id("NA12-01").name("my cluster name").build()).build();
       assertEquals(osImage.type, OsImage.TYPE, "OsImage type is not OS_IMAGE");
       List<OsImage> osImages = ImmutableList.of(osImage);
-      return new OsImages(osImages, 1, 2, 2, 250);
+      return new OsImages(osImages, 1, 1, 1, 1);
    }
 }

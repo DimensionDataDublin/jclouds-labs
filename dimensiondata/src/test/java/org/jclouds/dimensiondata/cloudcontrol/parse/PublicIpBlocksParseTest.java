@@ -41,6 +41,6 @@ public class PublicIpBlocksParseTest extends BaseDimensionDataCloudControlParseT
             .of(PublicIpBlock.builder().networkDomainId("690de302-bb80-49c6-b401-8c02bbefb945")
                   .id("9993e5fc-bdce-11e4-8c14-b8ca3a5d9ef8").createTime(parseDate("2016-03-14T11:49:33.000Z"))
                   .state("NORMAL").datacenterId("NA9").size(2).baseIp("168.128.6.216").build());
-      return new PublicIpBlocks(publicIpBlocks, 1, 5, 5, 250);
+      return new PublicIpBlocks(publicIpBlocks, 1, 1, 1, 250);
    }
 }
