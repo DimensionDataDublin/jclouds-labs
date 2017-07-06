@@ -19,6 +19,7 @@ package org.jclouds.dimensiondata.cloudcontrol;
 import org.jclouds.dimensiondata.cloudcontrol.features.AccountApi;
 import org.jclouds.dimensiondata.cloudcontrol.features.InfrastructureApi;
 import org.jclouds.dimensiondata.cloudcontrol.features.NetworkApi;
+import org.jclouds.dimensiondata.cloudcontrol.features.ServerApi;
 import org.jclouds.dimensiondata.cloudcontrol.features.vip.NodeApi;
 import org.jclouds.dimensiondata.cloudcontrol.features.ServerImageApi;
 import org.jclouds.dimensiondata.cloudcontrol.features.vip.PoolApi;
@@ -45,4 +46,7 @@ public interface DimensionDataCloudControlApi extends Closeable {
 
    @Delegate
    PoolApi getPoolApi();
+
+   @Delegate
+   ServerApi getServerApi();
 }
