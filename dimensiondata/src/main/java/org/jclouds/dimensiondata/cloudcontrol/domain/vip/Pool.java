@@ -149,7 +149,7 @@ public abstract class Pool {
 
       public Pool build() {
          healthMonitor(
-               healthMonitor() != null ? ImmutableList.copyOf(healthMonitor()) : ImmutableList.<HealthMonitor>of());
+               healthMonitor() == null ? null : ImmutableList.copyOf(healthMonitor()));
          return autoBuild();
       }
    }
