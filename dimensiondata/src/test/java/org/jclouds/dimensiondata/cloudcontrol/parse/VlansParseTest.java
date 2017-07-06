@@ -47,6 +47,6 @@ public class VlansParseTest extends BaseDimensionDataCloudControlParseTest<Vlans
             .ipv6Range(IpRange.create("2607:f480:111:1575:0:0:0:0", 64)).ipv4GatewayAddress("10.0.0.1")
             .ipv6GatewayAddress("2607:f480:111:1575:0:0:0:1").createTime(parseDate("2016-03-11T10:41:19.000Z"))
             .state(State.NORMAL).datacenterId("NA9").build());
-      return new Vlans(vlans, 1, 5, 5, 250);
+      return new Vlans(vlans, 1, 1, 1, 250);
    }
 }

@@ -71,6 +71,6 @@ public class CustomerImagesParseTest extends BaseDimensionDataCloudControlParseT
                         .type(CustomerImage.Source.Type.CLONE).build()).build();
       assertEquals(customerImage.type, CustomerImage.TYPE, "CustomerImage type is no CUSTOMER_IMAGE");
       List<CustomerImage> customerImages = ImmutableList.of(customerImage);
-      return new CustomerImages(customerImages, 1, 2, 2, 250);
+      return new CustomerImages(customerImages, 1, 1, 1, 1);
    }
 }

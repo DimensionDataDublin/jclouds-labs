@@ -44,6 +44,6 @@ public class NetworkDomainsParseTest extends BaseDimensionDataCloudControlParseT
             .of(NetworkDomain.builder().id("8e082ed6-c198-4eff-97cb-aeac6f9685d8").datacenterId("NA9").name("test")
                   .description("").state(State.NORMAL).type(ESSENTIALS).snatIpv4Address("168.128.3.44")
                   .createTime(parseDate("2016-03-08T14:39:47.000Z")).build());
-      return new NetworkDomains(networkDomains, 1, 5, 5, 250);
+      return new NetworkDomains(networkDomains, 1, 1, 1, 250);
    }
 }
