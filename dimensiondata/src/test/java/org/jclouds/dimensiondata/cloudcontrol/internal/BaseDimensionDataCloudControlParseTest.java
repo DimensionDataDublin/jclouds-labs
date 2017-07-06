@@ -19,8 +19,10 @@ package org.jclouds.dimensiondata.cloudcontrol.internal;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.jclouds.dimensiondata.cloudcontrol.config.DimensionDataCloudControlParserModule;
+import org.jclouds.dimensiondata.cloudcontrol.domain.PaginatedCollection;
 import org.jclouds.json.BaseItemParserTest;
 import org.jclouds.json.config.GsonModule;
+import org.testng.Assert;
 
 import javax.xml.bind.DatatypeConverter;
 import java.util.Date;
@@ -36,4 +38,21 @@ public abstract class BaseDimensionDataCloudControlParseTest<T> extends BaseItem
       return DatatypeConverter.parseDateTime(dateString).getTime();
    }
 
+   @Override
+   public void compare(T expects, T response) {
+      super.compare(expects, response);
+      if (expects instanceof PaginatedCollection) {
+         PaginatedCollection<?> expectedPaginatedCollection = (PaginatedCollection<?>) expects;
+         PaginatedCollection<?> actualPaginatedCollection = (PaginatedCollection<?>) response;
+
+         Assert.assertEquals(
+               actualPaginatedCollection.getPageNumber(), expectedPaginatedCollection.getPageNumber(), "pageNumber");
+         Assert.assertEquals(
+               actualPaginatedCollection.getPageCount(), expectedPaginatedCollection.getPageCount(), "pageCount");
+         Assert.assertEquals(
+               actualPaginatedCollection.getTotalCount(), expectedPaginatedCollection.getTotalCount(), "totalCount");
+         Assert.assertEquals(
+               actualPaginatedCollection.getPageSize(), expectedPaginatedCollection.getPageSize(), "pageSize");
+      }
+   }
 }
