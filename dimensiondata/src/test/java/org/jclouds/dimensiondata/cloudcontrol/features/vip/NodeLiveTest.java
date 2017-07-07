@@ -16,17 +16,31 @@
  */
 package org.jclouds.dimensiondata.cloudcontrol.features.vip;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-
+import com.google.common.collect.FluentIterable;
+import org.jclouds.dimensiondata.cloudcontrol.domain.vip.CreateNode;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.Node;
 import org.jclouds.dimensiondata.cloudcontrol.internal.BaseDimensionDataCloudControlApiLiveTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.FluentIterable;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
 
 @Test(groups = "live", testName = "NodeApiLiveTest", singleThreaded = true)
 public class NodeLiveTest extends BaseDimensionDataCloudControlApiLiveTest {
+
+   public void testCreateNodes() throws Exception {
+      String nodeId = api.getNodeApi().createNode(CreateNode.builder()
+            .networkDomainId("your-nd-id-here")
+            .name("node1")
+            .description("description")
+            .healthMonitorId("hm-id-here")
+            .ipv4Address("10.0.1.1")
+            .connectionLimit(10)
+            .connectionRateLimit(100)
+            .status(Node.Status.DISABLED)
+            .build());
+      assertNotNull(nodeId);
+   }
 
    public void testListNodes() throws Exception {
       FluentIterable<Node> nodes = api.getNodeApi().listNodes().concat();
@@ -35,5 +49,4 @@ public class NodeLiveTest extends BaseDimensionDataCloudControlApiLiveTest {
          assertNotNull(node);
       }
    }
-
 }

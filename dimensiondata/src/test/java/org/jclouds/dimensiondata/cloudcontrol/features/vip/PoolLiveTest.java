@@ -19,6 +19,8 @@ package org.jclouds.dimensiondata.cloudcontrol.features.vip;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 
+import com.google.common.collect.ImmutableList;
+import org.jclouds.dimensiondata.cloudcontrol.domain.vip.CreatePool;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.Pool;
 import org.jclouds.dimensiondata.cloudcontrol.internal.BaseDimensionDataCloudControlApiLiveTest;
 import org.testng.annotations.Test;
@@ -27,6 +29,20 @@ import com.google.common.collect.FluentIterable;
 
 @Test(groups = "live", testName = "PoolApiLiveTest", singleThreaded = true)
 public class PoolLiveTest extends BaseDimensionDataCloudControlApiLiveTest {
+
+   public void testCreatePools() throws Exception {
+      String poolId = api.getPoolApi().createPool(CreatePool.builder()
+            .networkDomainId("your-nd-id-here")
+            .name("pool1")
+            .description("description")
+            .loadBalanceMethod(Pool.LoadBalanceMethod.LEAST_CONNECTIONS_MEMBER)
+            .serviceDownAction(Pool.ServiceDownAction.RESELECT)
+            .healthMonitorIds(
+                  ImmutableList.of("hm-id1-here", "hm-id2-here"))
+            .slowRampTime(100)
+            .build());
+      assertNotNull(poolId);
+   }
 
    public void testListPools() throws Exception {
       FluentIterable<Pool> pools = api.getPoolApi().listPools().concat();
