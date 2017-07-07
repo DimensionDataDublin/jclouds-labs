@@ -90,30 +90,30 @@ public abstract class CreateNode {
    public abstract Builder toBuilder();
 
    @AutoValue.Builder
-   public interface Builder {
-      Builder networkDomainId(String networkDomainId);
+   public abstract static class Builder {
+      public abstract Builder networkDomainId(String networkDomainId);
 
-      Builder name(String name);
+      public abstract Builder name(String name);
 
       @Nullable
-      Builder description(String description);
+      public abstract Builder description(String description);
 
       // choice, specify either IPv4 or IPv6
       @Nullable
-      Builder ipv4Address(String ipv4Address);
+      public abstract Builder ipv4Address(String ipv4Address);
 
       @Nullable
-      Builder ipv6Address(String ipv6Address);
+      public abstract Builder ipv6Address(String ipv6Address);
 
-      Builder status(Node.Status status);
+      public abstract Builder status(Node.Status status);
 
-      Builder healthMonitorId(String healthMonitorId);
+      public abstract Builder healthMonitorId(String healthMonitorId);
 
-      Builder connectionLimit(int connectionLimit);
+      public abstract Builder connectionLimit(int connectionLimit);
 
-      Builder connectionRateLimit(int connectionRateLimit);
+      public abstract Builder connectionRateLimit(int connectionRateLimit);
 
-      CreateNode build();
+      public abstract CreateNode build();
    }
 
 }

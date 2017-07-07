@@ -127,39 +127,39 @@ public abstract class Node {
    }
 
    @AutoValue.Builder
-   public interface Builder {
-      Builder id(String id);
+   public abstract static class Builder {
+      public abstract Builder id(String id);
 
-      Builder datacenterId(String datacenterId);
+      public abstract Builder datacenterId(String datacenterId);
 
-      Builder networkDomainId(String networkDomainId);
+      public abstract Builder networkDomainId(String networkDomainId);
 
-      Builder name(String name);
-
-      @Nullable
-      Builder description(String description);
-
-      Builder ipv4Address(String ipv4Address);
-
-      Builder state(State state);
-
-      Builder status(Status status);
+      public abstract Builder name(String name);
 
       @Nullable
-      Builder healthMonitor(HealthMonitor healthMonitor);
+      public abstract Builder description(String description);
+
+      public abstract Builder ipv4Address(String ipv4Address);
+
+      public abstract Builder state(State state);
+
+      public abstract Builder status(Status status);
 
       @Nullable
-      Builder connectionLimit(Integer connectionLimit);
+      public abstract Builder healthMonitor(HealthMonitor healthMonitor);
 
       @Nullable
-      Builder connectionRateLimit(Integer connectionRateLimit);
-
-      Builder createTime(Date createTime);
+      public abstract Builder connectionLimit(Integer connectionLimit);
 
       @Nullable
-      Builder loggingEnabled(Boolean loggingEnabled);
+      public abstract Builder connectionRateLimit(Integer connectionRateLimit);
 
-      Node build();
+      public abstract Builder createTime(Date createTime);
+
+      @Nullable
+      public abstract Builder loggingEnabled(Boolean loggingEnabled);
+
+      public abstract Node build();
    }
 
 }
