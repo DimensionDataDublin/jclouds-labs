@@ -1,0 +1,26 @@
+{
+  "poolMember": [
+    {
+      "networkDomainId": "553f26b6-2a73-42c3-a78b-6116f11291d0",
+      "pool": {
+        "id": "6f2f5d7b-cdd9-4d84-8ad7-999b64a87978",
+        "name": "myDevelopmentPool.1"
+      },
+      "node": {
+        "id": "3c207269-e75e-11e4-811f-005056806999",
+        "name": "10.0.3.13",
+        "ipAddress": "10.0.3.13",
+        "status": "ENABLED"
+      },
+      "status": "DISABLED",
+      "state": "PENDING_DELETE",
+      "createTime": "2015-06-09T10:43:29.000Z",
+      "id": "poolMemberIdFrom2ndPage",
+      "datacenterId": "NA9"
+    }
+  ],
+  "pageNumber": 2,
+  "pageCount": 1,
+  "totalCount": 2,
+  "pageSize": 1
+}
