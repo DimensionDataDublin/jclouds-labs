@@ -1,0 +1,6 @@
+{
+  "poolId": "poolId",
+  "nodeId": "nodeId",
+  "port": 10,
+  "status": "ENABLED"
+}

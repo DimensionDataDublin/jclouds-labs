@@ -1,0 +1,18 @@
+{
+  "operation": "ADD_POOL_MEMBER",
+  "responseCode": "OK",
+  "message": "Pool Member '10.0.3.13:9888' has been added.",
+  "info": [
+    {
+      "name": "poolMemberId",
+      "value": "poolMemberId1"
+    },
+    {
+      "name": "nodeName",
+      "value": "10.0.3.13"
+    }
+  ],
+  "warning": [],
+  "error": [],
+  "requestId": "na9_20160321T074626030-0400_7e9fffe7-190b-46f2-9107-9d52fe57d0ad"
+}

@@ -16,31 +16,18 @@
  */
 package org.jclouds.dimensiondata.cloudcontrol.domain.vip;
 
-import org.jclouds.json.SerializedNames;
+import org.jclouds.dimensiondata.cloudcontrol.domain.PaginatedCollection;
 
-import com.google.auto.value.AutoValue;
+import java.beans.ConstructorProperties;
+import java.util.List;
 
-@AutoValue
-public abstract class HealthMonitor {
-   @SerializedNames({"id", "name"})
-   public static HealthMonitor create(String id, String name) {
-      return builder().id(id).name(name).build();
-   }
+/**
+ * A collection of Pool Members
+ */
+public class PoolMembers extends PaginatedCollection<PoolMember> {
 
-   public static Builder builder() {
-      return new AutoValue_HealthMonitor.Builder();
-   }
-
-   public abstract String id();
-
-   public abstract String name();
-
-   @AutoValue.Builder
-   public abstract static class Builder {
-      public abstract Builder id(String id);
-
-      public abstract Builder name(String name);
-
-      public abstract HealthMonitor build();
+   @ConstructorProperties({ "poolMember", "pageNumber", "pageCount", "totalCount", "pageSize" })
+   public PoolMembers(List<PoolMember> content, Integer pageNumber, Integer pageCount, Integer totalCount, Integer pageSize) {
+      super(content, pageNumber, pageCount, totalCount, pageSize);
    }
 }

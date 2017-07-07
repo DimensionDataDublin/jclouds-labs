@@ -1,0 +1,27 @@
+{
+  "poolMember": [
+    {
+      "networkDomainId": "553f26b6-2a73-42c3-a78b-6116f11291d0",
+      "pool": {
+        "id": "6f2f5d7b-cdd9-4d84-8ad7-999b64a87978",
+        "name": "myDevelopmentPool.1"
+      },
+      "node": {
+        "id": "3c207269-e75e-11e4-811f-005056806999",
+        "name": "10.0.3.13",
+        "ipAddress": "10.0.3.13",
+        "status": "ENABLED"
+      },
+      "port": 9889,
+      "status": "ENABLED",
+      "state": "NORMAL",
+      "createTime": "2015-06-09T11:02:50.000Z",
+      "id": "poolMemberId1",
+      "datacenterId": "NA9"
+    }
+  ],
+  "pageNumber": 1,
+  "pageCount": 1,
+  "totalCount": 2,
+  "pageSize": 1
+}
