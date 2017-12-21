@@ -80,7 +80,7 @@ public class DatacenterToLocationTest {
       assertEquals(location, expected);
       assertEquals(location.getMetadata().get("name"), "US - West");
       assertEquals(location.getMetadata().get("city"), "Santa Clara");
-      assertEquals(location.getMetadata().get("state"), "California");
+      //      assertEquals(location.getMetadata().get("state"), "California");
       assertEquals(location.getMetadata().get("country"), "US");
    }
 }

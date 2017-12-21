@@ -46,8 +46,8 @@ public class DatacenterToLocation implements Function<Datacenter, Location> {
       return new LocationBuilder().id(datacenter.id()).description(datacenter.displayName())
             .parent(getOnlyElement(justProvider.get())).scope(LocationScope.ZONE)
             .iso3166Codes(ImmutableSet.<String>of()).metadata(
-                  ImmutableMap.<String, Object>of("name", datacenter.displayName(), "city", datacenter.city(), "state",
-                        datacenter.state(), "country", datacenter.country())).build();
+                  ImmutableMap.<String, Object>of("name", datacenter.displayName(), "city", datacenter.city(), /*"state",
+                        datacenter.state(), */"country", datacenter.country())).build();
    }
 
 }
