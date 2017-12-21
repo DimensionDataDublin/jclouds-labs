@@ -16,19 +16,12 @@
  */
 package org.jclouds.azurecompute.compute.strategy;
 
-import static com.google.common.base.MoreObjects.firstNonNull;
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.notNull;
-import static com.google.common.collect.Iterables.tryFind;
-import static java.lang.String.format;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
-
-import javax.inject.Named;
-import javax.inject.Singleton;
-
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Multimap;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.Inject;
 import org.jclouds.azurecompute.AzureComputeApi;
 import org.jclouds.azurecompute.compute.config.AzureComputeServiceContextModule.AzureComputeConstants;
 import org.jclouds.azurecompute.compute.options.AzureComputeTemplateOptions;
@@ -45,12 +38,18 @@ import org.jclouds.compute.strategy.CustomizeNodeAndAddToGoodMapOrPutExceptionIn
 import org.jclouds.compute.strategy.ListNodesStrategy;
 import org.jclouds.compute.strategy.impl.CreateNodesWithGroupEncodedIntoNameThenAddToSet;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Multimap;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static com.google.common.base.MoreObjects.firstNonNull;
+import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.notNull;
+import static com.google.common.collect.Iterables.tryFind;
+import static java.lang.String.format;
 
 @Singleton
 public class GetOrCreateStorageServiceAndVirtualNetworkThenCreateNodes
@@ -97,7 +96,7 @@ public class GetOrCreateStorageServiceAndVirtualNetworkThenCreateNodes
 
       final AzureComputeTemplateOptions templateOptions = template.getOptions().as(AzureComputeTemplateOptions.class);
       final String location = template.getLocation().getId();
-      final String storageAccountName = templateOptions.getStorageAccountName();
+      final String storageAccountName = templateOptions.g etStorageAccountName();
       final String storageAccountType = firstNonNull(templateOptions.getStorageAccountType(), DEFAULT_STORAGE_SERVICE_TYPE);
       final String virtualNetworkName = templateOptions.getVirtualNetworkName();
 

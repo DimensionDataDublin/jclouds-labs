@@ -17,18 +17,37 @@
 package org.jclouds.dimensiondata.cloudcontrol.config;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.inject.TypeLiteral;
+import org.jclouds.compute.ComputeService;
+import org.jclouds.compute.ComputeServiceAdapter;
+import org.jclouds.compute.domain.Hardware;
+import org.jclouds.compute.domain.Image;
+import org.jclouds.compute.domain.OsFamily;
+import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.reference.ComputeServiceConstants;
+import org.jclouds.compute.strategy.CreateNodesInGroupThenAddToSet;
 import org.jclouds.dimensiondata.cloudcontrol.DimensionDataCloudControlApi;
+import org.jclouds.dimensiondata.cloudcontrol.compute.DimensionDataCloudControlComputeService;
+import org.jclouds.dimensiondata.cloudcontrol.compute.DimensionDataCloudControlServiceAdapter;
+import org.jclouds.dimensiondata.cloudcontrol.compute.functions.BaseImageToHardware;
+import org.jclouds.dimensiondata.cloudcontrol.compute.functions.BaseImageToImage;
+import org.jclouds.dimensiondata.cloudcontrol.compute.functions.OperatingSystemToOsFamily;
+import org.jclouds.dimensiondata.cloudcontrol.domain.BaseImage;
+import org.jclouds.dimensiondata.cloudcontrol.domain.Datacenter;
 import org.jclouds.dimensiondata.cloudcontrol.domain.NetworkDomain;
+import org.jclouds.dimensiondata.cloudcontrol.domain.OperatingSystem;
 import org.jclouds.dimensiondata.cloudcontrol.domain.Server;
 import org.jclouds.dimensiondata.cloudcontrol.domain.State;
 import org.jclouds.dimensiondata.cloudcontrol.domain.Vlan;
 import org.jclouds.dimensiondata.cloudcontrol.domain.VmTools;
+import org.jclouds.dimensiondata.cloudcontrol.domain.internal.ServerWithExternalIp;
 import org.jclouds.dimensiondata.cloudcontrol.features.NetworkApi;
 import org.jclouds.dimensiondata.cloudcontrol.features.ServerApi;
+import org.jclouds.domain.Location;
 import org.jclouds.logging.Logger;
 
 import javax.annotation.Resource;
@@ -55,6 +74,20 @@ public class DimensionDataCloudControlComputeServiceContextModule extends Abstra
 
    @Override
    protected void configure() {
+      bind(new TypeLiteral<ComputeServiceAdapter<ServerWithExternalIp, BaseImage, BaseImage, Datacenter>>() {
+      }).to(DimensionDataCloudControlServiceAdapter.class);
+
+      bind(ComputeService.class).to(DimensionDataCloudControlComputeService.class);
+      bind(new TypeLiteral<Function<BaseImage, Image>>() {
+      }).to(BaseImageToImage.class);
+      bind(new TypeLiteral<Function<OperatingSystem, OsFamily>>() {
+      }).to(OperatingSystemToOsFamily.class);
+      bind(new TypeLiteral<Function<BaseImage, Hardware>>() {
+      }).to(BaseImageToHardware.class);
+      bind(new TypeLiteral<Function<Datacenter, Location>>() {
+      }).to(DatacenterToLocation.class);
+      bind(TemplateOptions.class).to(DimensionDataCloudControlTemplateOptions.class);
+      bind(CreateNodesInGroupThenAddToSet.class).to(GetOrCreateNetworkDomainThenCreateNodes.class);
 
    }
 
