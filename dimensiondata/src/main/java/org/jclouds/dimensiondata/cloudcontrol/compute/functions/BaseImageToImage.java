@@ -37,12 +37,12 @@ import java.util.regex.Pattern;
 @Singleton
 public class BaseImageToImage implements Function<BaseImage, Image> {
 
-   private final Supplier<Set<Location>> locations;
+   private final Supplier<Set<? extends Location>> locations;
    private final Function<org.jclouds.dimensiondata.cloudcontrol.domain.OperatingSystem, OsFamily> operatingSystemToOsFamily;
    private static final Pattern OS_VERSION_EXTRACT_PATTERN = Pattern.compile("[A-Z]+(\\w+)(32|64)");
 
    @Inject
-   BaseImageToImage(@Memoized final Supplier<Set<Location>> locations,
+   BaseImageToImage(@Memoized final Supplier<Set<? extends Location>> locations,
          Function<org.jclouds.dimensiondata.cloudcontrol.domain.OperatingSystem, OsFamily> operatingSystemToOsFamily) {
       this.locations = locations;
       this.operatingSystemToOsFamily = operatingSystemToOsFamily;

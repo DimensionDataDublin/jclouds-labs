@@ -44,6 +44,7 @@ import java.util.Set;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
 import static java.lang.String.format;
+import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 import static org.jclouds.dimensiondata.cloudcontrol.compute.options.DimensionDataCloudControlTemplateOptions.DEFAULT_NETWORK_DOMAIN_NAME;
 import static org.jclouds.dimensiondata.cloudcontrol.compute.options.DimensionDataCloudControlTemplateOptions.DEFAULT_VLAN_NAME;
 import static org.jclouds.dimensiondata.cloudcontrol.config.DimensionDataCloudControlComputeServiceContextModule.NETWORK_DOMAIN_NORMAL_PREDICATE;
@@ -60,7 +61,7 @@ public class GetOrCreateNetworkDomainThenCreateNodes extends CreateNodesWithGrou
    @Inject
    protected GetOrCreateNetworkDomainThenCreateNodes(final CreateNodeWithGroupEncodedIntoName addNodeWithGroupStrategy,
          final ListNodesStrategy listNodesStrategy, final GroupNamingConvention.Factory namingConvention,
-         final ListeningExecutorService userExecutor,
+         @Named(PROPERTY_USER_THREADS) final ListeningExecutorService userExecutor,
          final CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap.Factory customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory,
          final DimensionDataCloudControlApi api, final ComputeServiceConstants.Timeouts timeouts,
          @Named(NETWORK_DOMAIN_NORMAL_PREDICATE) final Predicate<String> networkDomainNormalPredicate,

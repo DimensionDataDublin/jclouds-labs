@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.jclouds.dimensiondata.cloudcontrol.compute;
 
 import com.google.common.base.Objects;
@@ -31,7 +47,6 @@ import org.jclouds.dimensiondata.cloudcontrol.domain.Placement;
 import org.jclouds.dimensiondata.cloudcontrol.domain.internal.ServerWithExternalIp;
 import org.jclouds.dimensiondata.cloudcontrol.domain.options.CloneServerOptions;
 import org.jclouds.dimensiondata.cloudcontrol.domain.options.CreateServerOptions;
-import org.jclouds.dimensiondata.cloudcontrol.utils.DimensionDataCloudControlResponseUtils;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.logging.Logger;
 
@@ -46,12 +61,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static java.lang.String.format;
 import static org.jclouds.compute.reference.ComputeServiceConstants.COMPUTE_LOGGER;
+import static org.jclouds.dimensiondata.cloudcontrol.config.DimensionDataCloudControlComputeServiceContextModule.SERVER_STARTED_PREDICATE;
 import static org.jclouds.dimensiondata.cloudcontrol.utils.DimensionDataCloudControlResponseUtils.generateFirewallRuleName;
 import static org.jclouds.dimensiondata.cloudcontrol.utils.DimensionDataCloudControlResponseUtils.generatePortListName;
 import static org.jclouds.dimensiondata.cloudcontrol.utils.DimensionDataCloudControlResponseUtils.simplifyPorts;
 
-public class DimensionDataCloudControlServiceAdapter
-      implements ComputeServiceAdapter<ServerWithExternalIp, BaseImage, BaseImage, Datacenter> {
+public class DimensionDataCloudControlServiceAdapter implements ComputeServiceAdapter<ServerWithExternalIp, BaseImage, BaseImage, Datacenter> {
 
    private static final String DEFAULT_LOGIN_PASSWORD = "P$$ssWwrrdGoDd!";
    private static final String DEFAULT_LOGIN_USER = "root";
@@ -66,21 +81,22 @@ public class DimensionDataCloudControlServiceAdapter
    private final DimensionDataCloudControlApi api;
    private final ComputeServiceConstants.Timeouts timeouts;
    protected final CleanupServer cleanupServer;
+   private Predicate<String> provideServerStartedPredicate;
 
    @Inject
-   DimensionDataCloudControlServiceAdapter(DimensionDataCloudControlApi api, ComputeServiceConstants.Timeouts timeouts,
-         CleanupServer cleanupServer) {
+   DimensionDataCloudControlServiceAdapter(final DimensionDataCloudControlApi api,
+         final ComputeServiceConstants.Timeouts timeouts, final CleanupServer cleanupServer,
+         @Named(SERVER_STARTED_PREDICATE) Predicate<String> provideServerStartedPredicate) {
       this.api = checkNotNull(api, "api");
       this.timeouts = timeouts;
       this.cleanupServer = cleanupServer;
+      this.provideServerStartedPredicate = provideServerStartedPredicate;
    }
 
    @Override
-   public NodeAndInitialCredentials<ServerWithExternalIp> createNodeWithGroupEncodedIntoName(String group,
-         final String name, Template template) {
+   public NodeAndInitialCredentials<ServerWithExternalIp> createNodeWithGroupEncodedIntoName(String group, final String name, Template template) {
       // Infer the login credentials from the VM, defaulting to "root" user
-      LoginCredentials.Builder credsBuilder = LoginCredentials.builder().user(DEFAULT_LOGIN_USER)
-            .password(DEFAULT_LOGIN_PASSWORD);
+      LoginCredentials.Builder credsBuilder = LoginCredentials.builder().user(DEFAULT_LOGIN_USER).password(DEFAULT_LOGIN_PASSWORD);
       // If login overrides are supplied in TemplateOptions, always prefer those.
       String loginPassword = Objects.firstNonNull(template.getOptions().getLoginPassword(), DEFAULT_LOGIN_PASSWORD);
       if (loginPassword != null) {
@@ -91,8 +107,7 @@ public class DimensionDataCloudControlServiceAdapter
       Image image = checkNotNull(template.getImage(), "template image must not be null");
       Hardware hardware = checkNotNull(template.getHardware(), "template hardware must not be null");
 
-      DimensionDataCloudControlTemplateOptions templateOptions = DimensionDataCloudControlTemplateOptions.class
-            .cast(template.getOptions());
+      DimensionDataCloudControlTemplateOptions templateOptions = DimensionDataCloudControlTemplateOptions.class.cast(template.getOptions());
 
       String networkDomainId = templateOptions.getNetworkDomainId();
       String vlanId = templateOptions.getVlanId();
@@ -105,20 +120,19 @@ public class DimensionDataCloudControlServiceAdapter
       // TODO add all the volumes as disks
       if (template.getHardware().getVolumes() != null) {
          Volume volume = template.getHardware().getVolumes().get(0);
-         disks.add(Disk.builder().scsiId(Integer.valueOf(volume.getDevice())).sizeGb(volume.getSize().intValue())
-               .speed("STANDARD").build());
+         disks.add(Disk.builder().scsiId(Integer.valueOf(volume.getDevice())).sizeGb(volume.getSize().intValue()).speed("STANDARD").build());
       }
 
-      CreateServerOptions createServerOptions = CreateServerOptions.builder()
-            .memoryGb(template.getHardware().getRam() / 1024)
+      CreateServerOptions createServerOptions = CreateServerOptions.builder().memoryGb(template.getHardware().getRam() / 1024)
             .cpu(buildCpuFromProcessor(template.getHardware().getProcessors())).build();
 
       String serverId = api.getServerApi()
             .deployServer(name, imageId, Boolean.TRUE, networkInfo, loginPassword, disks, createServerOptions);
 
-      String message = format("Server(%s) is not ready within %d ms.", serverId, timeouts.nodeRunning);
-      DimensionDataCloudControlResponseUtils
-            .waitForServerStatus(api.getServerApi(), serverId, true, true, timeouts.nodeRunning, message);
+      if (!provideServerStartedPredicate.apply(serverId)) {
+         throw new IllegalStateException(
+               format("Server(%s) is not ready within %d ms.", serverId, timeouts.nodeRunning));
+      }
 
       if (group != null) {
          //         assignNodeToGroup(group, serverId);
@@ -159,8 +173,7 @@ public class DimensionDataCloudControlServiceAdapter
                      Boolean.TRUE, Placement.builder().position("LAST").build());
          if (firewallRuleId.isEmpty()) {
             // rollback
-            String firewallRuleErrorMessage = String
-                  .format("Cannot create a firewall rule %s. Rolling back ...", portListId);
+            String firewallRuleErrorMessage = String.format("Cannot create a firewall rule %s. Rolling back ...", portListId);
             logger.warn(firewallRuleErrorMessage);
             destroyNode(serverId);
             throw new IllegalStateException(firewallRuleErrorMessage);
@@ -171,8 +184,7 @@ public class DimensionDataCloudControlServiceAdapter
    }
 
    private CPU buildCpuFromProcessor(final List<? extends Processor> processor) {
-      return CPU.builder().count(processor.size())
-            .coresPerSocket(Double.valueOf(processor.get(0).getCores()).intValue())
+      return CPU.builder().count(processor.size()).coresPerSocket(Double.valueOf(processor.get(0).getCores()).intValue())
             .speed(CpuSpeed.fromSpeed(processor.get(0).getSpeed()).getDimensionDataSpeed()).build();
    }
 

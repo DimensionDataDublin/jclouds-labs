@@ -146,6 +146,10 @@
                                             ${test.dimensiondata-cloudcontrol.credential}
                                         </test.dimensiondata-cloudcontrol.credential>
                                         <jclouds.zones>NA9</jclouds.zones>
+                                        <jclouds.compute.timeout.node-terminated>1800000
+                                        </jclouds.compute.timeout.node-terminated>
+                                        <jclouds.compute.timeout.node-suspended>1800000
+                                        </jclouds.compute.timeout.node-suspended>
                                     </systemPropertyVariables>
                                 </configuration>
                             </execution>

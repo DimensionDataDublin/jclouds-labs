@@ -20,6 +20,8 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.util.concurrent.ListeningExecutorService;
+import org.jclouds.Constants;
+import org.jclouds.collect.Memoized;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.callables.RunScriptOnNode;
 import org.jclouds.compute.domain.Hardware;
@@ -47,6 +49,7 @@ import org.jclouds.domain.Location;
 import org.jclouds.scriptbuilder.functions.InitAdminAccess;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.Map;
@@ -54,6 +57,9 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
 
 @Singleton
 public class DimensionDataCloudControlComputeService extends BaseComputeService {
@@ -62,18 +68,20 @@ public class DimensionDataCloudControlComputeService extends BaseComputeService 
 
    @Inject
    DimensionDataCloudControlComputeService(ComputeServiceContext context, Map<String, Credentials> credentialStore,
-         Supplier<Set<? extends Image>> images, Supplier<Set<? extends Hardware>> hardwareProfiles,
-         Supplier<Set<? extends Location>> locations, ListNodesStrategy listNodesStrategy,
+         @Memoized Supplier<Set<? extends Image>> images, @Memoized Supplier<Set<? extends Hardware>> hardwareProfiles,
+         @Memoized Supplier<Set<? extends Location>> locations, ListNodesStrategy listNodesStrategy,
          GetImageStrategy getImageStrategy, GetNodeMetadataStrategy getNodeMetadataStrategy,
          CreateNodesInGroupThenAddToSet runNodesAndAddToSetStrategy, RebootNodeStrategy rebootNodeStrategy,
          DestroyNodeStrategy destroyNodeStrategy, ResumeNodeStrategy resumeNodeStrategy,
          SuspendNodeStrategy suspendNodeStrategy, Provider<TemplateBuilder> templateBuilderProvider,
-         Provider<TemplateOptions> templateOptionsProvider, Predicate<AtomicReference<NodeMetadata>> nodeRunning,
-         Predicate<AtomicReference<NodeMetadata>> nodeTerminated,
-         Predicate<AtomicReference<NodeMetadata>> nodeSuspended,
+         @Named("DEFAULT") Provider<TemplateOptions> templateOptionsProvider,
+         @Named(TIMEOUT_NODE_RUNNING) Predicate<AtomicReference<NodeMetadata>> nodeRunning,
+         @Named(TIMEOUT_NODE_TERMINATED) Predicate<AtomicReference<NodeMetadata>> nodeTerminated,
+         @Named(TIMEOUT_NODE_SUSPENDED) Predicate<AtomicReference<NodeMetadata>> nodeSuspended,
          InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory, InitAdminAccess initAdminAccess,
          RunScriptOnNode.Factory runScriptOnNodeFactory, PersistNodeCredentials persistNodeCredentials,
-         ComputeServiceConstants.Timeouts timeouts, ListeningExecutorService userExecutor,
+         ComputeServiceConstants.Timeouts timeouts,
+         @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
          Optional<ImageExtension> imageExtension, Optional<SecurityGroupExtension> securityGroupExtension,
          CleanupServer cleanupServer) {
       super(context, credentialStore, images, hardwareProfiles, locations, listNodesStrategy, getImageStrategy,

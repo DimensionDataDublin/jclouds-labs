@@ -45,7 +45,8 @@ import static org.testng.AssertJUnit.assertTrue;
 public class BaseImageToImageTest {
 
    private final Location zone = new LocationBuilder().id("EU6").description("EU6").scope(LocationScope.ZONE).build();
-   private final Supplier<Set<Location>> locations = Suppliers.<Set<Location>>ofInstance(ImmutableSet.of(zone));
+   private final Supplier<Set<? extends Location>> locations = Suppliers.<Set<? extends Location>>ofInstance(
+         ImmutableSet.of(zone));
    private BaseImageToImage baseImageToImage;
 
    @BeforeMethod
