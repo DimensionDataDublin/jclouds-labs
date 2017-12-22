@@ -18,9 +18,11 @@ package org.jclouds.dimensiondata.cloudcontrol.compute;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import org.jclouds.collect.Memoized;
 import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Image;
@@ -47,6 +49,7 @@ import org.jclouds.dimensiondata.cloudcontrol.domain.Placement;
 import org.jclouds.dimensiondata.cloudcontrol.domain.internal.ServerWithExternalIp;
 import org.jclouds.dimensiondata.cloudcontrol.domain.options.CloneServerOptions;
 import org.jclouds.dimensiondata.cloudcontrol.domain.options.CreateServerOptions;
+import org.jclouds.domain.Location;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.logging.Logger;
 
@@ -56,6 +59,7 @@ import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -66,7 +70,8 @@ import static org.jclouds.dimensiondata.cloudcontrol.utils.DimensionDataCloudCon
 import static org.jclouds.dimensiondata.cloudcontrol.utils.DimensionDataCloudControlResponseUtils.generatePortListName;
 import static org.jclouds.dimensiondata.cloudcontrol.utils.DimensionDataCloudControlResponseUtils.simplifyPorts;
 
-public class DimensionDataCloudControlServiceAdapter implements ComputeServiceAdapter<ServerWithExternalIp, BaseImage, BaseImage, Datacenter> {
+public class DimensionDataCloudControlServiceAdapter
+      implements ComputeServiceAdapter<ServerWithExternalIp, BaseImage, BaseImage, Datacenter> {
 
    private static final String DEFAULT_LOGIN_PASSWORD = "P$$ssWwrrdGoDd!";
    private static final String DEFAULT_LOGIN_USER = "root";
@@ -82,21 +87,26 @@ public class DimensionDataCloudControlServiceAdapter implements ComputeServiceAd
    private final ComputeServiceConstants.Timeouts timeouts;
    protected final CleanupServer cleanupServer;
    private Predicate<String> provideServerStartedPredicate;
+   private Supplier<Set<? extends Location>> locations;
 
    @Inject
    DimensionDataCloudControlServiceAdapter(final DimensionDataCloudControlApi api,
          final ComputeServiceConstants.Timeouts timeouts, final CleanupServer cleanupServer,
-         @Named(SERVER_STARTED_PREDICATE) Predicate<String> provideServerStartedPredicate) {
+         @Named(SERVER_STARTED_PREDICATE) Predicate<String> provideServerStartedPredicate,
+         @Memoized Supplier<Set<? extends Location>> locations) {
       this.api = checkNotNull(api, "api");
       this.timeouts = timeouts;
       this.cleanupServer = cleanupServer;
       this.provideServerStartedPredicate = provideServerStartedPredicate;
+      this.locations = locations;
    }
 
    @Override
-   public NodeAndInitialCredentials<ServerWithExternalIp> createNodeWithGroupEncodedIntoName(String group, final String name, Template template) {
+   public NodeAndInitialCredentials<ServerWithExternalIp> createNodeWithGroupEncodedIntoName(String group,
+         final String name, Template template) {
       // Infer the login credentials from the VM, defaulting to "root" user
-      LoginCredentials.Builder credsBuilder = LoginCredentials.builder().user(DEFAULT_LOGIN_USER).password(DEFAULT_LOGIN_PASSWORD);
+      LoginCredentials.Builder credsBuilder = LoginCredentials.builder().user(DEFAULT_LOGIN_USER)
+            .password(DEFAULT_LOGIN_PASSWORD);
       // If login overrides are supplied in TemplateOptions, always prefer those.
       String loginPassword = Objects.firstNonNull(template.getOptions().getLoginPassword(), DEFAULT_LOGIN_PASSWORD);
       if (loginPassword != null) {
@@ -107,7 +117,8 @@ public class DimensionDataCloudControlServiceAdapter implements ComputeServiceAd
       Image image = checkNotNull(template.getImage(), "template image must not be null");
       Hardware hardware = checkNotNull(template.getHardware(), "template hardware must not be null");
 
-      DimensionDataCloudControlTemplateOptions templateOptions = DimensionDataCloudControlTemplateOptions.class.cast(template.getOptions());
+      DimensionDataCloudControlTemplateOptions templateOptions = DimensionDataCloudControlTemplateOptions.class
+            .cast(template.getOptions());
 
       String networkDomainId = templateOptions.getNetworkDomainId();
       String vlanId = templateOptions.getVlanId();
@@ -120,10 +131,12 @@ public class DimensionDataCloudControlServiceAdapter implements ComputeServiceAd
       // TODO add all the volumes as disks
       if (template.getHardware().getVolumes() != null) {
          Volume volume = template.getHardware().getVolumes().get(0);
-         disks.add(Disk.builder().scsiId(Integer.valueOf(volume.getDevice())).sizeGb(volume.getSize().intValue()).speed("STANDARD").build());
+         disks.add(Disk.builder().scsiId(Integer.valueOf(volume.getDevice())).sizeGb(volume.getSize().intValue())
+               .speed("STANDARD").build());
       }
 
-      CreateServerOptions createServerOptions = CreateServerOptions.builder().memoryGb(template.getHardware().getRam() / 1024)
+      CreateServerOptions createServerOptions = CreateServerOptions.builder()
+            .memoryGb(template.getHardware().getRam() / 1024)
             .cpu(buildCpuFromProcessor(template.getHardware().getProcessors())).build();
 
       String serverId = api.getServerApi()
@@ -173,7 +186,8 @@ public class DimensionDataCloudControlServiceAdapter implements ComputeServiceAd
                      Boolean.TRUE, Placement.builder().position("LAST").build());
          if (firewallRuleId.isEmpty()) {
             // rollback
-            String firewallRuleErrorMessage = String.format("Cannot create a firewall rule %s. Rolling back ...", portListId);
+            String firewallRuleErrorMessage = String
+                  .format("Cannot create a firewall rule %s. Rolling back ...", portListId);
             logger.warn(firewallRuleErrorMessage);
             destroyNode(serverId);
             throw new IllegalStateException(firewallRuleErrorMessage);
@@ -184,7 +198,8 @@ public class DimensionDataCloudControlServiceAdapter implements ComputeServiceAd
    }
 
    private CPU buildCpuFromProcessor(final List<? extends Processor> processor) {
-      return CPU.builder().count(processor.size()).coresPerSocket(Double.valueOf(processor.get(0).getCores()).intValue())
+      return CPU.builder().count(processor.size())
+            .coresPerSocket(Double.valueOf(processor.get(0).getCores()).intValue())
             .speed(CpuSpeed.fromSpeed(processor.get(0).getSpeed()).getDimensionDataSpeed()).build();
    }
 
@@ -196,8 +211,10 @@ public class DimensionDataCloudControlServiceAdapter implements ComputeServiceAd
    @Override
    public Iterable<BaseImage> listImages() {
       Collection<BaseImage> osAndCustomerImages = new ArrayList<BaseImage>();
-      osAndCustomerImages.addAll(api.getServerImageApi().listOsImages().concat().toList());
-      osAndCustomerImages.addAll(api.getServerImageApi().listCustomerImages().concat().toList());
+      osAndCustomerImages.addAll(
+            api.getServerImageApi().listOsImagesForDatacenterId(locations.get().iterator().next().getId()).concat()
+                  .toList());
+      //      osAndCustomerImages.addAll(api.getServerImageApi().listCustomerImages().concat().toList());
       return osAndCustomerImages;
    }
 

@@ -46,6 +46,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 @RequestFilters({ BasicAuthentication.class, OrganisationIdFilter.class })
@@ -86,6 +87,14 @@ public interface ServerImageApi {
    @RequestFilters(DatacenterIdFilter.class)
    @Fallback(Fallbacks.EmptyPagedIterableOnNotFoundOr404.class)
    PagedIterable<CustomerImage> listCustomerImages();
+
+   @Named("image:listOsImagesForDatacenterId")
+   @GET
+   @Path("/osImage")
+   @Transform(ParseOsImages.ToPagedIterable.class)
+   @ResponseParser(ParseOsImages.class)
+   @Fallback(Fallbacks.EmptyPagedIterableOnNotFoundOr404.class)
+   PagedIterable<OsImage> listOsImagesForDatacenterId(@QueryParam("datacenterId") String datacenterId);
 
    @Named("image:getOsImage")
    @GET

@@ -23,6 +23,9 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 import java.net.URI;
 import java.util.Properties;
 
+import static org.jclouds.compute.config.ComputeServiceProperties.IMAGE_ID;
+import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
+
 /**
  * Implementation of {@link ProviderMetadata} for DimensionData CloudController.
  */
@@ -48,6 +51,9 @@ public class DimensionDataCloudControlProviderMetadata extends BaseProviderMetad
 
    public static Properties defaultProperties() {
       Properties properties = DimensionDataCloudControlApiMetadata.defaultProperties();
+      properties.put(TEMPLATE, "osVersionMatches=16,osFamily=UBUNTU,os64Bit=true");
+      properties.put(IMAGE_ID, "1f7c4960-527c-4e80-871a-152fe2a416ff");
+
       return properties;
    }
 

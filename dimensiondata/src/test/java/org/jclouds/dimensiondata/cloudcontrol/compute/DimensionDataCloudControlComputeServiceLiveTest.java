@@ -20,7 +20,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.internal.BaseComputeServiceLiveTest;
@@ -46,7 +45,7 @@ public class DimensionDataCloudControlComputeServiceLiveTest extends BaseCompute
 
    @Override
    protected Template buildTemplate(TemplateBuilder templateBuilder) {
-      return super.buildTemplate(templateBuilder.locationId("NA9").osFamily(OsFamily.UBUNTU).osVersionMatches("16.04"));
+      return super.buildTemplate(templateBuilder.locationId("NA9"));
    }
 
    @Override

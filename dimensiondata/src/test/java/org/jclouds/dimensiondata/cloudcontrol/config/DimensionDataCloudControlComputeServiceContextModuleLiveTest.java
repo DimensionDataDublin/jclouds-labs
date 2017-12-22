@@ -16,10 +16,21 @@
  */
 package org.jclouds.dimensiondata.cloudcontrol.config;
 
+import com.google.inject.Module;
 import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
+import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;
 
 @Test(groups = "live", testName = "DimensionDataCloudControlComputeServiceContextModuleLiveTest")
 public class DimensionDataCloudControlComputeServiceContextModuleLiveTest extends BaseComputeServiceContextLiveTest {
+
+   @Override
+   protected Module getSshModule() {
+      return new SshjSshClientModule();
+   }
+
+   public DimensionDataCloudControlComputeServiceContextModuleLiveTest() {
+      provider = "dimensiondata-cloudcontrol";
+   }
 
 }
