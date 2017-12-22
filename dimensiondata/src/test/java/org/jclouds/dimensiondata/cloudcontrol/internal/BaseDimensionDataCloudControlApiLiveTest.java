@@ -56,18 +56,18 @@ public class BaseDimensionDataCloudControlApiLiveTest extends BaseApiLiveTest<Di
 
    private static final Set<Module> modules = ImmutableSet.<Module>of(new ExecutorServiceModule(sameThreadExecutor()));
 
-   protected static final String PREPARED_CUSTOMER_IMAGE_ID = "fb438e00-10f8-47ac-a434-f3f9461c3a76";
+   public static final String PREPARED_CUSTOMER_IMAGE_ID = "fb438e00-10f8-47ac-a434-f3f9461c3a76";
 
-   protected static final String NETWORK_DOMAIN_ID = System
+   public static final String NETWORK_DOMAIN_ID = System
          .getProperty("networkDomainId", "690de302-bb80-49c6-b401-8c02bbefb945");
-   protected static final String VLAN_ID = System.getProperty("vlanId", "6b25b02e-d3a2-4e69-8ca7-9bab605deebd");
-   protected static final String IMAGE_ID = System.getProperty("imageId", "4c02126c-32fc-4b4c-9466-9824c1b5aa0f");
+   public static final String VLAN_ID = System.getProperty("vlanId", "6b25b02e-d3a2-4e69-8ca7-9bab605deebd");
+   public static final String IMAGE_ID = System.getProperty("imageId", "4c02126c-32fc-4b4c-9466-9824c1b5aa0f");
 
-   protected static final String PREPARED_NETWORK_DOMAIN_ID = System
+   public static final String PREPARED_NETWORK_DOMAIN_ID = System
          .getProperty("networkDomainId", "d122949b-8990-46d6-98f0-91c8676fc720");
-   protected static final String PREPARED_PRIVATE_IPV4_ADDRESS = "10.0.0.6";
+   public static final String PREPARED_PRIVATE_IPV4_ADDRESS = "10.0.0.6";
    protected static ApiContext<DimensionDataCloudControlApi> ctx;
-   protected static Set<String> DATACENTERS;
+   public static Set<String> DATACENTERS;
 
    @BeforeClass
    public static void setUp() {

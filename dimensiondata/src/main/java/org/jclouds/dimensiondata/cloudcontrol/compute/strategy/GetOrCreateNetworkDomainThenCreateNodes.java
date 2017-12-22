@@ -88,7 +88,9 @@ public class GetOrCreateNetworkDomainThenCreateNodes extends CreateNodesWithGrou
             DEFAULT_VLAN_NAME);
       templateOptions.networkDomainName(networkDomainName);
       String networkDomainId = tryCreateOrGetExistingNetworkDomainId(template.getLocation().getId(), networkDomainName);
+      templateOptions.networkDomainId(networkDomainId);
       String vlanId = tryCreateOrGetExistingVlanId(networkDomainId, vlanName, templateOptions);
+      templateOptions.vlanId(vlanId);
       templateOptions.networks(vlanName);
       return super
             .execute(group, count, new TemplateWithNetworkIds(template, networkDomainId, vlanId), goodNodes, badNodes,

@@ -16,7 +16,11 @@
  */
 package org.jclouds.dimensiondata.cloudcontrol.compute;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
+import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.internal.BaseComputeServiceLiveTest;
@@ -42,7 +46,23 @@ public class DimensionDataCloudControlComputeServiceLiveTest extends BaseCompute
 
    @Override
    protected Template buildTemplate(TemplateBuilder templateBuilder) {
-      return super.buildTemplate(templateBuilder.locationId("NA9"));
+      return super.buildTemplate(templateBuilder.locationId("NA9").osFamily(OsFamily.UBUNTU).osVersionMatches("16.04"));
+   }
+
+   @Override
+   public void testOptionToNotBlock() throws Exception {
+      // DimensionData ComputeService implementation has to block until the node
+      // is provisioned, to be able to return it.
+   }
+
+   @Override
+   protected void checkTagsInNodeEquals(NodeMetadata node, ImmutableSet<String> tags) {
+      // TODO implement (DimensionData does support tags)
+   }
+
+   @Override
+   protected void checkUserMetadataContains(NodeMetadata node, ImmutableMap<String, String> userMetadata) {
+      // TODO implement using tags
    }
 
 }
