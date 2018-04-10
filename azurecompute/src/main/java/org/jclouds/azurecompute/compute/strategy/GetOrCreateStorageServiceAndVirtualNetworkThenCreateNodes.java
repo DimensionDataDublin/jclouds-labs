@@ -96,7 +96,7 @@ public class GetOrCreateStorageServiceAndVirtualNetworkThenCreateNodes
 
       final AzureComputeTemplateOptions templateOptions = template.getOptions().as(AzureComputeTemplateOptions.class);
       final String location = template.getLocation().getId();
-      final String storageAccountName = templateOptions.g etStorageAccountName();
+      final String storageAccountName = templateOptions.getStorageAccountName();
       final String storageAccountType = firstNonNull(templateOptions.getStorageAccountType(), DEFAULT_STORAGE_SERVICE_TYPE);
       final String virtualNetworkName = templateOptions.getVirtualNetworkName();
 
