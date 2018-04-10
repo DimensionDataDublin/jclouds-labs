@@ -18,6 +18,7 @@ package org.jclouds.dimensiondata.cloudcontrol.compute.options;
 
 import org.testng.annotations.Test;
 
+// TODO TF figure out why these tests are commented out.
 @Test(groups = "unit", testName = "DimensionDataCloudControlTemplateOptionsTest")
 public class DimensionDataCloudControlTemplateOptionsTest {
 
