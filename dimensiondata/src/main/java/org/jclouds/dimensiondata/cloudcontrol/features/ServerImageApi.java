@@ -29,7 +29,6 @@ import org.jclouds.dimensiondata.cloudcontrol.domain.CustomerImages;
 import org.jclouds.dimensiondata.cloudcontrol.domain.OsImage;
 import org.jclouds.dimensiondata.cloudcontrol.domain.OsImages;
 import org.jclouds.dimensiondata.cloudcontrol.domain.PaginatedCollection;
-import org.jclouds.dimensiondata.cloudcontrol.filters.DatacenterIdFilter;
 import org.jclouds.dimensiondata.cloudcontrol.filters.OrganisationIdFilter;
 import org.jclouds.dimensiondata.cloudcontrol.options.PaginationOptions;
 import org.jclouds.http.filters.BasicAuthentication;
@@ -58,7 +57,7 @@ public interface ServerImageApi {
    @GET
    @Path("/osImage")
    @ResponseParser(ParseOsImages.class)
-   @RequestFilters(DatacenterIdFilter.class)
+   //   @RequestFilters(DatacenterIdFilter.class)
    @Fallback(Fallbacks.EmptyIterableWithMarkerOnNotFoundOr404.class)
    PaginatedCollection<OsImage> listOsImages(PaginationOptions options);
 
@@ -67,7 +66,7 @@ public interface ServerImageApi {
    @Path("/osImage")
    @Transform(ParseOsImages.ToPagedIterable.class)
    @ResponseParser(ParseOsImages.class)
-   @RequestFilters(DatacenterIdFilter.class)
+   //   @RequestFilters(DatacenterIdFilter.class)
    @Fallback(Fallbacks.EmptyPagedIterableOnNotFoundOr404.class)
    PagedIterable<OsImage> listOsImages();
 
@@ -75,7 +74,7 @@ public interface ServerImageApi {
    @GET
    @Path("/customerImage")
    @ResponseParser(ParseCustomerImages.class)
-   @RequestFilters(DatacenterIdFilter.class)
+   //   @RequestFilters(DatacenterIdFilter.class)
    @Fallback(Fallbacks.EmptyIterableWithMarkerOnNotFoundOr404.class)
    PaginatedCollection<CustomerImage> listCustomerImages(PaginationOptions options);
 
@@ -84,7 +83,7 @@ public interface ServerImageApi {
    @Path("/customerImage")
    @Transform(ParseCustomerImages.ToPagedIterable.class)
    @ResponseParser(ParseCustomerImages.class)
-   @RequestFilters(DatacenterIdFilter.class)
+   //   @RequestFilters(DatacenterIdFilter.class)
    @Fallback(Fallbacks.EmptyPagedIterableOnNotFoundOr404.class)
    PagedIterable<CustomerImage> listCustomerImages();
 

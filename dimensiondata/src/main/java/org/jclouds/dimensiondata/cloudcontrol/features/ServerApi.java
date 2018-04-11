@@ -31,7 +31,6 @@ import org.jclouds.dimensiondata.cloudcontrol.domain.Server;
 import org.jclouds.dimensiondata.cloudcontrol.domain.Servers;
 import org.jclouds.dimensiondata.cloudcontrol.domain.options.CloneServerOptions;
 import org.jclouds.dimensiondata.cloudcontrol.domain.options.CreateServerOptions;
-import org.jclouds.dimensiondata.cloudcontrol.filters.DatacenterIdFilter;
 import org.jclouds.dimensiondata.cloudcontrol.filters.OrganisationIdFilter;
 import org.jclouds.dimensiondata.cloudcontrol.options.PaginationOptions;
 import org.jclouds.dimensiondata.cloudcontrol.utils.ParseResponse;
@@ -77,7 +76,7 @@ public interface ServerApi {
    @Transform(ParseServers.ToPagedIterable.class)
    @ResponseParser(ParseServers.class)
    @Fallback(Fallbacks.EmptyPagedIterableOnNotFoundOr404.class)
-   @RequestFilters({ DatacenterIdFilter.class })
+      //   @RequestFilters({ DatacenterIdFilter.class })
    PagedIterable<Server> listServers();
 
    @Named("server:get")

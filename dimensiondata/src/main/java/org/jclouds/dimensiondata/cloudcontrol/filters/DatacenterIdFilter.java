@@ -16,34 +16,31 @@
  */
 package org.jclouds.dimensiondata.cloudcontrol.filters;
 
-import com.google.common.base.Supplier;
 import org.jclouds.http.HttpException;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpRequestFilter;
-import org.jclouds.location.Zone;
 
 import javax.inject.Inject;
-import java.util.Set;
 
 /**
  * Adds set of Datacenter IDs as set in jclouds.zones JVM property.
  */
 public class DatacenterIdFilter implements HttpRequestFilter {
 
-   private final Supplier<Set<String>> datacenterIdsSupplier;
+   //   private final Supplier<Set<String>> datacenterIdsSupplier;
 
    @Inject
-   DatacenterIdFilter(@Zone Supplier<Set<String>> datacenterIdsSupplier) {
-      this.datacenterIdsSupplier = datacenterIdsSupplier;
+   DatacenterIdFilter(/*@Zone Supplier<Set<String>> datacenterIdsSupplier*/) {
+      //      this.datacenterIdsSupplier = datacenterIdsSupplier;
    }
 
    @Override
    public HttpRequest filter(HttpRequest request) throws HttpException {
-      Set<String> datacenterIds = datacenterIdsSupplier.get();
-      if (datacenterIds != null && !datacenterIds.isEmpty()) {
-         return request.toBuilder().addQueryParam("datacenterId", datacenterIds).build();
-      } else {
-         return request;
-      }
+      //      Set<String> datacenterIds = datacenterIdsSupplier.get();
+      //      if (datacenterIds != null && !datacenterIds.isEmpty()) {
+      //         return request.toBuilder().addQueryParam("datacenterId", datacenterIds).build();
+      //      } else {
+      return request;
+      //      }
    }
 }

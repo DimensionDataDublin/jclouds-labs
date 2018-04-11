@@ -29,7 +29,6 @@ import org.jclouds.dimensiondata.cloudcontrol.domain.Datacenters;
 import org.jclouds.dimensiondata.cloudcontrol.domain.OperatingSystem;
 import org.jclouds.dimensiondata.cloudcontrol.domain.OperatingSystems;
 import org.jclouds.dimensiondata.cloudcontrol.domain.PaginatedCollection;
-import org.jclouds.dimensiondata.cloudcontrol.filters.DatacenterIdListDatacentersFilter;
 import org.jclouds.dimensiondata.cloudcontrol.filters.OrganisationIdFilter;
 import org.jclouds.dimensiondata.cloudcontrol.options.PaginationOptions;
 import org.jclouds.http.filters.BasicAuthentication;
@@ -58,7 +57,7 @@ public interface InfrastructureApi {
    @GET
    @Path("/datacenter")
    @ResponseParser(ParseDatacenters.class)
-   @RequestFilters(DatacenterIdListDatacentersFilter.class)
+   //   @RequestFilters(DatacenterIdListDatacentersFilter.class)
    @Fallback(Fallbacks.EmptyIterableWithMarkerOnNotFoundOr404.class)
    PaginatedCollection<Datacenter> listDatacenters(PaginationOptions options);
 
@@ -67,7 +66,7 @@ public interface InfrastructureApi {
    @Path("/datacenter")
    @Transform(ParseDatacenters.ToPagedIterable.class)
    @ResponseParser(ParseDatacenters.class)
-   @RequestFilters(DatacenterIdListDatacentersFilter.class)
+   //   @RequestFilters(DatacenterIdListDatacentersFilter.class)
    @Fallback(Fallbacks.EmptyPagedIterableOnNotFoundOr404.class)
    PagedIterable<Datacenter> listDatacenters();
 
