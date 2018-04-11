@@ -23,11 +23,15 @@ import org.jclouds.compute.domain.HardwareBuilder;
 import org.jclouds.compute.domain.Processor;
 import org.jclouds.compute.domain.Volume;
 import org.jclouds.compute.domain.VolumeBuilder;
+import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.dimensiondata.cloudcontrol.domain.BaseImage;
 import org.jclouds.dimensiondata.cloudcontrol.domain.CPU;
 import org.jclouds.dimensiondata.cloudcontrol.domain.CpuSpeed;
 import org.jclouds.dimensiondata.cloudcontrol.domain.Disk;
+import org.jclouds.logging.Logger;
 
+import javax.annotation.Resource;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +39,15 @@ import java.util.List;
 @Singleton
 public class BaseImageToHardware implements Function<BaseImage, Hardware> {
 
+   @Resource
+   @Named(ComputeServiceConstants.COMPUTE_LOGGER)
+   protected Logger logger = Logger.NULL;
+
    private static final int GB_TO_MB_MULTIPLIER = 1024;
 
    @Override
    public Hardware apply(final BaseImage from) {
+      logger.debug("Using BaseImage " + from);
       HardwareBuilder builder = new HardwareBuilder().ids(from.id()).name(from.name()).hypervisor("vmx")
             .processors(buildProcessorList(from.cpu())).ram(from.memoryGb() * GB_TO_MB_MULTIPLIER);
 

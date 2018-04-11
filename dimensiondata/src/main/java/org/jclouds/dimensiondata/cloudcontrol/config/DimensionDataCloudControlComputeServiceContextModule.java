@@ -98,9 +98,8 @@ public class DimensionDataCloudControlComputeServiceContextModule
       bind(TemplateOptions.class).to(DimensionDataCloudControlTemplateOptions.class);
       bind(CreateNodesInGroupThenAddToSet.class).to(GetOrCreateNetworkDomainThenCreateNodes.class);
       // breaks the mock tests
-      //      install(
-      //            new ComputeServiceAdapterContextModule.LocationsFromComputeServiceAdapterModule<ServerWithExternalIp, BaseImage, BaseImage, Datacenter>() {
-      //            });
+      //      install(new LocationsFromComputeServiceAdapterModule<ServerWithExternalIp, BaseImage, BaseImage, Datacenter>() {
+      //      });
    }
 
    @Provides

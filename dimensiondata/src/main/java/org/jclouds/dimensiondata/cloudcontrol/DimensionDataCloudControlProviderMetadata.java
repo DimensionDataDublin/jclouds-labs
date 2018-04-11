@@ -23,8 +23,12 @@ import org.jclouds.providers.internal.BaseProviderMetadata;
 import java.net.URI;
 import java.util.Properties;
 
+import static org.jclouds.Constants.PROPERTY_ISO3166_CODES;
 import static org.jclouds.compute.config.ComputeServiceProperties.IMAGE_ID;
 import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
+import static org.jclouds.location.reference.LocationConstants.ISO3166_CODES;
+import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGION;
+import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
 
 /**
  * Implementation of {@link ProviderMetadata} for DimensionData CloudController.
@@ -53,6 +57,14 @@ public class DimensionDataCloudControlProviderMetadata extends BaseProviderMetad
       Properties properties = DimensionDataCloudControlApiMetadata.defaultProperties();
       properties.put(TEMPLATE, "osVersionMatches=16,osFamily=UBUNTU,os64Bit=true");
       properties.put(IMAGE_ID, "1f7c4960-527c-4e80-871a-152fe2a416ff");
+      properties.setProperty(PROPERTY_REGIONS, "na,eu,au,mea,ap,canada");
+      properties.setProperty(PROPERTY_ISO3166_CODES, "NA,EU,AU,AF,AP,CA");
+      properties.setProperty(PROPERTY_REGION + ".na." + ISO3166_CODES, "NA");
+      properties.setProperty(PROPERTY_REGION + ".eu." + ISO3166_CODES, "EU");
+      properties.setProperty(PROPERTY_REGION + ".au." + ISO3166_CODES, "AU");
+      properties.setProperty(PROPERTY_REGION + ".mea." + ISO3166_CODES, "AF");
+      properties.setProperty(PROPERTY_REGION + ".ap." + ISO3166_CODES, "AP");
+      properties.setProperty(PROPERTY_REGION + ".canada." + ISO3166_CODES, "CA");
 
       return properties;
    }
