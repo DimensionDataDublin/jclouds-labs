@@ -22,7 +22,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import org.jclouds.collect.Memoized;
 import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Image;
@@ -49,8 +48,8 @@ import org.jclouds.dimensiondata.cloudcontrol.domain.Placement;
 import org.jclouds.dimensiondata.cloudcontrol.domain.internal.ServerWithExternalIp;
 import org.jclouds.dimensiondata.cloudcontrol.domain.options.CloneServerOptions;
 import org.jclouds.dimensiondata.cloudcontrol.domain.options.CreateServerOptions;
-import org.jclouds.domain.Location;
 import org.jclouds.domain.LoginCredentials;
+import org.jclouds.location.Zone;
 import org.jclouds.logging.Logger;
 
 import javax.annotation.Resource;
@@ -87,18 +86,18 @@ public class DimensionDataCloudControlServiceAdapter
    private final ComputeServiceConstants.Timeouts timeouts;
    protected final CleanupServer cleanupServer;
    private Predicate<String> provideServerStartedPredicate;
-   private Supplier<Set<? extends Location>> locations;
+   private Supplier<Set<String>> datacenterIds;
 
    @Inject
    DimensionDataCloudControlServiceAdapter(final DimensionDataCloudControlApi api,
          final ComputeServiceConstants.Timeouts timeouts, final CleanupServer cleanupServer,
          @Named(SERVER_STARTED_PREDICATE) Predicate<String> provideServerStartedPredicate,
-         @Memoized Supplier<Set<? extends Location>> locations) {
+         @Zone Supplier<Set<String>> datacenterIds) {
       this.api = checkNotNull(api, "api");
-      this.timeouts = timeouts;
-      this.cleanupServer = cleanupServer;
-      this.provideServerStartedPredicate = provideServerStartedPredicate;
-      this.locations = locations;
+      this.timeouts = checkNotNull(timeouts, "timeouts");
+      this.cleanupServer = checkNotNull(cleanupServer, "cleanupServer");
+      this.provideServerStartedPredicate = checkNotNull(provideServerStartedPredicate, "provideServerStartedPredicate");
+      this.datacenterIds = checkNotNull(datacenterIds, "datacenterIds");
    }
 
    @Override
@@ -212,7 +211,7 @@ public class DimensionDataCloudControlServiceAdapter
    public Iterable<BaseImage> listImages() {
       Collection<BaseImage> osAndCustomerImages = new ArrayList<BaseImage>();
       osAndCustomerImages.addAll(
-            api.getServerImageApi().listOsImagesForDatacenterId(locations.get().iterator().next().getId()).concat()
+            api.getServerImageApi().listOsImagesForDatacenterId(datacenterIds.get().iterator().next()).concat()
                   .toList());
       //      osAndCustomerImages.addAll(api.getServerImageApi().listCustomerImages().concat().toList());
       return osAndCustomerImages;
