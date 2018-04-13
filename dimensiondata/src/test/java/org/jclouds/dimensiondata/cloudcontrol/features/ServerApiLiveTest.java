@@ -40,6 +40,18 @@ public class ServerApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest 
    private String cloneImageId;
    private final String deployedServerName = ServerApiLiveTest.class.getSimpleName() + System.currentTimeMillis();
 
+   @Test
+   public void testDeployAndStartServer() {
+      Boolean started = Boolean.TRUE;
+      NetworkInfo networkInfo = NetworkInfo
+            .create(NETWORK_DOMAIN_ID, NIC.builder().vlanId(VLAN_ID).build(), Lists.<NIC>newArrayList());
+      List<Disk> disks = ImmutableList.of(Disk.builder().scsiId(0).speed("STANDARD").id("72bb49db-e67b-416b-af0d-370858e811ec").build());
+      serverId = api().deployServer(deployedServerName, IMAGE_ID, started, networkInfo, "P$$ssWwrrdGoDd!", disks, null);
+      assertNotNull(serverId);
+      assertTrue(serverStartedPredicate.apply(serverId), "server did not start after timeout");
+      assertTrue(serverNormalPredicate.apply(serverId), "server was not NORMAL after timeout");
+   }
+
    @Test(dependsOnMethods = "testDeployAndStartServer")
    public void testListServers() {
       List<Server> servers = api().listServers().concat().toList();
@@ -54,25 +66,13 @@ public class ServerApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest 
       assertTrue(foundDeployedServer, "Did not find deployed server " + deployedServerName);
    }
 
-   @Test
-   public void testDeployAndStartServer() {
-      Boolean started = Boolean.TRUE;
-      NetworkInfo networkInfo = NetworkInfo
-            .create(NETWORK_DOMAIN_ID, NIC.builder().vlanId(VLAN_ID).build(), Lists.<NIC>newArrayList());
-      List<Disk> disks = ImmutableList.of(Disk.builder().scsiId(0).speed("STANDARD").build());
-      serverId = api().deployServer(deployedServerName, IMAGE_ID, started, networkInfo, "P$$ssWwrrdGoDd!", disks, null);
-      assertNotNull(serverId);
-      assertTrue(serverStartedPredicate.apply(serverId), "server did not start after timeout");
-      assertTrue(serverNormalPredicate.apply(serverId), "server was not NORMAL after timeout");
-   }
-
    @Test(dependsOnMethods = "testDeployAndStartServer")
    public void testReconfigureServer() {
       api().reconfigureServer(serverId, 4, CpuSpeed.HIGHPERFORMANCE.name(), 1);
       assertTrue(serverNormalPredicate.apply(serverId), "server was not NORMAL after timeout");
    }
 
-   @Test(dependsOnMethods = "testDeployAndStartServer")
+   @Test(dependsOnMethods = {"testDeployAndStartServer"})
    public void testRebootServer() {
       api().rebootServer(serverId);
       assertTrue(serverNormalPredicate.apply(serverId), "server was not NORMAL after timeout");

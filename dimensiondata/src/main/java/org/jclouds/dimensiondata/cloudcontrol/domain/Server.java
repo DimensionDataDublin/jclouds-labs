@@ -43,8 +43,12 @@ public abstract class Server {
 
    public abstract String datacenterId();
 
+   @Nullable
+   public abstract Cluster cluster();
+
    public abstract State state();
 
+   @Nullable
    public abstract String sourceImageId();
 
    public abstract Date createTime();
@@ -60,10 +64,19 @@ public abstract class Server {
    public abstract int memoryGb();
 
    @Nullable
-   public abstract List<Disk> disks();
+   public abstract NetworkInfo networkInfo();
 
    @Nullable
-   public abstract NetworkInfo networkInfo();
+   public abstract List<ScsiController> scsiControllers();
+
+   @Nullable
+   public abstract List<SataController> sataControllers();
+
+   @Nullable
+   public abstract List<IdeController> ideControllers();
+
+   @Nullable
+   public abstract List<Floppy> floppies();
 
    @Nullable
    public abstract List<Object> softwareLabels();
@@ -74,16 +87,18 @@ public abstract class Server {
    @Nullable
    public abstract VirtualHardware virtualHardware();
 
-   @SerializedNames({ "id", "name", "description", "datacenterId", "state", "sourceImageId", "createTime", "started",
-         "deployed", "guest", "cpu", "memoryGb", "disk", "networkInfo", "softwareLabel", "progress",
-         "virtualHardware" })
-   public static Server create(String id, String name, String description, String datacenterId, State state,
+   @SerializedNames({"id", "name", "description", "datacenterId", "cluster", "state", "sourceImageId", "createTime", "started",
+         "deployed", "guest", "cpu", "memoryGb", "networkInfo", "scsiControllers", "sataControllers", "ideControllers",
+         "floppies", "softwareLabel", "progress", "virtualHardware"})
+   public static Server create(String id, String name, String description, String datacenterId, Cluster cluster, State state,
          String sourceImageId, Date createTime, Boolean started, Boolean deployed, Guest guest, CPU cpu, int memoryGb,
-         List<Disk> disks, NetworkInfo networkInfo, List<Object> softwareLabels, Progress progress,
+         NetworkInfo networkInfo, List<ScsiController> scsiControllers, List<SataController> sataControllers,
+         List<IdeController> ideControllers, List<Floppy> floppies, List<Object> softwareLabels, Progress progress,
          VirtualHardware virtualHardware) {
-      return builder().id(id).name(name).datacenterId(datacenterId).description(description).state(state)
+      return builder().id(id).name(name).description(description).datacenterId(datacenterId).cluster(cluster).state(state)
             .sourceImageId(sourceImageId).createTime(createTime).started(started).deployed(deployed).guest(guest)
-            .cpu(cpu).memoryGb(memoryGb).disks(disks).networkInfo(networkInfo).softwareLabels(softwareLabels)
+            .cpu(cpu).memoryGb(memoryGb).networkInfo(networkInfo).scsiControllers(scsiControllers)
+            .sataControllers(sataControllers).ideControllers(ideControllers).floppies(floppies).softwareLabels(softwareLabels)
             .progress(progress).virtualHardware(virtualHardware).build();
    }
 
@@ -115,8 +130,6 @@ public abstract class Server {
 
       public abstract Builder memoryGb(int memoryGb);
 
-      public abstract Builder disks(List<Disk> disks);
-
       public abstract Builder networkInfo(NetworkInfo networkInfo);
 
       public abstract Builder softwareLabels(List<Object> softwareLabels);
@@ -125,14 +138,34 @@ public abstract class Server {
 
       public abstract Builder virtualHardware(VirtualHardware virtualHardware);
 
-      abstract Server autoBuild();
+      public abstract Builder cluster(Cluster cluster);
 
-      abstract List<Disk> disks();
+      abstract Server autoBuild();
 
       abstract List<Object> softwareLabels();
 
+      abstract List<ScsiController> scsiControllers();
+
+      abstract List<SataController> sataControllers();
+
+      abstract List<IdeController> ideControllers();
+
+      abstract List<Floppy> floppies();
+
+      public abstract Builder scsiControllers(List<ScsiController> scsiControllers);
+
+      public abstract Builder sataControllers(List<SataController> sataControllers);
+
+      public abstract Builder ideControllers(List<IdeController> ideControllers);
+
+      public abstract Builder floppies(List<Floppy> floppies);
+
       public Server build() {
-         disks(disks() != null ? ImmutableList.copyOf(disks()) : null);
+         scsiControllers(scsiControllers() != null ? ImmutableList.copyOf(scsiControllers()) : null);
+         sataControllers(sataControllers() != null ? ImmutableList.copyOf(sataControllers()) : null);
+         ideControllers(ideControllers() != null ? ImmutableList.copyOf(ideControllers()) : null);
+         floppies(floppies() != null ? ImmutableList.copyOf(floppies()) : null);
+
          softwareLabels(softwareLabels() != null ? ImmutableList.copyOf(softwareLabels()) : null);
          return autoBuild();
       }
