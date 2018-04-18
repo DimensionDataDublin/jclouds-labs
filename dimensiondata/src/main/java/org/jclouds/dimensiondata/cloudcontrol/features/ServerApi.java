@@ -61,7 +61,7 @@ import java.util.List;
 
 @RequestFilters({ BasicAuthentication.class, OrganisationIdFilter.class })
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/2.6/server")
+@Path("/2.7/server")
 public interface ServerApi {
 
    @Named("server:list")

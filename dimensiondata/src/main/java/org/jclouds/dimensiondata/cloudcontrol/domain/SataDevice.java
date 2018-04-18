@@ -21,30 +21,37 @@ import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
 @AutoValue
-public abstract class SataDevice extends AbstractDrive{
+public abstract class SataDevice {
 
-   public abstract Integer sataId();
+   public abstract String id();
+
+   public abstract int sataId();
 
    public abstract String type();
 
+   public abstract int sizeGb();
+
    @Nullable
    public abstract String fileName();
+
+   public abstract State state();
 
    public abstract SataDevice.Builder toBuilder();
 
    @AutoValue.Builder
    public abstract static class Builder {
+
       public abstract SataDevice.Builder id(String id);
 
-      public abstract SataDevice.Builder sataId(Integer sataId);
+      public abstract SataDevice.Builder sataId(int sataId);
 
       public abstract SataDevice.Builder type(String type);
 
-      public abstract SataDevice.Builder sizeGb(Integer sizeGb);
+      public abstract SataDevice.Builder sizeGb(int sizeGb);
 
       public abstract SataDevice.Builder fileName(String fileName);
 
-      public abstract SataDevice.Builder state(String state);
+      public abstract SataDevice.Builder state(State state);
 
       public abstract SataDevice build();
    }
@@ -53,8 +60,8 @@ public abstract class SataDevice extends AbstractDrive{
       return new AutoValue_SataDevice.Builder();
    }
 
-   @SerializedNames({"id", "sataId", "type", "sizeGb", "fileName", "state" })
-   public static SataDevice create(String id, Integer sataId, String type, Integer sizeGb, String fileName, String state) {
+   @SerializedNames({ "id", "sataId", "type", "sizeGb", "fileName", "state" })
+   public static SataDevice create(String id, int sataId, String type, int sizeGb, String fileName, State state) {
       return builder().id(id).sataId(sataId).type(type).sizeGb(sizeGb).fileName(fileName).state(state).build();
    }
 }

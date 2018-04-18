@@ -21,30 +21,37 @@ import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
 @AutoValue
-public abstract class IdeDevice extends AbstractDrive{
+public abstract class IdeDevice {
 
-   public abstract Integer slot();
+   public abstract String id();
+
+   public abstract int slot();
 
    public abstract String type();
 
+   public abstract int sizeGb();
+
    @Nullable
    public abstract String fileName();
+
+   public abstract State state();
 
    public abstract IdeDevice.Builder toBuilder();
 
    @AutoValue.Builder
    public abstract static class Builder {
+
       public abstract IdeDevice.Builder id(String id);
 
-      public abstract IdeDevice.Builder slot(Integer slot);
+      public abstract IdeDevice.Builder slot(int slot);
 
       public abstract IdeDevice.Builder type(String type);
 
-      public abstract IdeDevice.Builder sizeGb(Integer sizeGb);
+      public abstract IdeDevice.Builder sizeGb(int sizeGb);
 
       public abstract IdeDevice.Builder fileName(String fileName);
 
-      public abstract IdeDevice.Builder state(String state);
+      public abstract IdeDevice.Builder state(State state);
 
       public abstract IdeDevice build();
    }
@@ -53,8 +60,8 @@ public abstract class IdeDevice extends AbstractDrive{
       return new AutoValue_IdeDevice.Builder();
    }
 
-   @SerializedNames({"id", "slot", "type", "sizeGb", "fileName", "state" })
-   public static IdeDevice create(String id, Integer slot, String type, Integer sizeGb, String fileName, String state) {
+   @SerializedNames({ "id", "slot", "type", "sizeGb", "fileName", "state" })
+   public static IdeDevice create(String id, int slot, String type, int sizeGb, String fileName, State state) {
       return builder().id(id).slot(slot).type(type).sizeGb(sizeGb).fileName(fileName).state(state).build();
    }
 }

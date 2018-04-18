@@ -18,17 +18,26 @@ package org.jclouds.dimensiondata.cloudcontrol.domain;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
-import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AutoValue
-public abstract class ScsiController extends AbstractBaseController {
+public abstract class ScsiController {
 
-   public abstract Integer busNumber();
+   public abstract String id();
 
-   @Nullable
+   public abstract int key();
+
+   public abstract int busNumber();
+
+   public abstract int virtualControllerId();
+
+   public abstract State state();
+
+   public abstract String adapterType();
+
    public abstract List<ScsiDisk> disks();
 
    @AutoValue.Builder
@@ -36,27 +45,26 @@ public abstract class ScsiController extends AbstractBaseController {
 
       public abstract Builder id(String id);
 
-      public abstract Builder adapterType(String adapterType);
+      public abstract Builder key(int key);
 
-      public abstract Builder key(Integer key);
+      public abstract Builder busNumber(int busNumber);
 
-      public abstract Builder busNumber(Integer busNumber);
-
-      public abstract Builder virtualControllerId(Integer virtualControllerId);
-
-      public abstract Builder disks(List<ScsiDisk> disks);
+      public abstract Builder virtualControllerId(int virtualControllerId);
 
       public abstract Builder state(State state);
+
+      public abstract Builder adapterType(String adapterType);
 
       abstract ScsiController autoBuild();
 
       abstract List<ScsiDisk> disks();
 
+      public abstract Builder disks(List<ScsiDisk> disks);
+
       public ScsiController build() {
-         disks(disks() != null ? ImmutableList.copyOf(disks()) : null);
+         disks(disks() != null ? ImmutableList.copyOf(disks()) : new ArrayList<ScsiDisk>());
          return autoBuild();
       }
-
    }
 
    public static ScsiController.Builder builder() {
@@ -64,8 +72,8 @@ public abstract class ScsiController extends AbstractBaseController {
    }
 
    @SerializedNames({ "id", "key", "busNumber", "virtualControllerId", "state", "adapterType", "disks" })
-   public static ScsiController create(String id, Integer key, Integer busNumber, Integer virtualControllerId,
-         State state, String adapterType, List<ScsiDisk> disks) {
+   public static ScsiController create(String id, int key, int busNumber, int virtualControllerId, State state,
+         String adapterType, List<ScsiDisk> disks) {
       return builder().id(id).key(key).busNumber(busNumber).virtualControllerId(virtualControllerId)
             .adapterType(adapterType).state(state).disks(disks).build();
    }

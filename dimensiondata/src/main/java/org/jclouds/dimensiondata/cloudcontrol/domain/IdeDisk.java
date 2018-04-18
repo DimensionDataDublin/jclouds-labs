@@ -20,25 +20,32 @@ import com.google.auto.value.AutoValue;
 import org.jclouds.json.SerializedNames;
 
 @AutoValue
-public abstract class IdeDisk extends AbstractDrive{
+public abstract class IdeDisk {
+
+   public abstract String id();
+
+   public abstract int slot();
+
+   public abstract int sizeGb();
 
    public abstract String speed();
 
-   public abstract Integer slot();
+   public abstract State state();
 
    public abstract IdeDisk.Builder toBuilder();
 
    @AutoValue.Builder
    public abstract static class Builder {
+
       public abstract IdeDisk.Builder id(String id);
 
-      public abstract IdeDisk.Builder slot(Integer slot);
+      public abstract IdeDisk.Builder slot(int slot);
 
-      public abstract IdeDisk.Builder sizeGb(Integer sizeGb);
+      public abstract IdeDisk.Builder sizeGb(int sizeGb);
 
       public abstract IdeDisk.Builder speed(String speed);
 
-      public abstract IdeDisk.Builder state(String state);
+      public abstract IdeDisk.Builder state(State state);
 
       public abstract IdeDisk build();
    }
@@ -47,8 +54,8 @@ public abstract class IdeDisk extends AbstractDrive{
       return new AutoValue_IdeDisk.Builder();
    }
 
-   @SerializedNames({"id", "slot", "sizeGb", "speed", "state" })
-   public static IdeDisk create(String id, Integer slot, Integer sizeGb, String speed, String state) {
+   @SerializedNames({ "id", "slot", "sizeGb", "speed", "state" })
+   public static IdeDisk create(String id, int slot, int sizeGb, String speed, State state) {
       return builder().id(id).slot(slot).sizeGb(sizeGb).speed(speed).state(state).build();
    }
 }

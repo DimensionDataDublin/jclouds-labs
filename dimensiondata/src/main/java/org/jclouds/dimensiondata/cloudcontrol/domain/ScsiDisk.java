@@ -20,32 +20,39 @@ import com.google.auto.value.AutoValue;
 import org.jclouds.json.SerializedNames;
 
 @AutoValue
-public abstract class ScsiDisk extends AbstractDrive{
+public abstract class ScsiDisk {
+
+   public abstract String id();
+
+   public abstract int scsiId();
+
+   public abstract int sizeGb();
 
    public abstract String speed();
 
-   public abstract Integer scsiId();
-
-   @SerializedNames({"id", "scsiId", "sizeGb", "speed", "state" })
-   public static ScsiDisk create(String id, Integer scsiId, Integer sizeGb, String speed, String state) {
-      return builder().id(id).scsiId(scsiId).sizeGb(sizeGb).speed(speed).state(state).build();
-   }
+   public abstract State state();
 
    public abstract ScsiDisk.Builder toBuilder();
 
    @AutoValue.Builder
    public abstract static class Builder {
+
       public abstract ScsiDisk.Builder id(String id);
 
-      public abstract ScsiDisk.Builder scsiId(Integer scsiId);
+      public abstract ScsiDisk.Builder scsiId(int scsiId);
 
-      public abstract ScsiDisk.Builder sizeGb(Integer sizeGb);
+      public abstract ScsiDisk.Builder sizeGb(int sizeGb);
 
       public abstract ScsiDisk.Builder speed(String speed);
 
-      public abstract ScsiDisk.Builder state(String state);
+      public abstract ScsiDisk.Builder state(State state);
 
       public abstract ScsiDisk build();
+   }
+
+   @SerializedNames({ "id", "scsiId", "sizeGb", "speed", "state" })
+   public static ScsiDisk create(String id, Integer scsiId, Integer sizeGb, String speed, State state) {
+      return builder().id(id).scsiId(scsiId).sizeGb(sizeGb).speed(speed).state(state).build();
    }
 
    public static ScsiDisk.Builder builder() {

@@ -18,42 +18,50 @@ package org.jclouds.dimensiondata.cloudcontrol.domain;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
-import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
 import java.util.List;
 
 @AutoValue
-public abstract class SataController extends AbstractBaseController {
+public abstract class SataController {
 
-   public abstract Integer busNumber();
+   public abstract String id();
 
-   @Nullable
-   public abstract List<AbstractDrive> deviceOrDisks();
+   public abstract int key();
+
+   public abstract int busNumber();
+
+   public abstract int virtualControllerId();
+
+   public abstract State state();
+
+   public abstract String adapterType();
+
+   public abstract List<Object> deviceOrDisks();
 
    @AutoValue.Builder
    public abstract static class Builder {
 
       public abstract Builder id(String id);
 
-      public abstract Builder busNumber(Integer busNumber);
+      public abstract Builder key(int key);
 
-      public abstract Builder adapterType(String adapterType);
+      public abstract Builder busNumber(int busNumber);
 
-      public abstract Builder key(Integer key);
-
-      public abstract Builder virtualControllerId(Integer virtualControllerId);
+      public abstract Builder virtualControllerId(int virtualControllerId);
 
       public abstract Builder state(State state);
 
-      public abstract Builder deviceOrDisks(List<AbstractDrive> deviceOrDisks);
+      public abstract Builder adapterType(String adapterType);
 
-      abstract List<AbstractDrive> deviceOrDisks();
+      public abstract Builder deviceOrDisks(List<Object> deviceOrDisks);
+
+      abstract List<Object> deviceOrDisks();
 
       public abstract SataController autoBuild();
 
       public SataController build() {
-         deviceOrDisks(deviceOrDisks() != null ? ImmutableList.copyOf(deviceOrDisks()) : null);
+         deviceOrDisks(deviceOrDisks() != null ? ImmutableList.copyOf(deviceOrDisks()) : ImmutableList.of());
          return autoBuild();
       }
    }
@@ -63,8 +71,8 @@ public abstract class SataController extends AbstractBaseController {
    }
 
    @SerializedNames({ "id", "key", "busNumber", "virtualControllerId", "state", "adapterType", "deviceOrDisks" })
-   public static SataController create(String id, Integer key, Integer busNumber, Integer virtualControllerId,
-         State state, String adapterType, List<AbstractDrive> deviceOrDisks) {
+   public static SataController create(String id, int key, int busNumber, int virtualControllerId, State state,
+         String adapterType, List<Object> deviceOrDisks) {
       return builder().id(id).key(key).busNumber(busNumber).virtualControllerId(virtualControllerId).state(state)
             .adapterType(adapterType).deviceOrDisks(deviceOrDisks).build();
    }

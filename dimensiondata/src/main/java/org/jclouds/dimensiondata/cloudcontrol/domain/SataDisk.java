@@ -20,25 +20,32 @@ import com.google.auto.value.AutoValue;
 import org.jclouds.json.SerializedNames;
 
 @AutoValue
-public abstract class SataDisk extends AbstractDrive{
+public abstract class SataDisk {
+
+   public abstract String id();
+
+   public abstract int sataId();
+
+   public abstract int sizeGb();
 
    public abstract String speed();
 
-   public abstract Integer sataId();
+   public abstract State state();
 
    public abstract SataDisk.Builder toBuilder();
 
    @AutoValue.Builder
    public abstract static class Builder {
+
       public abstract SataDisk.Builder id(String id);
 
-      public abstract SataDisk.Builder sataId(Integer sataId);
+      public abstract SataDisk.Builder sataId(int sataId);
 
-      public abstract SataDisk.Builder sizeGb(Integer sizeGb);
+      public abstract SataDisk.Builder sizeGb(int sizeGb);
 
       public abstract SataDisk.Builder speed(String speed);
 
-      public abstract SataDisk.Builder state(String state);
+      public abstract SataDisk.Builder state(State state);
 
       public abstract SataDisk build();
    }
@@ -47,8 +54,8 @@ public abstract class SataDisk extends AbstractDrive{
       return new AutoValue_SataDisk.Builder();
    }
 
-   @SerializedNames({"id", "sataId", "sizeGb", "speed", "state" })
-   public static SataDisk create(String id, Integer sataId, Integer sizeGb, String speed, String state) {
+   @SerializedNames({ "id", "sataId", "sizeGb", "speed", "state" })
+   public static SataDisk create(String id, int sataId, int sizeGb, String speed, State state) {
       return builder().id(id).sataId(sataId).sizeGb(sizeGb).speed(speed).state(state).build();
    }
 }
