@@ -28,6 +28,7 @@ import org.jclouds.dimensiondata.cloudcontrol.domain.options.CreateServerOptions
 import org.jclouds.dimensiondata.cloudcontrol.internal.BaseAccountAwareCloudControlMockTest;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.http.Uris;
+import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -99,6 +100,17 @@ public class ServerApiMockTest extends BaseAccountAwareCloudControlMockTest {
       server.enqueue(jsonResponse("/servers.json"));
       List<Server> servers = serverApi().listServers().concat().toList();
       Uris.UriBuilder uriBuilder = getListServerUriBuilder();
+      assertSent(GET, uriBuilder.toString());
+      assertEquals(servers.size(), 1);
+      for (Server s : servers) {
+         assertNotNull(s);
+      }
+   }
+
+   public void testListServersWithDatacenterFiltering() throws Exception {
+      server.enqueue(jsonResponse("/servers.json"));
+      List<Server> servers = serverApi().listServers(datacenterId(datacenters)).toList();
+      Uris.UriBuilder uriBuilder = addZonesToUriBuilder("datacenterId", getListServerUriBuilder());
       assertSent(GET, uriBuilder.toString());
       assertEquals(servers.size(), 1);
       for (Server s : servers) {

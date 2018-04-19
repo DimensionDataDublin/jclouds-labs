@@ -68,6 +68,7 @@ public interface ServerApi {
    @GET
    @Path("/server")
    @ResponseParser(ParseServers.class)
+   @Fallback(Fallbacks.EmptyIterableWithMarkerOnNotFoundOr404.class)
    PaginatedCollection<Server> listServers(DatacenterIdListFilters datacenterIdListFilters);
 
    @Named("server:list")
@@ -75,6 +76,7 @@ public interface ServerApi {
    @Path("/server")
    @Transform(ParseServers.ToPagedIterable.class)
    @ResponseParser(ParseServers.class)
+   @Fallback(Fallbacks.EmptyPagedIterableOnNotFoundOr404.class)
    PagedIterable<Server> listServers();
 
    @Named("server:get")
