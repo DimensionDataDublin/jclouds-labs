@@ -20,6 +20,7 @@ import org.jclouds.dimensiondata.cloudcontrol.features.AccountApi;
 import org.jclouds.dimensiondata.cloudcontrol.features.InfrastructureApi;
 import org.jclouds.dimensiondata.cloudcontrol.features.NetworkApi;
 import org.jclouds.dimensiondata.cloudcontrol.features.ServerApi;
+import org.jclouds.dimensiondata.cloudcontrol.features.vip.NodeApi;
 import org.jclouds.dimensiondata.cloudcontrol.features.ServerImageApi;
 import org.jclouds.dimensiondata.cloudcontrol.features.TagApi;
 import org.jclouds.rest.annotations.Delegate;
@@ -45,4 +46,7 @@ public interface DimensionDataCloudControlApi extends Closeable {
 
    @Delegate
    TagApi getTagApi();
+
+   @Delegate
+   NodeApi getNodeApi();
 }

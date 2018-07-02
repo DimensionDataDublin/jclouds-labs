@@ -16,10 +16,10 @@
  */
 package org.jclouds.dimensiondata.cloudcontrol.internal;
 
+import javax.ws.rs.HttpMethod;
+
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
 import org.testng.annotations.BeforeMethod;
-
-import javax.ws.rs.HttpMethod;
 
 /**
  * Base class for Dimension Data Cloud Control mock tests for API calls that include account information.
