@@ -20,12 +20,19 @@ import static org.testng.Assert.assertEquals;
 
 import javax.ws.rs.HttpMethod;
 
+import com.google.common.base.Supplier;
+import com.google.inject.Inject;
 import org.jclouds.dimensiondata.cloudcontrol.domain.PaginatedCollection;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.Node;
 import org.jclouds.dimensiondata.cloudcontrol.internal.BaseAccountAwareCloudControlMockTest;
+import org.jclouds.dimensiondata.cloudcontrol.options.DatacenterIdListFilters;
 import org.jclouds.dimensiondata.cloudcontrol.options.PaginationOptions;
 import org.jclouds.http.Uris;
+import org.jclouds.location.Zone;
+import org.jclouds.location.suppliers.ZoneIdsSupplier;
 import org.testng.annotations.Test;
+
+import java.util.Set;
 
 @Test(groups = "live", testName = "NodeApiLiveTest", singleThreaded = true)
 public class NodeMockTest extends BaseAccountAwareCloudControlMockTest {
@@ -38,15 +45,15 @@ public class NodeMockTest extends BaseAccountAwareCloudControlMockTest {
               "should return all nodes defined in enqueued response");
 
       Uris.UriBuilder uriBuilder = getBasicApiUri("networkDomainVip/node");
-      addDatacenterFilters(uriBuilder);
       assertSent(HttpMethod.GET, uriBuilder.toString());
    }
 
    @Test
    public void testListNodes_WithPagination() throws Exception {
       server.enqueue(jsonResponse("/vip/nodes_page2.json"));
-      PaginatedCollection<Node> nodes = api.getNodeApi().listNodes(
-              new PaginationOptions().pageNumber(2).pageSize(1));
+      ZoneIdsSupplier zoneIdsSupplier = ctx.utils().injector().getInstance(ZoneIdsSupplier.class);
+      PaginatedCollection<Node> nodes = api.getNodeApi().listNodes(DatacenterIdListFilters.Builder.paginationOptions(
+              new PaginationOptions().pageNumber(2).pageSize(1)).datacenterIdsFromZoneIdsSupplier(zoneIdsSupplier));
       assertEquals(nodes.size(), 1, "should only return 2nd element");
       assertEquals(nodes.get(0).id(), "nodeIdFrom2ndPage", "Should return 2nd element (from 2nd page).");
 

@@ -31,8 +31,8 @@ import org.jclouds.collect.internal.Arg0ToPagedIterable;
 import org.jclouds.dimensiondata.cloudcontrol.DimensionDataCloudControlApi;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.Node;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.Nodes;
-//import org.jclouds.dimensiondata.cloudcontrol.filters.DatacenterIdFilter;
 import org.jclouds.dimensiondata.cloudcontrol.filters.OrganisationIdFilter;
+import org.jclouds.dimensiondata.cloudcontrol.options.DatacenterIdListFilters;
 import org.jclouds.dimensiondata.cloudcontrol.options.PaginationOptions;
 import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.http.functions.ParseJson;
@@ -61,15 +61,13 @@ public interface NodeApi {
    @GET
    @Path("/node")
    @ResponseParser(ParseNodes.class)
-//   @RequestFilters(DatacenterIdFilter.class)
-   Nodes listNodes(PaginationOptions options);
+   Nodes listNodes(DatacenterIdListFilters datacenterIdListFilters);
 
    @Named("node:list")
    @GET
    @Path("/node")
    @Transform(ParseNodes.ToPagedIterable.class)
    @ResponseParser(ParseNodes.class)
-//   @RequestFilters(DatacenterIdFilter.class) // TODO DatacenterIdFilter merge into this branch
    PagedIterable<Node> listNodes();
 
    final class ParseNodes extends ParseJson<Nodes> {
@@ -89,12 +87,14 @@ public interface NodeApi {
          }
 
          @Override
-         protected Function<Object, IterableWithMarker<Node>> markerToNextForArg0(Optional<Object> arg0) {
+         protected Function<Object, IterableWithMarker<Node>> markerToNextForArg0(final Optional<Object> arg0) {
             return new Function<Object, IterableWithMarker<Node>>() {
                @Override
                public IterableWithMarker<Node> apply(Object input) {
-                  PaginationOptions paginationOptions = PaginationOptions.class.cast(input);
-                  return api.getNodeApi().listNodes(paginationOptions);
+                  DatacenterIdListFilters datacenterIdListFilters = arg0.isPresent() ?
+                        ((DatacenterIdListFilters) arg0.get()).paginationOptions(PaginationOptions.class.cast(input)) :
+                        DatacenterIdListFilters.Builder.paginationOptions(PaginationOptions.class.cast(input));
+                  return api.getNodeApi().listNodes(datacenterIdListFilters);
                }
             };
          }

@@ -17,6 +17,7 @@
 package org.jclouds.dimensiondata.cloudcontrol.internal;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Supplier;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Resources;
@@ -31,6 +32,9 @@ import org.jclouds.dimensiondata.cloudcontrol.DimensionDataCloudControlApi;
 import org.jclouds.dimensiondata.cloudcontrol.DimensionDataCloudControlProviderMetadata;
 import org.jclouds.http.Uris;
 import org.jclouds.json.Json;
+import org.jclouds.location.suppliers.ImplicitRegionIdSupplier;
+import org.jclouds.location.suppliers.RegionIdToZoneIdsSupplier;
+import org.jclouds.location.suppliers.ZoneIdsSupplier;
 import org.jclouds.rest.ApiContext;
 import org.testng.IHookCallBack;
 import org.testng.IHookable;
@@ -41,11 +45,12 @@ import org.testng.annotations.BeforeMethod;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
 import static com.google.common.collect.Iterables.size;
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertEquals;

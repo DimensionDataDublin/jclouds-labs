@@ -17,8 +17,10 @@
 package org.jclouds.dimensiondata.cloudcontrol.options;
 
 import org.jclouds.http.options.BaseHttpRequestOptions;
+import org.jclouds.location.suppliers.ZoneIdsSupplier;
 
 import java.util.Collection;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -41,11 +43,20 @@ public class DatacenterIdListFilters extends BaseHttpRequestOptions {
       return this;
    }
 
+   public DatacenterIdListFilters datacenterIdsFromZoneIdsSupplier(ZoneIdsSupplier zoneIdsSupplier) {
+      Set<String> zones = zoneIdsSupplier.get();
+      for (String zone : zones) {
+         this.queryParameters.put("datacenterId", checkNotNull(zone, "datacenterId"));
+      }
+      return this;
+   }
+
    public DatacenterIdListFilters paginationOptions(final PaginationOptions paginationOptions) {
       this.queryParameters.putAll(paginationOptions.buildQueryParameters());
       return this;
    }
 
+   // TODO this is Factory Pattern rather than Builder.
    public static class Builder {
 
       /**
