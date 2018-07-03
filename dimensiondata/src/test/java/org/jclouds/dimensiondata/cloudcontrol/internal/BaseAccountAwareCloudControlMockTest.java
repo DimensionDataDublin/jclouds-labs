@@ -48,10 +48,14 @@ public class BaseAccountAwareCloudControlMockTest extends BaseDimensionDataCloud
       accountRetrieved = false;
    }
 
+   protected void assertSentToCloudControlEndpoint(String method, String path) throws InterruptedException {
+      assertSentToCloudControlEndpoint(method, path, null);
+   }
+
    protected void assertSentToCloudControlEndpoint(String method, String path, @Nullable String requestBody)
          throws InterruptedException {
       RecordedRequest recordedRequest = assertSent(
-            method, "/caas/" + VERSION + "/6ac1e746-b1ea-4da5-a24e-caf1a978789d/" + path);
+            method, "/caas/" + VERSION + "/6ac1e746-b1ea-4da5-a24e-caf1a978789d" + path);
       if (requestBody != null) {
          assertEquals(parser.parse(recordedRequest.getUtf8Body()), parser.parse(requestBody));
       }

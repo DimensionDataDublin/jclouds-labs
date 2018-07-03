@@ -27,7 +27,6 @@ import org.testng.annotations.Test;
 
 import javax.ws.rs.HttpMethod;
 
-import static javax.ws.rs.HttpMethod.GET;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -39,7 +38,7 @@ public class PoolMockTest extends BaseAccountAwareCloudControlMockTest {
    public void testGetPool() throws InterruptedException {
       server.enqueue(jsonResponse("/vip/pool.json"));
       Pool pool = api.getPoolApi().getPool("12345");
-      assertSent(GET, getBasicApiUri("networkDomainVip/pool/12345").toString());
+      assertSentToCloudControlEndpoint(HttpMethod.GET, "/networkDomainVip/pool/12345");
       assertNotNull(pool);
    }
 
@@ -56,9 +55,7 @@ public class PoolMockTest extends BaseAccountAwareCloudControlMockTest {
       Iterable<Pool> pools = api.getPoolApi().listPools().concat();
       assertEquals(consumeIteratorAndReturnSize(pools), 2,
               "should return all pools defined in enqueued response");
-
-      Uris.UriBuilder uriBuilder = getBasicApiUri("networkDomainVip/pool");
-      assertSent(HttpMethod.GET, uriBuilder.toString());
+      assertSentToCloudControlEndpoint(HttpMethod.GET, "/networkDomainVip/pool");
    }
 
    @Test
@@ -70,10 +67,10 @@ public class PoolMockTest extends BaseAccountAwareCloudControlMockTest {
       assertEquals(pools.size(), 1, "should only return 2nd element");
       assertEquals(pools.get(0).id(), "poolIdFrom2ndPage", "Should return 2nd element (from 2nd page).");
 
-      Uris.UriBuilder uriBuilder = getBasicApiUri("networkDomainVip/pool");
-      uriBuilder.addQuery("pageNumber", Integer.toString(2));
-      uriBuilder.addQuery("pageSize", Integer.toString(1));
-      addDatacenterFilters(uriBuilder);
-      assertSent(HttpMethod.GET, uriBuilder.toString());
+      Uris.UriBuilder expectedUriBuilder = Uris.uriBuilder("networkDomainVip/pool");
+      expectedUriBuilder.addQuery("pageNumber", Integer.toString(2));
+      expectedUriBuilder.addQuery("pageSize", Integer.toString(1));
+      addDatacenterFilters(expectedUriBuilder);
+      assertSentToCloudControlEndpoint(HttpMethod.GET, expectedUriBuilder.toString());
    }
 }

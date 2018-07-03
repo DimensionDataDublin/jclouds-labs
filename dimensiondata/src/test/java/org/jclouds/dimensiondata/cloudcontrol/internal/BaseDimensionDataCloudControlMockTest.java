@@ -242,10 +242,6 @@ public class BaseDimensionDataCloudControlMockTest implements IHookable {
       }
    }
 
-   protected Uris.UriBuilder getBasicApiUri(String uri) {
-      return Uris.uriBuilder("/caas/" + VERSION + "/6ac1e746-b1ea-4da5-a24e-caf1a978789d/" + uri);
-   }
-
    protected void addDatacenterFilters(Uris.UriBuilder uriBuilder) {
       Set<String> zones = ctx.utils().injector().getInstance(ZoneIdsSupplier.class).get();
       for (String zone : zones) {

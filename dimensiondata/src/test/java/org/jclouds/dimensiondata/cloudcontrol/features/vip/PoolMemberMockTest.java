@@ -28,7 +28,6 @@ import org.testng.annotations.Test;
 
 import javax.ws.rs.HttpMethod;
 
-import static javax.ws.rs.HttpMethod.GET;
 import static javax.ws.rs.HttpMethod.POST;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -48,19 +47,19 @@ public class PoolMemberMockTest extends BaseAccountAwareCloudControlMockTest {
             .build());
       assertEquals(poolMemberId, "poolMemberId1");
       assertSentToCloudControlEndpoint(
-            POST, "networkDomainVip/addPoolMember", stringFromResource("/vip/addPoolMemberRequest.json"));
+            POST, "/networkDomainVip/addPoolMember", stringFromResource("/vip/addPoolMemberRequest.json"));
    }
 
    @Test
    public void testGetPoolMember() throws InterruptedException {
       server.enqueue(jsonResponse("/vip/poolMember.json"));
       PoolMember poolMember = api.getPoolMemberApi().getPoolMember("12345");
-      assertSent(GET, getBasicApiUri("networkDomainVip/poolMember/12345").toString());
+      assertSentToCloudControlEndpoint(HttpMethod.GET, "/networkDomainVip/poolMember/12345");
       assertNotNull(poolMember);
    }
 
    @Test
-   public void testGetPoolMemberResourceNotFound() throws InterruptedException {
+   public void testGetPoolMemberResourceNotFound() {
       server.enqueue(responseResourceNotFound());
       PoolMember found = api.getPoolMemberApi().getPoolMember("12345");
       assertNull(found);
@@ -72,9 +71,7 @@ public class PoolMemberMockTest extends BaseAccountAwareCloudControlMockTest {
       Iterable<PoolMember> poolMembers = api.getPoolMemberApi().listPoolMembers().concat();
       assertEquals(consumeIteratorAndReturnSize(poolMembers), 2,
             "should return all poolMembers defined in enqueued response");
-
-      Uris.UriBuilder uriBuilder = getBasicApiUri("networkDomainVip/poolMember");
-      assertSent(HttpMethod.GET, uriBuilder.toString());
+      assertSentToCloudControlEndpoint(HttpMethod.GET, "/networkDomainVip/poolMember");
    }
 
    @Test
@@ -87,10 +84,10 @@ public class PoolMemberMockTest extends BaseAccountAwareCloudControlMockTest {
       assertEquals(poolMembers.size(), 1, "should only return 2nd element");
       assertEquals(poolMembers.get(0).id(), "poolMemberIdFrom2ndPage", "Should return 2nd element (from 2nd page).");
 
-      Uris.UriBuilder uriBuilder = getBasicApiUri("networkDomainVip/poolMember");
+      Uris.UriBuilder uriBuilder = Uris.uriBuilder("networkDomainVip/poolMember");
       uriBuilder.addQuery("pageNumber", Integer.toString(2));
       uriBuilder.addQuery("pageSize", Integer.toString(1));
       addDatacenterFilters(uriBuilder);
-      assertSent(HttpMethod.GET, uriBuilder.toString());
+      assertSentToCloudControlEndpoint(HttpMethod.GET, uriBuilder.toString());
    }
 }

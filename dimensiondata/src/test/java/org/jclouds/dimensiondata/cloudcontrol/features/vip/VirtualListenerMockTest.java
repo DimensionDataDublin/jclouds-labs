@@ -27,7 +27,6 @@ import org.testng.annotations.Test;
 
 import javax.ws.rs.HttpMethod;
 
-import static javax.ws.rs.HttpMethod.GET;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -59,7 +58,7 @@ public class VirtualListenerMockTest extends BaseAccountAwareCloudControlMockTes
    public void testGetVirtualListener() throws InterruptedException {
       server.enqueue(jsonResponse("/vip/virtualListener.json"));
       VirtualListener virtualListener = api.getVirtualListenerApi().getVirtualListener("12345");
-      assertSent(GET, getBasicApiUri("networkDomainVip/virtualListener/12345").toString());
+      assertSentToCloudControlEndpoint(HttpMethod.GET, "/networkDomainVip/virtualListener/12345");
       assertNotNull(virtualListener);
    }
 
@@ -77,8 +76,7 @@ public class VirtualListenerMockTest extends BaseAccountAwareCloudControlMockTes
       assertEquals(consumeIteratorAndReturnSize(virtualListeners), 2,
               "should return all virtualListeners defined in enqueued response");
 
-      Uris.UriBuilder uriBuilder = getBasicApiUri("networkDomainVip/virtualListener");
-      assertSent(HttpMethod.GET, uriBuilder.toString());
+      assertSentToCloudControlEndpoint(HttpMethod.GET, "/networkDomainVip/virtualListener");
    }
 
    @Test
@@ -90,10 +88,10 @@ public class VirtualListenerMockTest extends BaseAccountAwareCloudControlMockTes
       assertEquals(virtualListeners.size(), 1, "should only return 2nd element");
       assertEquals(virtualListeners.get(0).id(), "VirtualListenerIdFrom2ndPage", "Should return 2nd element (from 2nd page).");
 
-      Uris.UriBuilder uriBuilder = getBasicApiUri("networkDomainVip/virtualListener");
+      Uris.UriBuilder uriBuilder = Uris.uriBuilder("/networkDomainVip/virtualListener");
       uriBuilder.addQuery("pageNumber", Integer.toString(2));
       uriBuilder.addQuery("pageSize", Integer.toString(1));
       addDatacenterFilters(uriBuilder);
-      assertSent(HttpMethod.GET, uriBuilder.toString());
+      assertSentToCloudControlEndpoint(HttpMethod.GET, uriBuilder.toString());
    }
 }

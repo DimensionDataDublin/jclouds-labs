@@ -28,8 +28,6 @@ import org.testng.annotations.Test;
 
 import javax.ws.rs.HttpMethod;
 
-import static javax.ws.rs.HttpMethod.GET;
-import static javax.ws.rs.HttpMethod.POST;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -52,14 +50,14 @@ public class NodeMockTest extends BaseAccountAwareCloudControlMockTest {
             .build());
       assertEquals(nodeId, "nodeId1");
       assertSentToCloudControlEndpoint(
-            POST, "networkDomainVip/createNode", stringFromResource("/vip/createNodeRequest.json"));
+            HttpMethod.POST, "/networkDomainVip/createNode", stringFromResource("/vip/createNodeRequest.json"));
    }
 
    @Test
    public void testGetNode() throws InterruptedException {
       server.enqueue(jsonResponse("/vip/node.json"));
       Node node = api.getNodeApi().getNode("12345");
-      assertSent(GET, getBasicApiUri("networkDomainVip/node/12345").toString());
+      assertSentToCloudControlEndpoint(HttpMethod.GET, "/networkDomainVip/node/12345");
       assertNotNull(node);
    }
 
@@ -77,8 +75,7 @@ public class NodeMockTest extends BaseAccountAwareCloudControlMockTest {
       assertEquals(consumeIteratorAndReturnSize(nodes), 2,
               "should return all nodes defined in enqueued response");
 
-      Uris.UriBuilder uriBuilder = getBasicApiUri("networkDomainVip/node");
-      assertSent(HttpMethod.GET, uriBuilder.toString());
+      assertSentToCloudControlEndpoint(HttpMethod.GET, "/networkDomainVip/node");
    }
 
    @Test
@@ -90,10 +87,10 @@ public class NodeMockTest extends BaseAccountAwareCloudControlMockTest {
       assertEquals(nodes.size(), 1, "should only return 2nd element");
       assertEquals(nodes.get(0).id(), "nodeIdFrom2ndPage", "Should return 2nd element (from 2nd page).");
 
-      Uris.UriBuilder uriBuilder = getBasicApiUri("networkDomainVip/node");
+      Uris.UriBuilder uriBuilder = Uris.uriBuilder("networkDomainVip/node");
       uriBuilder.addQuery("pageNumber", Integer.toString(2));
       uriBuilder.addQuery("pageSize", Integer.toString(1));
       addDatacenterFilters(uriBuilder);
-      assertSent(HttpMethod.GET, uriBuilder.toString());
+      assertSentToCloudControlEndpoint(HttpMethod.GET, uriBuilder.toString());
    }
 }
