@@ -1,0 +1,26 @@
+{
+  "virtualListener": [
+    {
+      "networkDomainId": "443f26b6-2a73-42c3-a66c-6116f11291d1",
+      "name": "vl3",
+      "state": "PENDING_ADD",
+      "createTime": "2017-09-11T13:06:06.000Z",
+      "type": "PERFORMANCE_LAYER_4",
+      "protocol": "ANY",
+      "listenerIpAddress": "10.0.1.4",
+      "listenerIpAddressability": "PRIVATE_NON_RFC1918",
+      "port": 90,
+      "enabled": false,
+      "connectionLimit": 3000,
+      "connectionRateLimit": 100,
+      "sourcePortPreservation": "CHANGE",
+      "optimizationProfile": "TCP_LEGACY",
+      "id": "VirtualListenerIdFrom2ndPage",
+      "datacenterId": "NA10"
+    }
+  ],
+  "pageNumber": 2,
+  "pageCount": 1,
+  "totalCount": 2,
+  "pageSize": 1
+}

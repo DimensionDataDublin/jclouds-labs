@@ -50,6 +50,7 @@ class ServerWithNatRuleToNodeMetadata implements Function<ServerWithExternalIp, 
          .put(State.PENDING_DELETE, NodeMetadata.Status.PENDING).put(State.PENDING_CHANGE, NodeMetadata.Status.PENDING)
          .put(State.FAILED_ADD, NodeMetadata.Status.ERROR).put(State.FAILED_CHANGE, NodeMetadata.Status.ERROR)
          .put(State.FAILED_DELETE, NodeMetadata.Status.ERROR).put(State.DELETED, NodeMetadata.Status.TERMINATED)
+         .put(State.PENDING_CLEAN, NodeMetadata.Status.PENDING).put(State.REQUIRES_SUPPORT, NodeMetadata.Status.ERROR)
          .put(State.NORMAL, NodeMetadata.Status.RUNNING).put(State.UNRECOGNIZED, NodeMetadata.Status.UNRECOGNIZED)
          .build();
 

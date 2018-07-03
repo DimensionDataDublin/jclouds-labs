@@ -1,0 +1,63 @@
+{
+  "id": "c8c92ea3-2da8-4d51-8153-f39bec794d69",
+  "datacenterId": "NA9",
+  "networkDomainId": "033a97dc-ee9b-4808-97ea-50b06624fd13",
+  "name": "PdrnVirtualListener",
+  "state": "NORMAL",
+  "description": "Production Virtual Listener",
+  "createTime": "2017-08-29T02:49:45",
+  "type": "STANDARD",
+  "protocol": "TCP",
+  "listenerIpAddress": "8.8.8.8",
+  "listenerIpAddressability": "PRIVATE_RFC1918",
+  "port": 80,
+  "enabled": true,
+  "connectionLimit": 2000,
+  "connectionRateLimit": 200,
+  "sourcePortPreservation": "PRESERVE",
+  "pool": {
+    "id": "80276678-58ab-476d-af8a-bbb8f4ce10f6",
+    "name": "MyPool",
+    "loadBalanceMethod": "ROUND_ROBIN",
+    "serviceDownAction": "RESELECT",
+    "slowRampTime": 200,
+    "healthMonitor": [
+      {
+        "id": "string",
+        "name": "string"
+      }
+    ]
+  },
+  "clientClonePool": {
+    "id": "80276678-58ab-476d-af8a-bbb8f4ce10f8",
+    "name": "MyPool2",
+    "loadBalanceMethod": "LEAST_CONNECTIONS_NODE",
+    "serviceDownAction": "RESELECT",
+    "slowRampTime": 200,
+    "healthMonitor": [
+      {
+        "id": "string",
+        "name": "string"
+      }
+    ]
+  },
+  "persistenceProfile": {
+    "id": "9e6b496d-5261-4542-91aa-b50c7f569c54",
+    "name": "source_addr"
+  },
+  "fallbackPersistenceProfile": {
+    "id": "9e6b496d-5261-4542-91aa-b50c7f569c55",
+    "name": "dest_addr"
+  },
+  "optimizationProfile": "TCP",
+  "sslOffloadProfile": {
+    "id": "9e6b496d-5261-4542-91aa-b50c7f569c55",
+    "name": "mySslProfile"
+  },
+  "irule": [
+    {
+      "id": "9e6b496d-5261-4542-91aa-b50c7f569982",
+      "name": "defaultiRule20"
+    }
+  ]
+}
