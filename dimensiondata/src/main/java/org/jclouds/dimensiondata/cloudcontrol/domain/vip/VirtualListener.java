@@ -18,6 +18,7 @@ package org.jclouds.dimensiondata.cloudcontrol.domain.vip;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
+import org.jclouds.dimensiondata.cloudcontrol.domain.State;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
@@ -186,14 +187,6 @@ public abstract class VirtualListener {
 
    public enum OptimizationProfile {
       TCP, LAN_OPT, WAN_OPT, MOBILE_OPT, TCP_LEGACY, SMTP, SIP
-   }
-
-   // FIXME use common State
-   public enum State {
-      NORMAL,
-      PENDING_ADD, PENDING_CHANGE, PENDING_DELETE,
-      FAILED_ADD, FAILED_CHANGE, FAILED_DELETE,
-      REQUIRES_SUPPORT
    }
 
    @AutoValue

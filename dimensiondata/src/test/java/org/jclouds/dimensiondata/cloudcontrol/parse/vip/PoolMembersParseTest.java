@@ -17,6 +17,7 @@
 package org.jclouds.dimensiondata.cloudcontrol.parse.vip;
 
 import com.google.common.collect.ImmutableList;
+import org.jclouds.dimensiondata.cloudcontrol.domain.State;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.PoolMember;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.PoolMembers;
 import org.jclouds.dimensiondata.cloudcontrol.internal.BaseDimensionDataCloudControlParseTest;
@@ -53,7 +54,7 @@ public class PoolMembersParseTest extends BaseDimensionDataCloudControlParseTest
                         .build())
                   .port(9889)
                   .status(PoolMember.Status.ENABLED)
-                  .state(PoolMember.State.NORMAL)
+                  .state(State.NORMAL)
                   .createTime(parseDate("2015-06-09T11:02:50.000Z"))
                   .build(),
             PoolMember.builder()
@@ -71,7 +72,7 @@ public class PoolMembersParseTest extends BaseDimensionDataCloudControlParseTest
                         .status(PoolMember.Status.ENABLED)
                         .build())
                   .status(PoolMember.Status.DISABLED)
-                  .state(PoolMember.State.PENDING_DELETE)
+                  .state(State.PENDING_DELETE)
                   .createTime(parseDate("2015-06-09T10:43:29.000Z"))
                   .build()), 1, 2, 2, 250);
    }

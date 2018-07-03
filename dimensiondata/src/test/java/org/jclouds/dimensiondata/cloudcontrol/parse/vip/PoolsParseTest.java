@@ -17,6 +17,7 @@
 package org.jclouds.dimensiondata.cloudcontrol.parse.vip;
 
 import com.google.common.collect.ImmutableList;
+import org.jclouds.dimensiondata.cloudcontrol.domain.State;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.HealthMonitor;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.Pool;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.Pools;
@@ -55,7 +56,7 @@ public class PoolsParseTest extends BaseDimensionDataCloudControlParseTest<Pools
                                     .build()))
                         .serviceDownAction(Pool.ServiceDownAction.RESELECT)
                         .slowRampTime(10)
-                        .state(Pool.State.NORMAL)
+                        .state(State.NORMAL)
                         .createTime(DatatypeConverter.parseDateTime("2015-06-04T09:15:07.000Z").getTime())
                         .id("4d360b1f-bc2c-4ab7-9884-1f03ba2768f7")
                         .datacenterId("NA9")
@@ -66,7 +67,7 @@ public class PoolsParseTest extends BaseDimensionDataCloudControlParseTest<Pools
                         .loadBalanceMethod(Pool.LoadBalanceMethod.PREDICTIVE_NODE)
                         .serviceDownAction(Pool.ServiceDownAction.DROP)
                         .slowRampTime(11)
-                        .state(Pool.State.PENDING_DELETE)
+                        .state(State.PENDING_DELETE)
                         .createTime(DatatypeConverter.parseDateTime("2015-06-05T09:15:07.000Z").getTime())
                         .id("5e471c20-cd3d-5bc8-a995-2014cb387908")
                         .datacenterId("NA9")

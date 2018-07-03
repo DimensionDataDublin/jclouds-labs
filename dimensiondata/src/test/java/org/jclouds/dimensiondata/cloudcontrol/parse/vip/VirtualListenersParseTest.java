@@ -17,6 +17,7 @@
 package org.jclouds.dimensiondata.cloudcontrol.parse.vip;
 
 import com.google.common.collect.ImmutableList;
+import org.jclouds.dimensiondata.cloudcontrol.domain.State;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.HealthMonitor;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.VirtualListener;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.VirtualListeners;
@@ -43,7 +44,7 @@ public class VirtualListenersParseTest extends BaseDimensionDataCloudControlPars
             VirtualListener.builder()
                   .networkDomainId("033a97dc-ee9b-4808-97ea-50b06624fd13")
                   .name("PdrnVirtualListener")
-                  .state(VirtualListener.State.NORMAL)
+                  .state(State.NORMAL)
                   .description("Production Virtual Listener")
                   .createTime(DatatypeConverter.parseDateTime("2017-08-29T02:49:45Z").getTime())
                   .type(VirtualListener.Type.STANDARD)
@@ -94,7 +95,7 @@ public class VirtualListenersParseTest extends BaseDimensionDataCloudControlPars
             VirtualListener.builder()
                   .networkDomainId("443f26b6-2a73-42c3-a66c-6116f11291d1")
                   .name("vl3")
-                  .state(VirtualListener.State.PENDING_ADD)
+                  .state(State.PENDING_ADD)
                   .createTime(DatatypeConverter.parseDateTime("2017-09-11T13:06:06.000Z").getTime())
                   .type(VirtualListener.Type.PERFORMANCE_LAYER_4)
                   .protocol(VirtualListener.Protocol.ANY)

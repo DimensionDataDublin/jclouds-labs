@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import org.jclouds.dimensiondata.cloudcontrol.domain.State;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
@@ -100,13 +101,6 @@ public abstract class Pool {
    public abstract String datacenterId();
 
    public abstract Builder toBuilder();
-
-   public enum State {
-      NORMAL,
-      PENDING_ADD, PENDING_CHANGE, PENDING_DELETE,
-      FAILED_ADD, FAILED_CHANGE, FAILED_DELETE,
-      REQUIRES_SUPPORT
-   }
 
    public enum LoadBalanceMethod {
       ROUND_ROBIN,

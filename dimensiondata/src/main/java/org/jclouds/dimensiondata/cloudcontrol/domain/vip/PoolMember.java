@@ -17,6 +17,7 @@
 package org.jclouds.dimensiondata.cloudcontrol.domain.vip;
 
 import com.google.auto.value.AutoValue;
+import org.jclouds.dimensiondata.cloudcontrol.domain.State;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
@@ -85,13 +86,6 @@ public abstract class PoolMember {
    public abstract Date createTime();
 
    public abstract Builder toBuilder();
-
-   public enum State {
-      NORMAL,
-      PENDING_ADD, PENDING_CHANGE, PENDING_DELETE,
-      FAILED_ADD, FAILED_CHANGE, FAILED_DELETE,
-      REQUIRES_SUPPORT
-   }
 
    public enum Status {
       ENABLED, DISABLED, FORCED_OFFLINE

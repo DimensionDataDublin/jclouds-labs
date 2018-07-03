@@ -21,9 +21,10 @@ import com.google.common.base.CaseFormat;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public enum State {
-
-   NORMAL, FAILED_ADD, FAILED_CHANGE, FAILED_DELETE, PENDING_DELETE, DELETED, PENDING_CHANGE,
-   PENDING_CLEAN, REQUIRES_SUPPORT,
+   NORMAL,
+   FAILED_ADD, FAILED_CHANGE, FAILED_DELETE,
+   PENDING_ADD, PENDING_CHANGE, PENDING_DELETE,
+   DELETED, PENDING_CLEAN, REQUIRES_SUPPORT,
    UNRECOGNIZED;
 
    @Override

@@ -17,6 +17,7 @@
 package org.jclouds.dimensiondata.cloudcontrol.parse.vip;
 
 import com.google.common.collect.ImmutableList;
+import org.jclouds.dimensiondata.cloudcontrol.domain.State;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.HealthMonitor;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.Node;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.Nodes;
@@ -44,7 +45,7 @@ public class NodesParseTest extends BaseDimensionDataCloudControlParseTest<Nodes
                   .name("ProductionNode.2")
                   .description("Production Server 2")
                   .ipv4Address("10.10.10.101")
-                  .state(Node.State.NORMAL)
+                  .state(State.NORMAL)
                   .status(Node.Status.ENABLED)
                   .healthMonitor(HealthMonitor.builder()
                         .id("0168b83a-d487-11e4-811f-005056806999")
@@ -61,7 +62,7 @@ public class NodesParseTest extends BaseDimensionDataCloudControlParseTest<Nodes
                   .name("ProductionNode.3")
                   .description("Production Server 3")
                   .ipv4Address("10.10.10.102")
-                  .state(Node.State.PENDING_DELETE)
+                  .state(State.PENDING_DELETE)
                   .status(Node.Status.FORCED_OFFLINE)
                   .createTime(DatatypeConverter.parseDateTime("2015-05-28T13:56:14.000Z").getTime())
                   .id("45ef7fe7-57b5-5ebf-b864-309e4951d70a")
