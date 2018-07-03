@@ -64,6 +64,7 @@ public interface PoolMemberApi {
    @ResponseParser(PoolMemberId.class)
    String addPoolMember(@BinderParam(BindToJsonPayload.class) AddPoolMember addPoolMember);
 
+   // FIXME JCLOUD-90 handle RESOURCE_NOT_FOUND and write Mock test
    @Named("poolMember:get")
    @GET
    @Path("/poolMember/{id}")

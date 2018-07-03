@@ -51,6 +51,7 @@ import com.google.inject.TypeLiteral;
 @Path("/{jclouds.api-version}/networkDomainVip")
 public interface PoolApi {
 
+   // FIXME JCLOUD-90 handle RESOURCE_NOT_FOUND and write Mock test
    @Named("pool:get")
    @GET
    @Path("/pool/{id}")

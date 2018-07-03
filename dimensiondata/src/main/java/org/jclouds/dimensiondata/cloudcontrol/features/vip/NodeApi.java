@@ -65,6 +65,7 @@ public interface NodeApi {
    @ResponseParser(NodeId.class)
    String createNode(@BinderParam(BindToJsonPayload.class) CreateNode createNode);
 
+   // FIXME JCLOUD-90 handle RESOURCE_NOT_FOUND and write Mock test
    @Named("node:get")
    @GET
    @Path("/node/{id}")
