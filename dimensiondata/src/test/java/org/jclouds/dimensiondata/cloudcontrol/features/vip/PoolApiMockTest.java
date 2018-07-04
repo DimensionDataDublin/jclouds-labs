@@ -32,7 +32,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
 @Test(groups = "live", testName = "PoolApiLiveTest", singleThreaded = true)
-public class PoolMockTest extends BaseAccountAwareCloudControlMockTest {
+public class PoolApiMockTest extends BaseAccountAwareCloudControlMockTest {
 
    @Test
    public void testGetPool() throws InterruptedException {

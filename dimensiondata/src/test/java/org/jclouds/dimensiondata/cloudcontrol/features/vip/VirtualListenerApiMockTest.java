@@ -35,8 +35,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
 @Test(groups = "live", testName = "VirtualListenerApiLiveTest", singleThreaded = true)
-// FIXME rename all Mock tests to ApiMockTest
-public class VirtualListenerMockTest extends BaseAccountAwareCloudControlMockTest {
+public class VirtualListenerApiMockTest extends BaseAccountAwareCloudControlMockTest {
 
    @Test
    public void testCreateVirtualListener() throws InterruptedException {

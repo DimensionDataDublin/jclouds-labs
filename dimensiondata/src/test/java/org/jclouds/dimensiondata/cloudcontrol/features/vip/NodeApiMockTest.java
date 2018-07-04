@@ -33,7 +33,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
 @Test(groups = "live", testName = "NodeApiLiveTest", singleThreaded = true)
-public class NodeMockTest extends BaseAccountAwareCloudControlMockTest {
+public class NodeApiMockTest extends BaseAccountAwareCloudControlMockTest {
 
    @Test
    public void testCreateNode() throws InterruptedException {
