@@ -1,0 +1,9 @@
+{
+  "operation": "DELETE_VIRTUAL_LISTENER",
+  "responseCode": "OK",
+  "message": "Virtual Listener (Id:6115469d-a8bb-445b-bb23-d23b5283f2b9) has been deleted",
+  "info": [],
+  "warning": [],
+  "error": [],
+  "requestId": "na9_20160321T074626030-0400_7e9fffe7-190b-46f2-9107-9d52fe57d0ad"
+}

@@ -1,0 +1,9 @@
+{
+  "operation": "DELETE_NODE",
+  "responseCode": "OK",
+  "message": "Node (Id:34de6ed6-46a4-4dae-a753-2f8d3840c6f9) has been deleted",
+  "info": [],
+  "warning": [],
+  "error": [],
+  "requestId": "na9_20160321T074626030-0400_7e9fffe7-190b-46f2-9107- 9d52fe57d0ad"
+}

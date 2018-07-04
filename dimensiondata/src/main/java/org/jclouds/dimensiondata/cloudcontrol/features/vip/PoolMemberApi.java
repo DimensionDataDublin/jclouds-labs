@@ -36,6 +36,8 @@ import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.MapBinder;
+import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.Transform;
@@ -64,7 +66,7 @@ public interface PoolMemberApi {
    @ResponseParser(PoolMemberId.class)
    String addPoolMember(@BinderParam(BindToJsonPayload.class) AddPoolMember addPoolMember);
 
-   // FIXME JCLOUD-90 handle RESOURCE_NOT_FOUND and write Mock test
+   // FIXME JCLOUDS-1432 handle RESOURCE_NOT_FOUND and write Mock test
    @Named("poolMember:get")
    @GET
    @Path("/poolMember/{id}")
@@ -83,6 +85,14 @@ public interface PoolMemberApi {
    @Transform(ParsePoolMembers.ToPagedIterable.class)
    @ResponseParser(ParsePoolMembers.class)
    PagedIterable<PoolMember> listPoolMembers();
+
+   @Named("poolMember:remove")
+   @POST
+   @Path("/removePoolMember")
+   @Produces(MediaType.APPLICATION_JSON)
+   @Fallback(Fallbacks.VoidOnNotFoundOr404.class)
+   @MapBinder(BindToJsonPayload.class)
+   void removePoolMember(@PayloadParam("id") String id);
 
    final class ParsePoolMembers extends ParseJson<PoolMembers> {
 

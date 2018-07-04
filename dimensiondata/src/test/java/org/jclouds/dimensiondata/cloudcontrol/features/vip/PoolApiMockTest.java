@@ -93,4 +93,11 @@ public class PoolApiMockTest extends BaseAccountAwareCloudControlMockTest {
       addDatacenterFilters(expectedUriBuilder);
       assertSentToCloudControlEndpoint(HttpMethod.GET, expectedUriBuilder.toString());
    }
+
+   @Test
+   public void testDeletePool() throws Exception {
+      server.enqueue(jsonResponse("/vip/deletePoolResponse.json"));
+      api.getPoolApi().deletePool("12345");
+      assertSentToCloudControlEndpoint(HttpMethod.POST, "/networkDomainVip/deletePool");
+   }
 }

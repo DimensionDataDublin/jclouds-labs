@@ -93,4 +93,11 @@ public class NodeApiMockTest extends BaseAccountAwareCloudControlMockTest {
       addDatacenterFilters(uriBuilder);
       assertSentToCloudControlEndpoint(HttpMethod.GET, uriBuilder.toString());
    }
+
+   @Test
+   public void testDeleteNode() throws Exception {
+      server.enqueue(jsonResponse("/vip/deleteNodeResponse.json"));
+      api.getNodeApi().deleteNode("12345");
+      assertSentToCloudControlEndpoint(HttpMethod.POST, "/networkDomainVip/deleteNode");
+   }
 }

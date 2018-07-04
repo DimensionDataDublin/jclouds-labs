@@ -37,6 +37,8 @@ import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.MapBinder;
+import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.Transform;
@@ -64,7 +66,7 @@ public interface PoolApi {
    @ResponseParser(PoolId.class)
    String createPool(@BinderParam(BindToJsonPayload.class) CreatePool createPool);
 
-   // FIXME JCLOUD-90 handle RESOURCE_NOT_FOUND and write Mock test
+   // FIXME JCLOUDS-1432 handle RESOURCE_NOT_FOUND and write Mock test
    @Named("pool:get")
    @GET
    @Path("/pool/{id}")
@@ -83,6 +85,14 @@ public interface PoolApi {
    @Transform(ParsePools.ToPagedIterable.class)
    @ResponseParser(ParsePools.class)
    PagedIterable<Pool> listPools();
+
+   @Named("pool:delete")
+   @POST
+   @Path("/deletePool")
+   @Produces(MediaType.APPLICATION_JSON)
+   @Fallback(Fallbacks.VoidOnNotFoundOr404.class)
+   @MapBinder(BindToJsonPayload.class)
+   void deletePool(@PayloadParam("id") String id);
 
    final class ParsePools extends ParseJson<Pools> {
 

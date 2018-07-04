@@ -44,6 +44,8 @@ import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.MapBinder;
+import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.Transform;
@@ -65,7 +67,6 @@ public interface NodeApi {
    @ResponseParser(NodeId.class)
    String createNode(@BinderParam(BindToJsonPayload.class) CreateNode createNode);
 
-   // FIXME JCLOUD-90 handle RESOURCE_NOT_FOUND and write Mock test
    @Named("node:get")
    @GET
    @Path("/node/{id}")
@@ -84,6 +85,14 @@ public interface NodeApi {
    @Transform(ParseNodes.ToPagedIterable.class)
    @ResponseParser(ParseNodes.class)
    PagedIterable<Node> listNodes();
+
+   @Named("node:delete")
+   @POST
+   @Path("/deleteNode")
+   @Produces(MediaType.APPLICATION_JSON)
+   @Fallback(Fallbacks.VoidOnNotFoundOr404.class)
+   @MapBinder(BindToJsonPayload.class)
+   void deleteNode(@PayloadParam("id") String id);
 
    final class ParseNodes extends ParseJson<Nodes> {
 

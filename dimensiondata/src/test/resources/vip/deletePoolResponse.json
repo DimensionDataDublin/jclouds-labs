@@ -1,0 +1,9 @@
+{
+  "operation": "DELETE_POOL",
+  "responseCode": "OK",
+  "message": "Pool (Id:4d360b1f-bc2c-4ab7-9884-1f03ba2768f7) has been deleted",
+  "info": [],
+  "warning": [],
+  "error": [],
+  "requestId": "na9_20160321T074626030-0400_7e9fffe7-190b-46f2-9107-9d52fe57d0ad"
+}

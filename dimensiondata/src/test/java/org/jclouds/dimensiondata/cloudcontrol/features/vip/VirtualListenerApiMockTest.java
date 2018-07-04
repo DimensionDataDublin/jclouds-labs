@@ -105,4 +105,11 @@ public class VirtualListenerApiMockTest extends BaseAccountAwareCloudControlMock
       addDatacenterFilters(uriBuilder);
       assertSentToCloudControlEndpoint(HttpMethod.GET, uriBuilder.toString());
    }
+
+   @Test
+   public void testDeleteVirtualListener() throws Exception {
+      server.enqueue(jsonResponse("/vip/deleteVirtualListenerResponse.json"));
+      api.getVirtualListenerApi().deleteVirtualListener("12345");
+      assertSentToCloudControlEndpoint(HttpMethod.POST, "/networkDomainVip/deleteVirtualListener");
+   }
 }

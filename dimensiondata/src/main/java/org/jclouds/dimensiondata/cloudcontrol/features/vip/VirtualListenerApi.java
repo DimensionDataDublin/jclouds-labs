@@ -37,6 +37,8 @@ import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.MapBinder;
+import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.Transform;
@@ -64,7 +66,7 @@ public interface VirtualListenerApi {
    @ResponseParser(VirtualListenerId.class)
    String createVirtualListener(@BinderParam(BindToJsonPayload.class) CreateVirtualListener createVirtualListener);
 
-   // FIXME JCLOUD-90 handle RESOURCE_NOT_FOUND and write Mock test
+   // FIXME JCLOUDS-1432 handle RESOURCE_NOT_FOUND and write Mock test
    @Named("virtualListener:get")
    @GET
    @Path("/virtualListener/{id}")
@@ -83,6 +85,14 @@ public interface VirtualListenerApi {
    @Transform(ParseVirtualListeners.ToPagedIterable.class)
    @ResponseParser(ParseVirtualListeners.class)
    PagedIterable<VirtualListener> listVirtualListeners();
+
+   @Named("virtualListener:delete")
+   @POST
+   @Path("/deleteVirtualListener")
+   @Produces(MediaType.APPLICATION_JSON)
+   @Fallback(Fallbacks.VoidOnNotFoundOr404.class)
+   @MapBinder(BindToJsonPayload.class)
+   void deleteVirtualListener(@PayloadParam("id") String id);
 
    final class ParseVirtualListeners extends ParseJson<VirtualListeners> {
 
