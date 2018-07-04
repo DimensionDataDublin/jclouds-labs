@@ -29,7 +29,7 @@ import static org.testng.Assert.assertNotNull;
 @Test(groups = "live", testName = "PoolMemberApiLiveTest", singleThreaded = true)
 public class PoolMemberLiveTest extends BaseDimensionDataCloudControlApiLiveTest {
 
-   public void testCreatePools() throws Exception {
+   public void testCreatePoolMemeber() {
       String poolId = api.getPoolMemberApi().addPoolMember(AddPoolMember.builder()
             .poolId("your-pool-id-here")
             .nodeId("your-node-id-here")
