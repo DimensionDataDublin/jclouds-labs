@@ -16,7 +16,9 @@
  */
 package org.jclouds.dimensiondata.cloudcontrol.features.vip;
 
+import com.google.common.collect.ImmutableList;
 import org.jclouds.dimensiondata.cloudcontrol.domain.PaginatedCollection;
+import org.jclouds.dimensiondata.cloudcontrol.domain.vip.CreatePool;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.Pool;
 import org.jclouds.dimensiondata.cloudcontrol.internal.BaseAccountAwareCloudControlMockTest;
 import org.jclouds.dimensiondata.cloudcontrol.options.DatacenterIdListFilters;
@@ -33,6 +35,24 @@ import static org.testng.Assert.assertNull;
 
 @Test(groups = "live", testName = "PoolApiLiveTest", singleThreaded = true)
 public class PoolApiMockTest extends BaseAccountAwareCloudControlMockTest {
+
+   @Test
+   public void testCreatePool() throws InterruptedException {
+      server.enqueue(jsonResponse("/vip/createPoolResponse.json"));
+      String poolId = api.getPoolApi().createPool(CreatePool.builder()
+            .networkDomainId("553f26b6-2a73-42c3-a78b-6116f11291d0")
+            .name("myDevelopmentPool.1")
+            .description("Pool for load balancing development application servers.")
+            .loadBalanceMethod(Pool.LoadBalanceMethod.ROUND_ROBIN)
+            .healthMonitorIds(
+                  ImmutableList.of("01683574-d487-11e4-811f-005056806999", "0168546c-d487-11e4-811f-005056806999"))
+            .serviceDownAction(Pool.ServiceDownAction.RESELECT)
+            .slowRampTime(10)
+            .build());
+      assertEquals(poolId, "poolId1");
+      assertSentToCloudControlEndpoint(
+            HttpMethod.POST, "/networkDomainVip/createPool", stringFromResource("/vip/createPoolRequest.json"));
+   }
 
    @Test
    public void testGetPool() throws InterruptedException {
@@ -54,7 +74,7 @@ public class PoolApiMockTest extends BaseAccountAwareCloudControlMockTest {
       server.enqueue(jsonResponse("/vip/pools.json"));
       Iterable<Pool> pools = api.getPoolApi().listPools().concat();
       assertEquals(consumeIteratorAndReturnSize(pools), 2,
-              "should return all pools defined in enqueued response");
+            "should return all pools defined in enqueued response");
       assertSentToCloudControlEndpoint(HttpMethod.GET, "/networkDomainVip/pool");
    }
 
@@ -63,7 +83,7 @@ public class PoolApiMockTest extends BaseAccountAwareCloudControlMockTest {
       server.enqueue(jsonResponse("/vip/pools_page2.json"));
       ZoneIdsSupplier zoneIdsSupplier = ctx.utils().injector().getInstance(ZoneIdsSupplier.class);
       PaginatedCollection<Pool> pools = api.getPoolApi().listPools(DatacenterIdListFilters.Builder.paginationOptions(
-              new PaginationOptions().pageNumber(2).pageSize(1)).datacenterIdsFromZoneIdsSupplier(zoneIdsSupplier));
+            new PaginationOptions().pageNumber(2).pageSize(1)).datacenterIdsFromZoneIdsSupplier(zoneIdsSupplier));
       assertEquals(pools.size(), 1, "should only return 2nd element");
       assertEquals(pools.get(0).id(), "poolIdFrom2ndPage", "Should return 2nd element (from 2nd page).");
 
