@@ -35,7 +35,6 @@ import static org.testng.Assert.assertNull;
 @Test(groups = "live", testName = "NodeApiLiveTest", singleThreaded = true)
 public class NodeApiMockTest extends BaseAccountAwareCloudControlMockTest {
 
-   @Test
    public void testCreateNode() throws InterruptedException {
       server.enqueue(jsonResponse("/vip/createNodeResponse.json"));
       String nodeId = api.getNodeApi().createNode(CreateNode.builder()
@@ -53,7 +52,6 @@ public class NodeApiMockTest extends BaseAccountAwareCloudControlMockTest {
             HttpMethod.POST, "/networkDomainVip/createNode", stringFromResource("/vip/createNodeRequest.json"));
    }
 
-   @Test
    public void testGetNode() throws InterruptedException {
       server.enqueue(jsonResponse("/vip/node.json"));
       Node node = api.getNodeApi().getNode("12345");
@@ -61,14 +59,12 @@ public class NodeApiMockTest extends BaseAccountAwareCloudControlMockTest {
       assertNotNull(node);
    }
 
-   @Test
    public void testGetNodeResourceNotFound() {
       server.enqueue(responseResourceNotFound());
       Node found = api.getNodeApi().getNode("12345");
       assertNull(found);
    }
 
-   @Test
    public void testListNodes_ReadAll() throws Exception {
       server.enqueue(jsonResponse("/vip/nodes.json"));
       Iterable<Node> nodes = api.getNodeApi().listNodes().concat();
@@ -78,7 +74,6 @@ public class NodeApiMockTest extends BaseAccountAwareCloudControlMockTest {
       assertSentToCloudControlEndpoint(HttpMethod.GET, "/networkDomainVip/node");
    }
 
-   @Test
    public void testListNodes_WithPagination() throws Exception {
       server.enqueue(jsonResponse("/vip/nodes_page2.json"));
       ZoneIdsSupplier zoneIdsSupplier = ctx.utils().injector().getInstance(ZoneIdsSupplier.class);
@@ -94,7 +89,6 @@ public class NodeApiMockTest extends BaseAccountAwareCloudControlMockTest {
       assertSentToCloudControlEndpoint(HttpMethod.GET, uriBuilder.toString());
    }
 
-   @Test
    public void testDeleteNode() throws Exception {
       server.enqueue(jsonResponse("/vip/deleteNodeResponse.json"));
       api.getNodeApi().deleteNode("12345");

@@ -37,7 +37,6 @@ import static org.testng.Assert.assertNull;
 @Test(groups = "live", testName = "VirtualListenerApiLiveTest", singleThreaded = true)
 public class VirtualListenerApiMockTest extends BaseAccountAwareCloudControlMockTest {
 
-   @Test
    public void testCreateVirtualListener() throws InterruptedException {
       server.enqueue(jsonResponse("/vip/createVirtualListenerResponse.json"));
       String virtualListenerId = api.getVirtualListenerApi().createVirtualListener(CreateVirtualListener.builder()
@@ -65,7 +64,6 @@ public class VirtualListenerApiMockTest extends BaseAccountAwareCloudControlMock
             stringFromResource("/vip/createVirtualListenerRequest.json"));
    }
 
-   @Test
    public void testGetVirtualListener() throws InterruptedException {
       server.enqueue(jsonResponse("/vip/virtualListener.json"));
       VirtualListener virtualListener = api.getVirtualListenerApi().getVirtualListener("12345");
@@ -73,14 +71,12 @@ public class VirtualListenerApiMockTest extends BaseAccountAwareCloudControlMock
       assertNotNull(virtualListener);
    }
 
-   @Test
    public void testGetVirtualListenerResourceNotFound() {
       server.enqueue(responseResourceNotFound());
       VirtualListener found = api.getVirtualListenerApi().getVirtualListener("12345");
       assertNull(found);
    }
 
-   @Test
    public void testListVirtualListeners_ReadAll() throws Exception {
       server.enqueue(jsonResponse("/vip/virtualListeners.json"));
       Iterable<VirtualListener> virtualListeners = api.getVirtualListenerApi().listVirtualListeners().concat();
@@ -90,7 +86,6 @@ public class VirtualListenerApiMockTest extends BaseAccountAwareCloudControlMock
       assertSentToCloudControlEndpoint(HttpMethod.GET, "/networkDomainVip/virtualListener");
    }
 
-   @Test
    public void testListVirtualListeners_WithPagination() throws Exception {
       server.enqueue(jsonResponse("/vip/virtualListeners_page2.json"));
       ZoneIdsSupplier zoneIdsSupplier = ctx.utils().injector().getInstance(ZoneIdsSupplier.class);
@@ -106,7 +101,6 @@ public class VirtualListenerApiMockTest extends BaseAccountAwareCloudControlMock
       assertSentToCloudControlEndpoint(HttpMethod.GET, uriBuilder.toString());
    }
 
-   @Test
    public void testDeleteVirtualListener() throws Exception {
       server.enqueue(jsonResponse("/vip/deleteVirtualListenerResponse.json"));
       api.getVirtualListenerApi().deleteVirtualListener("12345");

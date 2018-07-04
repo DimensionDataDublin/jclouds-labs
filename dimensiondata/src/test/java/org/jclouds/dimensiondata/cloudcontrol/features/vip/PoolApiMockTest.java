@@ -36,7 +36,6 @@ import static org.testng.Assert.assertNull;
 @Test(groups = "live", testName = "PoolApiLiveTest", singleThreaded = true)
 public class PoolApiMockTest extends BaseAccountAwareCloudControlMockTest {
 
-   @Test
    public void testCreatePool() throws InterruptedException {
       server.enqueue(jsonResponse("/vip/createPoolResponse.json"));
       String poolId = api.getPoolApi().createPool(CreatePool.builder()
@@ -54,7 +53,6 @@ public class PoolApiMockTest extends BaseAccountAwareCloudControlMockTest {
             HttpMethod.POST, "/networkDomainVip/createPool", stringFromResource("/vip/createPoolRequest.json"));
    }
 
-   @Test
    public void testGetPool() throws InterruptedException {
       server.enqueue(jsonResponse("/vip/pool.json"));
       Pool pool = api.getPoolApi().getPool("12345");
@@ -62,14 +60,12 @@ public class PoolApiMockTest extends BaseAccountAwareCloudControlMockTest {
       assertNotNull(pool);
    }
 
-   @Test
    public void testGetPoolResourceNotFound() {
       server.enqueue(responseResourceNotFound());
       Pool found = api.getPoolApi().getPool("12345");
       assertNull(found);
    }
 
-   @Test
    public void testListPools_ReadAll() throws Exception {
       server.enqueue(jsonResponse("/vip/pools.json"));
       Iterable<Pool> pools = api.getPoolApi().listPools().concat();
@@ -78,7 +74,6 @@ public class PoolApiMockTest extends BaseAccountAwareCloudControlMockTest {
       assertSentToCloudControlEndpoint(HttpMethod.GET, "/networkDomainVip/pool");
    }
 
-   @Test
    public void testListPools_WithPagination() throws Exception {
       server.enqueue(jsonResponse("/vip/pools_page2.json"));
       ZoneIdsSupplier zoneIdsSupplier = ctx.utils().injector().getInstance(ZoneIdsSupplier.class);
@@ -94,7 +89,6 @@ public class PoolApiMockTest extends BaseAccountAwareCloudControlMockTest {
       assertSentToCloudControlEndpoint(HttpMethod.GET, expectedUriBuilder.toString());
    }
 
-   @Test
    public void testDeletePool() throws Exception {
       server.enqueue(jsonResponse("/vip/deletePoolResponse.json"));
       api.getPoolApi().deletePool("12345");

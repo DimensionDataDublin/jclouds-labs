@@ -36,7 +36,6 @@ import static org.testng.Assert.assertNull;
 @Test(groups = "live", testName = "PoolApiLiveTest", singleThreaded = true)
 public class PoolMemberApiMockTest extends BaseAccountAwareCloudControlMockTest {
 
-   @Test
    public void testAddPoolMember() throws InterruptedException {
       server.enqueue(jsonResponse("/vip/addPoolMemberResponse.json"));
       String poolMemberId = api.getPoolMemberApi().addPoolMember(AddPoolMember.builder()
@@ -50,7 +49,6 @@ public class PoolMemberApiMockTest extends BaseAccountAwareCloudControlMockTest 
             POST, "/networkDomainVip/addPoolMember", stringFromResource("/vip/addPoolMemberRequest.json"));
    }
 
-   @Test
    public void testGetPoolMember() throws InterruptedException {
       server.enqueue(jsonResponse("/vip/poolMember.json"));
       PoolMember poolMember = api.getPoolMemberApi().getPoolMember("12345");
@@ -58,14 +56,12 @@ public class PoolMemberApiMockTest extends BaseAccountAwareCloudControlMockTest 
       assertNotNull(poolMember);
    }
 
-   @Test
    public void testGetPoolMemberResourceNotFound() {
       server.enqueue(responseResourceNotFound());
       PoolMember found = api.getPoolMemberApi().getPoolMember("12345");
       assertNull(found);
    }
 
-   @Test
    public void testListPoolMembers_ReadAll() throws Exception {
       server.enqueue(jsonResponse("/vip/poolMembers.json"));
       Iterable<PoolMember> poolMembers = api.getPoolMemberApi().listPoolMembers().concat();
@@ -74,7 +70,6 @@ public class PoolMemberApiMockTest extends BaseAccountAwareCloudControlMockTest 
       assertSentToCloudControlEndpoint(HttpMethod.GET, "/networkDomainVip/poolMember");
    }
 
-   @Test
    public void testListPoolMembers_WithPagination() throws Exception {
       server.enqueue(jsonResponse("/vip/poolMembers_page2.json"));
       ZoneIdsSupplier zoneIdsSupplier = ctx.utils().injector().getInstance(ZoneIdsSupplier.class);
@@ -91,7 +86,6 @@ public class PoolMemberApiMockTest extends BaseAccountAwareCloudControlMockTest 
       assertSentToCloudControlEndpoint(HttpMethod.GET, uriBuilder.toString());
    }
 
-   @Test
    public void testRemovePoolMember() throws Exception {
       server.enqueue(jsonResponse("/vip/removePoolMemberResponse.json"));
       api.getPoolMemberApi().removePoolMember("12345");
