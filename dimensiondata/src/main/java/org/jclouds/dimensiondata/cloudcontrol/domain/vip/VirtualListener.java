@@ -203,8 +203,8 @@ public abstract class VirtualListener {
       public static PoolSummary create(
             String id,
             String name,
-            LoadBalanceMethod loadBalanceMethod,
-            ServiceDownAction serviceDownAction,
+            Pool.LoadBalanceMethod loadBalanceMethod,
+            Pool.ServiceDownAction serviceDownAction,
             int slowRampTime,
             @Nullable List<HealthMonitor> healthMonitors
       ) {
@@ -226,28 +226,14 @@ public abstract class VirtualListener {
 
       public abstract String name();
 
-      public abstract LoadBalanceMethod loadBalanceMethod();
+      public abstract Pool.LoadBalanceMethod loadBalanceMethod();
 
-      public abstract ServiceDownAction serviceDownAction();
+      public abstract Pool.ServiceDownAction serviceDownAction();
 
       public abstract int slowRampTime();
 
       @Nullable
       public abstract List<HealthMonitor> healthMonitors();
-
-      public enum LoadBalanceMethod {
-         ROUND_ROBIN,
-         LEAST_CONNECTIONS_MEMBER,
-         LEAST_CONNECTIONS_NODE,
-         OBSERVED_MEMBER,
-         OBSERVED_NODE,
-         PREDICTIVE_MEMBER,
-         PREDICTIVE_NODE
-      }
-
-      public enum ServiceDownAction {
-         NONE, DROP, RESELECT
-      }
 
       @AutoValue.Builder
       public abstract static class Builder {
@@ -255,9 +241,9 @@ public abstract class VirtualListener {
 
          public abstract Builder name(String name);
 
-         public abstract Builder loadBalanceMethod(LoadBalanceMethod loadBalanceMethod);
+         public abstract Builder loadBalanceMethod(Pool.LoadBalanceMethod loadBalanceMethod);
 
-         public abstract Builder serviceDownAction(ServiceDownAction serviceDownAction);
+         public abstract Builder serviceDownAction(Pool.ServiceDownAction serviceDownAction);
 
          public abstract Builder slowRampTime(int slowRampTime);
 

@@ -19,6 +19,7 @@ package org.jclouds.dimensiondata.cloudcontrol.parse.vip;
 import com.google.common.collect.ImmutableList;
 import org.jclouds.dimensiondata.cloudcontrol.domain.State;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.HealthMonitor;
+import org.jclouds.dimensiondata.cloudcontrol.domain.vip.Pool;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.VirtualListener;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.VirtualListeners;
 import org.jclouds.dimensiondata.cloudcontrol.internal.BaseDimensionDataCloudControlParseTest;
@@ -59,8 +60,8 @@ public class VirtualListenersParseTest extends BaseDimensionDataCloudControlPars
                   .pool(VirtualListener.PoolSummary.builder()
                         .id("80276678-58ab-476d-af8a-bbb8f4ce10f6")
                         .name("MyPool")
-                        .loadBalanceMethod(VirtualListener.PoolSummary.LoadBalanceMethod.LEAST_CONNECTIONS_MEMBER)
-                        .serviceDownAction(VirtualListener.PoolSummary.ServiceDownAction.RESELECT)
+                        .loadBalanceMethod(Pool.LoadBalanceMethod.LEAST_CONNECTIONS_MEMBER)
+                        .serviceDownAction(Pool.ServiceDownAction.RESELECT)
                         .slowRampTime(200)
                         .healthMonitors(ImmutableList.of(
                               HealthMonitor.builder()
@@ -71,8 +72,8 @@ public class VirtualListenersParseTest extends BaseDimensionDataCloudControlPars
                   .clientClonePool(VirtualListener.PoolSummary.builder()
                         .id("80276678-58ab-476d-af8a-bbb8f4ce10f8")
                         .name("MyPool2")
-                        .loadBalanceMethod(VirtualListener.PoolSummary.LoadBalanceMethod.ROUND_ROBIN)
-                        .serviceDownAction(VirtualListener.PoolSummary.ServiceDownAction.DROP)
+                        .loadBalanceMethod(Pool.LoadBalanceMethod.ROUND_ROBIN)
+                        .serviceDownAction(Pool.ServiceDownAction.DROP)
                         .slowRampTime(100)
                         .build())
                   .persistenceProfile(VirtualListener.PersistenceProfile.builder()
