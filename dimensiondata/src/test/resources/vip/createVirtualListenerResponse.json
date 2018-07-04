@@ -1,0 +1,22 @@
+{
+  "operation": "CREATE_VIRTUAL_LISTENER",
+  "responseCode": "OK",
+  "message": "Virtual Listener 'Production.Load.Balancer' has been created on Public IP Address 165.180.12.22.",
+  "info": [
+    {
+      "name": "virtualListenerId",
+      "value": "virtualListenerId1"
+    },
+    {
+      "name": "name",
+      "value": "Production.Load.Balancer"
+    },
+    {
+      "name": "listenerIpAddress",
+      "value": "165.180.12.22"
+    }
+  ],
+  "warning": [],
+  "error": [],
+  "requestId": "na9_20160321T074626030-0400_7e9fffe7-190b-46f2-9107-9d52fe57d0ad"
+}

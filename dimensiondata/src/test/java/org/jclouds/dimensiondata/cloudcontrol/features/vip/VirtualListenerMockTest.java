@@ -17,6 +17,7 @@
 package org.jclouds.dimensiondata.cloudcontrol.features.vip;
 
 import org.jclouds.dimensiondata.cloudcontrol.domain.PaginatedCollection;
+import org.jclouds.dimensiondata.cloudcontrol.domain.vip.CreateVirtualListener;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.VirtualListener;
 import org.jclouds.dimensiondata.cloudcontrol.internal.BaseAccountAwareCloudControlMockTest;
 import org.jclouds.dimensiondata.cloudcontrol.options.DatacenterIdListFilters;
@@ -27,32 +28,43 @@ import org.testng.annotations.Test;
 
 import javax.ws.rs.HttpMethod;
 
+import java.util.Collections;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
 @Test(groups = "live", testName = "VirtualListenerApiLiveTest", singleThreaded = true)
+// FIXME rename all Mock tests to ApiMockTest
 public class VirtualListenerMockTest extends BaseAccountAwareCloudControlMockTest {
 
-/* FIXME add create
    @Test
    public void testCreateVirtualListener() throws InterruptedException {
       server.enqueue(jsonResponse("/vip/createVirtualListenerResponse.json"));
-      String VirtualListenerId = api.getVirtualListenerApi().createVirtualListener(CreateVirtualListener.builder()
-            .networkDomainId("networkDomainId")
-            .name("name")
-            .description("description")
-            .ipv4Address("10.5.2.14")
-            .status(VirtualListener.Status.ENABLED)
-            .healthMonitorId("healthMonitorId")
-            .connectionLimit(100)
-            .connectionRateLimit(200)
+      String virtualListenerId = api.getVirtualListenerApi().createVirtualListener(CreateVirtualListener.builder()
+            .networkDomainId("553f26b6-2a73-42c3-a78b-6116f11291d0")
+            .name("Production.Load.Balancer")
+            .description("Used as the load balancer for the production applications.")
+            .type(VirtualListener.Type.STANDARD)
+            .protocol(VirtualListener.Protocol.TCP)
+            .listenerIpAddress("165.180.12.22")
+            .port(80)
+            .enabled(true)
+            .connectionLimit(25000)
+            .connectionRateLimit(2000)
+            .sourcePortPreservation(VirtualListener.SourcePortPreservation.PRESERVE)
+            .poolId("afb1fb1a-eab9-43f4-95c2-36a4cdda6cb8")
+            .clientClonePoolId("033a97dc-ee9b-4808-97ea-50b06624fd16")
+            .persistenceProfileId("a34ca25c-f3db-11e4-b010-005056806999")
+            .fallbackPersistenceProfileId("6f2f5d7b-cdd9-4d84-8ad7-999b64a87978")
+            .optimizationProfile(VirtualListener.OptimizationProfile.TCP)
+            // .sslOffloadProfile(SslOffloadProfile.builder().....build())
+            .iruleIds(Collections.singletonList("2b20abd9-ffdc-11e4-b010-005056806999"))
             .build());
-      assertEquals(VirtualListenerId, "VirtualListenerId1");
-      assertSentToCloudControlEndpoint(
-            POST, "networkDomainVip/createVirtualListener", stringFromResource("/vip/createVirtualListenerRequest.json"));
+      assertEquals(virtualListenerId, "virtualListenerId1");
+      assertSentToCloudControlEndpoint(HttpMethod.POST, "/networkDomainVip/createVirtualListener",
+            stringFromResource("/vip/createVirtualListenerRequest.json"));
    }
-*/
 
    @Test
    public void testGetVirtualListener() throws InterruptedException {

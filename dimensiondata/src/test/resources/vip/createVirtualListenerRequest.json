@@ -1,0 +1,21 @@
+{
+  "networkDomainId": "553f26b6-2a73-42c3-a78b-6116f11291d0",
+  "name": "Production.Load.Balancer",
+  "description": "Used as the load balancer for the production applications.",
+  "type": "STANDARD",
+  "protocol": "TCP",
+  "listenerIpAddress": "165.180.12.22",
+  "port": 80,
+  "enabled": true,
+  "connectionLimit": 25000,
+  "connectionRateLimit": 2000,
+  "sourcePortPreservation": "PRESERVE",
+  "poolId": "afb1fb1a-eab9-43f4-95c2-36a4cdda6cb8",
+  "clientClonePoolId": "033a97dc-ee9b-4808-97ea-50b06624fd16",
+  "persistenceProfileId": "a34ca25c-f3db-11e4-b010-005056806999",
+  "fallbackPersistenceProfileId": "6f2f5d7b-cdd9-4d84-8ad7-999b64a87978",
+  "optimizationProfile": "TCP",
+  "iruleId": [
+    "2b20abd9-ffdc-11e4-b010-005056806999"
+  ]
+}

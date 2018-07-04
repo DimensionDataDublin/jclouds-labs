@@ -21,6 +21,7 @@ import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
 @AutoValue
+// FIXME parse test
 public abstract class CreateNode {
    CreateNode() {
    }
