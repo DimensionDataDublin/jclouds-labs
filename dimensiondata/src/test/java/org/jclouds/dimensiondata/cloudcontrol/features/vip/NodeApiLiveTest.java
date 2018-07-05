@@ -48,7 +48,7 @@ public class NodeApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest {
    public void testCreateNode() {
       nodeId = api.getNodeApi().createNode(CreateNode.builder()
             .networkDomainId(networkDomainId)
-            .name("nodeApiLiveTest" +  + System.currentTimeMillis())
+            .name("nodeApiLiveTest" + System.currentTimeMillis())
             .description("description")
             .ipv4Address("10.5.2.14")
             .status(Node.Status.ENABLED)
