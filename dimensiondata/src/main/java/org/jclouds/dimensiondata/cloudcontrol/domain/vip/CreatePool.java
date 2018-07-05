@@ -44,7 +44,7 @@ public abstract class CreatePool {
          String name,
          @Nullable String description,
          Pool.LoadBalanceMethod loadBalanceMethod,
-         List<String> healthMonitorIds,
+         @Nullable List<String> healthMonitorIds,
          Pool.ServiceDownAction serviceDownAction,
          int slowRampTime
    ) {
@@ -68,6 +68,7 @@ public abstract class CreatePool {
 
    public abstract Pool.LoadBalanceMethod loadBalanceMethod();
 
+   @Nullable
    public abstract List<String> healthMonitorIds();
 
    public abstract Pool.ServiceDownAction serviceDownAction();
@@ -87,6 +88,7 @@ public abstract class CreatePool {
 
       public abstract Builder loadBalanceMethod(Pool.LoadBalanceMethod loadBalanceMethod);
 
+      @Nullable
       public abstract Builder healthMonitorIds(List<String> healthMonitorIds);
 
       public abstract Builder serviceDownAction(Pool.ServiceDownAction serviceDownAction);

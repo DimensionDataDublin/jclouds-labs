@@ -70,7 +70,7 @@ public abstract class CreateVirtualListener {
          @Nullable String fallbackPersistenceProfileId,
          @Nullable VirtualListener.OptimizationProfile optimizationProfile,
          // @Nullable String sslOffloadProfileId,
-         List<String> iruleIds
+         @Nullable List<String> iruleIds
    ) {
 
       return builder()
@@ -137,6 +137,7 @@ public abstract class CreateVirtualListener {
    //   @Nullable
    //   public abstract String sslOffloadProfileId();
 
+   @Nullable
    public abstract List<String> iruleIds();
 
    @AutoValue.Builder

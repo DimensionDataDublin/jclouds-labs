@@ -45,8 +45,7 @@ public abstract class Node {
            "healthMonitor",
            "connectionLimit",
            "connectionRateLimit",
-           "createTime",
-           "loggingEnabled"})
+           "createTime"})
    public static Node create(
            String id,
            String datacenterId,
@@ -59,8 +58,7 @@ public abstract class Node {
            @Nullable HealthMonitor healthMonitor,
            @Nullable Integer connectionLimit,
            @Nullable Integer connectionRateLimit,
-           Date createTime,
-           @Nullable Boolean loggingEnabled) {
+           Date createTime) {
 
       return builder()
               .id(id)
@@ -75,7 +73,6 @@ public abstract class Node {
               .connectionLimit(connectionLimit)
               .connectionRateLimit(connectionRateLimit)
               .createTime(createTime)
-              .loggingEnabled(loggingEnabled)
               .build();
    }
 
@@ -106,9 +103,6 @@ public abstract class Node {
    public abstract Integer connectionRateLimit();
 
    public abstract Date createTime();
-
-   @Nullable
-   public abstract Boolean loggingEnabled();
 
    public boolean isEnabled() {
       return status() == Status.ENABLED;
@@ -149,9 +143,6 @@ public abstract class Node {
       Builder connectionRateLimit(Integer connectionRateLimit);
 
       Builder createTime(Date createTime);
-
-      @Nullable
-      Builder loggingEnabled(Boolean loggingEnabled);
 
       Node build();
    }

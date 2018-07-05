@@ -41,37 +41,37 @@ public class PoolsParseTest extends BaseDimensionDataCloudControlParseTest<Pools
    public Pools expected() {
       return new Pools(ImmutableList.of(
             Pool.builder()
-                        .networkDomainId("553f26b6-2a73-42c3-a78b-6116f11291d0")
-                        .name("myDevelopmentPool.1")
-                        .description("Pool for load balancing development application servers.")
-                        .loadBalanceMethod(Pool.LoadBalanceMethod.ROUND_ROBIN)
-                        .healthMonitor(ImmutableList.of(
-                              HealthMonitor.builder()
-                                    .id("01683574-d487-11e4-811f-005056806999")
-                                    .name("CCDEFAULT.Http")
-                                    .build(),
-                              HealthMonitor.builder()
-                                    .id("0168546c-d487-11e4-811f-005056806999")
-                                    .name("CCDEFAULT.Https")
-                                    .build()))
-                        .serviceDownAction(Pool.ServiceDownAction.RESELECT)
-                        .slowRampTime(10)
-                        .state(State.NORMAL)
-                        .createTime(DatatypeConverter.parseDateTime("2015-06-04T09:15:07.000Z").getTime())
-                        .id("4d360b1f-bc2c-4ab7-9884-1f03ba2768f7")
-                        .datacenterId("NA9")
-                        .build(),
+                  .networkDomainId("553f26b6-2a73-42c3-a78b-6116f11291d0")
+                  .name("myDevelopmentPool.1")
+                  .description("Pool for load balancing development application servers.")
+                  .loadBalanceMethod(Pool.LoadBalanceMethod.ROUND_ROBIN)
+                  .healthMonitor(ImmutableList.of(
+                        HealthMonitor.builder()
+                              .id("01683574-d487-11e4-811f-005056806999")
+                              .name("CCDEFAULT.Http")
+                              .build(),
+                        HealthMonitor.builder()
+                              .id("0168546c-d487-11e4-811f-005056806999")
+                              .name("CCDEFAULT.Https")
+                              .build()))
+                  .serviceDownAction(Pool.ServiceDownAction.RESELECT)
+                  .slowRampTime(10)
+                  .state(State.NORMAL)
+                  .createTime(DatatypeConverter.parseDateTime("2015-06-04T09:15:07.000Z").getTime())
+                  .id("4d360b1f-bc2c-4ab7-9884-1f03ba2768f7")
+                  .datacenterId("NA9")
+                  .build(),
             Pool.builder()
-                        .networkDomainId("553f26b6-2a73-42c3-a78b-6116f11291d0")
-                        .name("myDevelopmentPool.2")
-                        .loadBalanceMethod(Pool.LoadBalanceMethod.PREDICTIVE_NODE)
-                        .serviceDownAction(Pool.ServiceDownAction.DROP)
-                        .slowRampTime(11)
-                        .state(State.PENDING_DELETE)
-                        .createTime(DatatypeConverter.parseDateTime("2015-06-05T09:15:07.000Z").getTime())
-                        .id("5e471c20-cd3d-5bc8-a995-2014cb387908")
-                        .datacenterId("NA9")
-                        .build()
-            ), 1, 2, 2, 250);
+                  .networkDomainId("553f26b6-2a73-42c3-a78b-6116f11291d0")
+                  .name("myDevelopmentPool.2")
+                  .loadBalanceMethod(Pool.LoadBalanceMethod.PREDICTIVE_NODE)
+                  .serviceDownAction(Pool.ServiceDownAction.DROP)
+                  .slowRampTime(11)
+                  .state(State.PENDING_DELETE)
+                  .createTime(DatatypeConverter.parseDateTime("2015-06-05T09:15:07.000Z").getTime())
+                  .id("5e471c20-cd3d-5bc8-a995-2014cb387908")
+                  .datacenterId("NA9")
+                  .build()
+      ), 1, 2, 2, 250);
    }
 }

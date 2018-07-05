@@ -49,7 +49,7 @@ public abstract class CreateNode {
          @Nullable String ipv6Address,
 
          Node.Status status,
-         String healthMonitorId,
+         @Nullable String healthMonitorId,
          int connectionLimit,
          int connectionRateLimit) {
 
@@ -81,6 +81,7 @@ public abstract class CreateNode {
 
    public abstract Node.Status status();
 
+   @Nullable
    public abstract String healthMonitorId();
 
    public abstract int connectionLimit();
@@ -107,6 +108,7 @@ public abstract class CreateNode {
 
       public abstract Builder status(Node.Status status);
 
+      @Nullable
       public abstract Builder healthMonitorId(String healthMonitorId);
 
       public abstract Builder connectionLimit(int connectionLimit);
