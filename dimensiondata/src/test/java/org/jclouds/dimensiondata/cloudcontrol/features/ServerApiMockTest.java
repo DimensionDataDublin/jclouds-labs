@@ -151,7 +151,6 @@ public class ServerApiMockTest extends BaseAccountAwareCloudControlMockTest {
    public void testDeleteServer_NotFound() throws Exception{
       server.enqueue(responseResourceNotFound());
       serverApi().deleteServer("12345");
-      assertSent(POST, "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/deleteServer");
    }
 
    public void testPowerOffServer() throws Exception {
