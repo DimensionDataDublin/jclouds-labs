@@ -28,7 +28,6 @@ import org.jclouds.dimensiondata.cloudcontrol.domain.options.CreateServerOptions
 import org.jclouds.dimensiondata.cloudcontrol.internal.BaseAccountAwareCloudControlMockTest;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.http.Uris;
-import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -118,17 +117,6 @@ public class ServerApiMockTest extends BaseAccountAwareCloudControlMockTest {
       }
    }
 
-   public void testListServersWithDatacenterFiltering() throws Exception {
-      server.enqueue(jsonResponse("/servers.json"));
-      List<Server> servers = serverApi().listServers(datacenterId(datacenters)).toList();
-      Uris.UriBuilder uriBuilder = addZonesToUriBuilder("datacenterId", getListServerUriBuilder());
-      assertSent(GET, uriBuilder.toString());
-      assertEquals(servers.size(), 1);
-      for (Server s : servers) {
-         assertNotNull(s);
-      }
-   }
-
    private Uris.UriBuilder getListServerUriBuilder() {
       return Uris.uriBuilder("/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/server");
    }
@@ -160,9 +148,10 @@ public class ServerApiMockTest extends BaseAccountAwareCloudControlMockTest {
       assertBodyContains(recordedRequest, "{\"id\":\"12345\"}");
    }
 
-   public void testDeleteServer_NotFound() {
+   public void testDeleteServer_NotFound() throws Exception{
       server.enqueue(responseResourceNotFound());
       serverApi().deleteServer("12345");
+      assertSent(POST, "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/deleteServer");
    }
 
    public void testPowerOffServer() throws Exception {
