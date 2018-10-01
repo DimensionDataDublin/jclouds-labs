@@ -35,7 +35,7 @@ public class ServerToServerWithExternalIp implements Function<Server, ServerWith
     private final DimensionDataCloudControlApi api;
 
     @Inject
-    public ServerToServerWithExternalIp(DimensionDataCloudControlApi api) {
+    ServerToServerWithExternalIp(DimensionDataCloudControlApi api) {
         this.api = checkNotNull(api, "api");
     }
 
