@@ -38,7 +38,10 @@
         "networkDomainId": "690de302-bb80-49c6-b401-8c02bbefb945"
       },
       "softwareLabel": [],
-      "sourceImageId": "1e44ab3f-2426-45ec-a1b5-827b2ce58836",
+      "source": {
+        "type": "IMAGE_ID",
+        "value": "7f336a98-6ef2-11e2-b29c-001517c4643e"
+      },
       "createTime": "2016-03-10T13:05:21.000Z",
       "deployed": true,
       "started": true,

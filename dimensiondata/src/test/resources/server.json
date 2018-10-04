@@ -1,60 +1,110 @@
 {
-  "name": "ServerApiLiveTest",
-  "cpu": {
-    "count": 2,
-    "speed": "STANDARD",
-    "coresPerSocket": 1
-  },
-  "memoryGb": 4,
-  "disk": [
-    {
-      "id": "918f12ba-5e5e-4cd6-87bd-60c18293c24d",
-      "scsiId": 0,
-      "sizeGb": 20,
-      "speed": "STANDARD",
-      "state": "NORMAL"
-    }
-  ],
-  "networkInfo": {
-    "primaryNic": {
-      "id": "f0c00cab-bfa3-4c51-8c0a-c52fdac1ae4b",
-      "privateIpv4": "10.0.0.7",
-      "ipv6": "2a00:47c0: 111: 1131: 5851: 1950:411c: 3dd8",
-      "vlanId": "7bd12a4d-4e83-4254-a266-174aa5f55187",
-      "vlanName": "jclouds vlan",
-      "networkAdapter": "E1000",
-      "macAddress": "00: 50: 56: bb: 53: 1e",
-      "key": 4000,
-      "state": "NORMAL"
+    "name": "Test Server",
+    "cluster": {
+        "id": "DEV_LAB1_N2_VMWARE_1-01",
+        "name": "DEV_LAB1_N2_VMWARE_1-01"
     },
-    "additionalNic": [],
-    "networkDomainId": "d122949b-8990-46d6-98f0-91c8676fc720"
-  },
-  "softwareLabel": [],
-  "sourceImageId": "56eb0b7c-15a7-4b63-b373-05b962e37554",
-  "createTime": "2017-07-03T16: 29: 33.000Z",
-  "deployed": true,
-  "started": true,
-  "state": "NORMAL",
-  "guest": {
-    "operatingSystem": {
-      "id": "REDHAT764",
-      "displayName": "REDHAT7/64",
-      "family": "UNIX"
+    "cpu": {
+        "count": 2,
+        "speed": "STANDARD",
+        "coresPerSocket": 1
     },
-    "vmTools": {
-      "type": "VMWARE_TOOLS",
-      "versionStatus": "CURRENT",
-      "runningStatus": "NOT_RUNNING",
-      "apiVersion": 9356
+    "memoryGb": 4,
+    "scsiController": [
+        {
+            "state": "NORMAL",
+            "id": "8a8301f3-58e6-449b-b048-0169f2540a08",
+            "adapterType": "LSI_LOGIC_PARALLEL",
+            "key": 1000,
+            "disk": [
+                {
+                    "state": "NORMAL",
+                    "id": "577be19d-dd68-48ff-a3a0-963f20b0b51b",
+                    "sizeGb": 10,
+                    "speed": "STANDARD",
+                    "scsiId": 0
+                }
+            ],
+            "busNumber": 0
+        }
+    ],
+    "sataController": [],
+    "ideController": [
+        {
+            "state": "NORMAL",
+            "id": "5bdfc88c-5509-420c-8c5d-cc7876dacfbe",
+            "adapterType": "IDE",
+            "key": 200,
+            "deviceOrDisk": [],
+            "channel": 0
+        },
+        {
+            "state": "NORMAL",
+            "id": "ec0f6488-21aa-4bf6-8bce-8ce752391cf8",
+            "adapterType": "IDE",
+            "key": 201,
+            "deviceOrDisk": [
+                {
+                    "state": "NORMAL",
+                    "id": "fd70be3c-f068-4bbf-a55c-8c776a66ed5a",
+                    "type": "CDROM",
+                    "slot": 0
+                }
+            ],
+            "channel": 1
+        }
+    ],
+    "floppy": [
+        {
+            "state": "NORMAL",
+            "id": "afeafa7e-742d-4902-a3f8-67d9bec5c160",
+            "driveNumber": 0,
+            "key": 8000
+        }
+    ],
+    "networkInfo": {
+        "primaryNic": {
+            "id": "4f5d52a3-f842-4f3b-80dd-efbf07afe751",
+            "privateIpv4": "10.0.0.6",
+            "ipv6": "2607:f480:1111:1245:158d:2474:5fb2:b187",
+            "vlanId": "fdece27c-65bd-4af8-af01-40161b50179d",
+            "vlanName": "Test Server Vlan",
+            "networkAdapter": "VMXNET3",
+            "macAddress": "00:50:56:84:7f:16",
+            "key": 4000,
+            "state": "NORMAL"
+        },
+        "additionalNic": [],
+        "networkDomainId": "7c5e9c4d-641c-4be1-b688-73c4c87260c0"
     },
-    "osCustomization": true
+    "softwareLabel": [],
+  "source": {
+    "type": "IMAGE_ID",
+    "value": "7f336a98-6ef2-11e2-b29c-001517c4643e"
   },
-  "virtualHardware": {
-    "version": "vmx-10",
-    "upToDate": true
-  },
-  "tag": [],
-  "id": "cb08c7ba-7a51-4e32-8d39-05d2270f8f8b",
-  "datacenterId": "EU6"
+    "createTime": "2017-06-30T12:54:24.000Z",
+    "deployed": true,
+    "started": true,
+    "state": "NORMAL",
+    "guest": {
+        "operatingSystem": {
+            "id": "UBUNTU1264",
+            "displayName": "UBUNTU12/64",
+            "family": "UNIX"
+        },
+        "vmTools": {
+            "type": "VMWARE_TOOLS",
+            "versionStatus": "CURRENT",
+            "runningStatus": "RUNNING",
+            "apiVersion": 9354
+        },
+        "osCustomization": true
+    },
+    "virtualHardware": {
+        "version": "vmx-08",
+        "upToDate": false
+    },
+    "tag": [],
+    "id": "84363cf0-3aad-4b93-96e8-b76d68d43261",
+    "datacenterId": "NA9"
 }

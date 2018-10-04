@@ -72,6 +72,7 @@ public class CreateServerOptions implements MapBinder {
 
       abstract NetworkInfo networkInfo();
 
+      @Nullable
       abstract List<Disk> disks();
 
       @Nullable
@@ -115,7 +116,7 @@ public class CreateServerOptions implements MapBinder {
                   checkNotNull(postParams.get("imageId"), "imageId parameter not present").toString(),
                   Boolean.valueOf(checkNotNull(postParams.get("start"), "start parameter not present").toString()),
                   (NetworkInfo) checkNotNull(postParams.get("networkInfo"), "image parameter not present"),
-                  (List<Disk>) checkNotNull(postParams.get("disk"), "disk parameter not present"),
+                  (List<Disk>) postParams.get("disk"),
                   (String) postParams.get("administratorPassword"), description, cpu, memoryGb, primaryDns,
                   secondaryDns, microsoftTimeZone);
 

@@ -31,6 +31,7 @@ import org.jclouds.dimensiondata.cloudcontrol.domain.NIC;
 import org.jclouds.dimensiondata.cloudcontrol.domain.NetworkInfo;
 import org.jclouds.dimensiondata.cloudcontrol.domain.OperatingSystem;
 import org.jclouds.dimensiondata.cloudcontrol.domain.Server;
+import org.jclouds.dimensiondata.cloudcontrol.domain.ServerSource;
 import org.jclouds.dimensiondata.cloudcontrol.domain.State;
 import org.jclouds.dimensiondata.cloudcontrol.domain.internal.ServerWithExternalIp;
 import org.jclouds.dimensiondata.cloudcontrol.features.ServerImageApi;
@@ -106,7 +107,7 @@ public class ServerWithNatRuleToNodeMetadataTest {
 
       server = Server.builder().id("serverId").name(serverName).datacenterId(datacenterId)
             .networkInfo(NetworkInfo.create(networkDomainId, nic, new ArrayList<NIC>())).cpu(cpu).deployed(true)
-            .state(State.NORMAL).sourceImageId("imageId").started(false).createTime(new Date()).memoryGb(1024)
+            .state(State.NORMAL).source(ServerSource.builder().type("IMAGE_ID").value("imageId").build()).started(false).createTime(new Date()).memoryGb(1024)
             .guest(Guest.builder().osCustomization(false).operatingSystem(os).build()).build();
 
       serverWithNatRuleToNodeMetadata = new ServerWithNatRuleToNodeMetadata(locations, conventionFactory,
@@ -131,7 +132,7 @@ public class ServerWithNatRuleToNodeMetadataTest {
       EasyMock.replay(nodeNamingConvention, serverImageApi, image, nic, serverToHardware, operatingSystemToOperatingSystem);
 
       assertNodeMetadata(serverWithNatRuleToNodeMetadata.apply(serverWithExternalIp), operatingSystem,
-            serverWithExternalIp.server().sourceImageId(), NodeMetadata.Status.RUNNING,
+            serverWithExternalIp.server().source().value(), NodeMetadata.Status.RUNNING,
             ImmutableSet.of(nic.privateIpv4()), ImmutableSet.of(externalIp));
    }
 
@@ -140,7 +141,7 @@ public class ServerWithNatRuleToNodeMetadataTest {
 
       server = Server.builder().id("serverId").name(serverName).datacenterId(datacenterId)
             .networkInfo(NetworkInfo.create(networkDomainId, nic, new ArrayList<NIC>())).cpu(cpu).deployed(true)
-            .state(State.DELETED).sourceImageId("imageId").started(false).createTime(new Date()).memoryGb(1024)
+            .state(State.DELETED).source(ServerSource.builder().type("IMAGE_ID").value("imageId").build()).started(false).createTime(new Date()).memoryGb(1024)
             .guest(Guest.builder().osCustomization(false).operatingSystem(os).build()).build();
 
       serverWithExternalIp = ServerWithExternalIp.create(server, null);

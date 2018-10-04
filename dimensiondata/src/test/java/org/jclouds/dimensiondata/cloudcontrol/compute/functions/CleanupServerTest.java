@@ -35,6 +35,7 @@ import org.jclouds.dimensiondata.cloudcontrol.domain.NetworkInfo;
 import org.jclouds.dimensiondata.cloudcontrol.domain.OperatingSystem;
 import org.jclouds.dimensiondata.cloudcontrol.domain.PublicIpBlock;
 import org.jclouds.dimensiondata.cloudcontrol.domain.Server;
+import org.jclouds.dimensiondata.cloudcontrol.domain.ServerSource;
 import org.jclouds.dimensiondata.cloudcontrol.domain.State;
 import org.jclouds.dimensiondata.cloudcontrol.domain.VmTools;
 import org.jclouds.dimensiondata.cloudcontrol.features.NetworkApi;
@@ -82,7 +83,8 @@ public class CleanupServerTest {
       serverBuilder = Server.builder().id(serverId).name("jclouds server").memoryGb(10)
             .cpu(CPU.builder().count(1).coresPerSocket(2).speed(CpuSpeed.STANDARD.getDimensionDataSpeed()).build())
             .datacenterId(datacenterId).deployed(true).started(true).description("jclouds server")
-            .sourceImageId("sourceImageId").createTime(new Date()).guest(Guest.builder().operatingSystem(
+            .source(ServerSource.builder().type("IMAGE_ID").value("sourceImageId").build()).createTime(new Date())
+            .guest(Guest.builder().operatingSystem(
                   OperatingSystem.builder().id("WIN2012DC64").displayName("WIN2012DC/64").family("WINDOWS").build())
                   .vmTools(VmTools.builder().versionStatus(VmTools.VersionStatus.CURRENT)
                         .runningStatus(VmTools.RunningStatus.NOT_RUNNING).apiVersion(9354)

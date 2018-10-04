@@ -26,7 +26,15 @@ import org.jclouds.compute.domain.Volume;
 import org.jclouds.compute.domain.VolumeBuilder;
 import org.jclouds.dimensiondata.cloudcontrol.domain.CPU;
 import org.jclouds.dimensiondata.cloudcontrol.domain.CpuSpeed;
-import org.jclouds.dimensiondata.cloudcontrol.domain.Disk;
+import org.jclouds.dimensiondata.cloudcontrol.domain.Floppy;
+import org.jclouds.dimensiondata.cloudcontrol.domain.IdeController;
+import org.jclouds.dimensiondata.cloudcontrol.domain.IdeDevice;
+import org.jclouds.dimensiondata.cloudcontrol.domain.IdeDisk;
+import org.jclouds.dimensiondata.cloudcontrol.domain.SataController;
+import org.jclouds.dimensiondata.cloudcontrol.domain.SataDevice;
+import org.jclouds.dimensiondata.cloudcontrol.domain.SataDisk;
+import org.jclouds.dimensiondata.cloudcontrol.domain.ScsiController;
+import org.jclouds.dimensiondata.cloudcontrol.domain.ScsiDisk;
 import org.jclouds.dimensiondata.cloudcontrol.domain.Server;
 
 import java.util.ArrayList;
@@ -42,16 +50,87 @@ public class ServerToHardware implements Function<Server, Hardware> {
       HardwareBuilder builder = new HardwareBuilder().ids(from.id()).name(from.name()).hypervisor("vmx")
             .processors(buildProcessorList(from.cpu())).ram(from.memoryGb() * GB_TO_MB_MULTIPLIER);
 
-      if (from.disks() != null) {
-         builder.volumes(FluentIterable.from(from.disks()).transform(new Function<Disk, Volume>() {
-            @Override
-            public Volume apply(final Disk disk) {
-               return new VolumeBuilder().id(disk.id()).device(String.valueOf(disk.scsiId()))
-                     .size(Float.valueOf(disk.sizeGb())).type(Volume.Type.LOCAL).build();
-            }
-         }).toSet());
-      }
+      FluentIterable<Volume> completeVolumeSet = processIdeControllers(from,
+            FluentIterable.from(new ArrayList<Volume>()));
+      completeVolumeSet = processSataControllers(from, completeVolumeSet);
+      completeVolumeSet = processScsiControllers(from, completeVolumeSet);
+      completeVolumeSet = processFloppies(from, completeVolumeSet);
+      builder.volumes(completeVolumeSet);
       return builder.build();
+   }
+
+   private FluentIterable<Volume> processIdeControllers(final Server from, FluentIterable<Volume> completeVolumeSet) {
+      if (from.ideControllers() != null) {
+         completeVolumeSet = completeVolumeSet.append(
+               FluentIterable.from(buildIdeDiskList(from.ideControllers())).transform(new Function<IdeDisk, Volume>() {
+                  @Override
+                  public Volume apply(final IdeDisk disk) {
+                     return new VolumeBuilder().id(disk.id()).device(disk.slot()).size((float) disk.sizeGb())
+                           .type(Volume.Type.LOCAL).build();
+                  }
+               }).toSet());
+
+         completeVolumeSet = completeVolumeSet.append(FluentIterable.from(buildIdeDeviceList(from.ideControllers()))
+               .transform(new Function<IdeDevice, Volume>() {
+                  @Override
+                  public Volume apply(final IdeDevice device) {
+                     return new VolumeBuilder().id(device.id()).device(device.slot()).size((float) device.sizeGb())
+                           .type(Volume.Type.LOCAL).build();
+                  }
+               }).toSet());
+      }
+      return completeVolumeSet;
+   }
+
+   private FluentIterable<Volume> processSataControllers(final Server from, FluentIterable<Volume> completeVolumeSet) {
+      if (from.sataControllers() != null) {
+         completeVolumeSet = completeVolumeSet.append(FluentIterable.from(buildSataDiskList(from.sataControllers()))
+               .transform(new Function<SataDisk, Volume>() {
+                  @Override
+                  public Volume apply(final SataDisk disk) {
+                     return new VolumeBuilder().id(disk.id()).device(disk.sataId()).size((float) disk.sizeGb())
+                           .type(Volume.Type.LOCAL).build();
+                  }
+               }).toSet());
+
+         completeVolumeSet = completeVolumeSet.append(FluentIterable.from(buildSataDeviceList(from.sataControllers()))
+               .transform(new Function<SataDevice, Volume>() {
+                  @Override
+                  public Volume apply(final SataDevice device) {
+                     return new VolumeBuilder().id(device.id()).device(device.sataId()).size((float) device.sizeGb())
+                           .type(Volume.Type.LOCAL).build();
+                  }
+               }).toSet());
+      }
+      return completeVolumeSet;
+   }
+
+   private FluentIterable<Volume> processScsiControllers(final Server from, FluentIterable<Volume> completeVolumeSet) {
+      if (from.scsiControllers() != null) {
+         completeVolumeSet = completeVolumeSet.append(FluentIterable.from(buildScsiDiskList(from.scsiControllers()))
+               .transform(new Function<ScsiDisk, Volume>() {
+                  @Override
+                  public Volume apply(final ScsiDisk disk) {
+                     return new VolumeBuilder().id(disk.id()).device(disk.scsiId()).size((float) disk.sizeGb())
+                           .type(Volume.Type.LOCAL).build();
+                  }
+               }).toSet());
+      }
+      return completeVolumeSet;
+   }
+
+   private FluentIterable<Volume> processFloppies(final Server from, FluentIterable<Volume> completeVolumeSet) {
+      if (from.floppies() != null) {
+         completeVolumeSet = completeVolumeSet.append(
+               FluentIterable.from(buildFloppiesList(from.floppies())).transform(new Function<Floppy, Volume>() {
+                  @Override
+                  public Volume apply(final Floppy floppy) {
+                     return new VolumeBuilder().id(floppy.id()).device(floppy.key() + ":" + floppy.driveNumber())
+                           .size((float) floppy.sizeGb()).type(Volume.Type.LOCAL).build();
+                  }
+               }).toSet());
+      }
+      return completeVolumeSet;
    }
 
    private List<Processor> buildProcessorList(final CPU cpu) {
@@ -61,5 +140,95 @@ public class ServerToHardware implements Function<Server, Hardware> {
          processorList.add(new Processor(cpu.coresPerSocket(), speed));
       }
       return processorList;
+   }
+
+   private List<IdeDisk> buildIdeDiskList(final List<IdeController> controllers) {
+      final List<IdeDisk> diskList = new ArrayList<IdeDisk>();
+      for (int count = 0; count < controllers.size(); count++) {
+         for (Object deviceOrDisk : controllers.get(count).deviceOrDisks()) {
+            if (deviceOrDisk instanceof IdeDisk) {
+               IdeDisk ideDisk = (IdeDisk) deviceOrDisk;
+               diskList.add(IdeDisk.create(ideDisk.id(),
+                     constructUniqueVolumeIdentifier(controllers.get(count).key(), ideDisk.slot()), ideDisk.sizeGb(),
+                     ideDisk.speed(), ideDisk.state()));
+            }
+         }
+      }
+      return diskList;
+   }
+
+   private List<IdeDevice> buildIdeDeviceList(final List<IdeController> controllers) {
+      final List<IdeDevice> deviceList = new ArrayList<IdeDevice>();
+      for (int count = 0; count < controllers.size(); count++) {
+         for (Object deviceOrDisk : controllers.get(count).deviceOrDisks()) {
+            if (deviceOrDisk instanceof IdeDevice) {
+               IdeDevice ideDevice = (IdeDevice) deviceOrDisk;
+               if (ideDevice.sizeGb() > 0) {
+                  deviceList.add(IdeDevice.create(ideDevice.id(),
+                        constructUniqueVolumeIdentifier(controllers.get(count).key(), ideDevice.slot()),
+                        ideDevice.type(), ideDevice.sizeGb(), ideDevice.fileName(), ideDevice.state()));
+               }
+            }
+         }
+      }
+      return deviceList;
+   }
+
+   private List<SataDisk> buildSataDiskList(final List<SataController> controllers) {
+      final List<SataDisk> diskList = new ArrayList<SataDisk>();
+      for (int count = 0; count < controllers.size(); count++) {
+         for (Object deviceOrDisk : controllers.get(count).deviceOrDisks()) {
+            if (deviceOrDisk instanceof SataDisk) {
+               SataDisk sataDisk = (SataDisk) deviceOrDisk;
+               diskList.add(SataDisk.create(sataDisk.id(),
+                     constructUniqueVolumeIdentifier(controllers.get(count).key(), sataDisk.sataId()),
+                     sataDisk.sizeGb(), sataDisk.speed(), sataDisk.state()));
+            }
+         }
+      }
+      return diskList;
+   }
+
+   private List<SataDevice> buildSataDeviceList(final List<SataController> controllers) {
+      final List<SataDevice> deviceList = new ArrayList<SataDevice>();
+      for (int count = 0; count < controllers.size(); count++) {
+         for (Object deviceOrDisk : controllers.get(count).deviceOrDisks()) {
+            if (deviceOrDisk instanceof SataDevice) {
+               SataDevice sataDevice = (SataDevice) deviceOrDisk;
+               if (sataDevice.sizeGb() > 0) {
+                  deviceList.add(SataDevice.create(sataDevice.id(),
+                        constructUniqueVolumeIdentifier(controllers.get(count).key(), sataDevice.sataId()),
+                        sataDevice.type(), sataDevice.sizeGb(), sataDevice.fileName(), sataDevice.state()));
+               }
+            }
+         }
+      }
+      return deviceList;
+   }
+
+   private List<ScsiDisk> buildScsiDiskList(final List<ScsiController> controllers) {
+      final List<ScsiDisk> diskList = new ArrayList<ScsiDisk>();
+      for (int count = 0; count < controllers.size(); count++) {
+         for (ScsiDisk scsiDisk : controllers.get(count).disks()) {
+            diskList.add(ScsiDisk.create(scsiDisk.id(),
+                  constructUniqueVolumeIdentifier(controllers.get(count).key(), scsiDisk.scsiId()), scsiDisk.sizeGb(),
+                  scsiDisk.speed(), scsiDisk.state()));
+         }
+      }
+      return diskList;
+   }
+
+   private List<Floppy> buildFloppiesList(final List<Floppy> floppies) {
+      List<Floppy> resultList = new ArrayList<>();
+      for (Floppy floppy : floppies) {
+         if (floppy.sizeGb() > 0) {
+            resultList.add(floppy);
+         }
+      }
+      return resultList;
+   }
+
+   private String constructUniqueVolumeIdentifier(int controllerKey, String diskOrDeviceId) {
+      return controllerKey + ":" + diskOrDeviceId;
    }
 }

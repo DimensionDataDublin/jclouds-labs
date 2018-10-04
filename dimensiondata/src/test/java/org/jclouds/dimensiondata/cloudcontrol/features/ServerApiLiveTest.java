@@ -40,6 +40,20 @@ public class ServerApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest 
    private String cloneImageId;
    private final String deployedServerName = ServerApiLiveTest.class.getSimpleName() + System.currentTimeMillis();
 
+   private static final String IMAGE_DISK_ID = "9dccbba8-54b4-420c-9d8c-6e1a7ef1c88c";
+
+   @Test
+   public void testDeployAndStartServer() {
+      Boolean started = Boolean.TRUE;
+      NetworkInfo networkInfo = NetworkInfo
+            .create(NETWORK_DOMAIN_ID, NIC.builder().vlanId(VLAN_ID).build(), Lists.<NIC>newArrayList());
+      List<Disk> disks = ImmutableList.of(Disk.builder().scsiId(0).speed("STANDARD").id(IMAGE_DISK_ID).build());
+      serverId = api().deployServer(deployedServerName, IMAGE_ID, started, networkInfo, "P$$ssWwrrdGoDd!", disks, null);
+      assertNotNull(serverId);
+      assertTrue(serverStartedPredicate.apply(serverId), "server did not start after timeout");
+      assertTrue(serverNormalPredicate.apply(serverId), "server was not NORMAL after timeout");
+   }
+
    @Test(dependsOnMethods = "testDeployAndStartServer")
    public void testListServers() {
       List<Server> servers = api().listServers().concat().toList();
@@ -52,18 +66,6 @@ public class ServerApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest 
          }
       }
       assertTrue(foundDeployedServer, "Did not find deployed server " + deployedServerName);
-   }
-
-   @Test
-   public void testDeployAndStartServer() {
-      Boolean started = Boolean.TRUE;
-      NetworkInfo networkInfo = NetworkInfo
-            .create(NETWORK_DOMAIN_ID, NIC.builder().vlanId(VLAN_ID).build(), Lists.<NIC>newArrayList());
-      List<Disk> disks = ImmutableList.of(Disk.builder().scsiId(0).speed("STANDARD").build());
-      serverId = api().deployServer(deployedServerName, IMAGE_ID, started, networkInfo, "P$$ssWwrrdGoDd!", disks, null);
-      assertNotNull(serverId);
-      assertTrue(serverStartedPredicate.apply(serverId), "server did not start after timeout");
-      assertTrue(serverNormalPredicate.apply(serverId), "server was not NORMAL after timeout");
    }
 
    @Test(dependsOnMethods = "testDeployAndStartServer")
