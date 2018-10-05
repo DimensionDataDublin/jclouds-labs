@@ -87,8 +87,8 @@ public abstract class Server {
    public abstract VirtualHardware virtualHardware();
 
    @SerializedNames({"id", "name", "description", "datacenterId", "cluster", "state", "source", "createTime", "started",
-         "deployed", "guest", "cpu", "memoryGb", "networkInfo", "scsiControllers", "sataControllers", "ideControllers",
-         "floppies", "softwareLabel", "progress", "virtualHardware"})
+         "deployed", "guest", "cpu", "memoryGb", "networkInfo", "scsiController", "sataController", "ideController",
+         "floppy", "softwareLabel", "progress", "virtualHardware"})
    public static Server create(String id, String name, String description, String datacenterId, Cluster cluster, State state,
          ServerSource source, Date createTime, Boolean started, Boolean deployed, Guest guest, CPU cpu, int memoryGb,
          NetworkInfo networkInfo, List<ScsiController> scsiControllers, List<SataController> sataControllers,

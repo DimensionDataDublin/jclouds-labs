@@ -29,9 +29,11 @@ import org.jclouds.dimensiondata.cloudcontrol.domain.CpuSpeed;
 import org.jclouds.dimensiondata.cloudcontrol.domain.Floppy;
 import org.jclouds.dimensiondata.cloudcontrol.domain.IdeController;
 import org.jclouds.dimensiondata.cloudcontrol.domain.IdeDevice;
+import org.jclouds.dimensiondata.cloudcontrol.domain.IdeDeviceOrDisk;
 import org.jclouds.dimensiondata.cloudcontrol.domain.IdeDisk;
 import org.jclouds.dimensiondata.cloudcontrol.domain.SataController;
 import org.jclouds.dimensiondata.cloudcontrol.domain.SataDevice;
+import org.jclouds.dimensiondata.cloudcontrol.domain.SataDeviceOrDisk;
 import org.jclouds.dimensiondata.cloudcontrol.domain.SataDisk;
 import org.jclouds.dimensiondata.cloudcontrol.domain.ScsiController;
 import org.jclouds.dimensiondata.cloudcontrol.domain.ScsiDisk;
@@ -145,9 +147,9 @@ public class ServerToHardware implements Function<Server, Hardware> {
    private List<IdeDisk> buildIdeDiskList(final List<IdeController> controllers) {
       final List<IdeDisk> diskList = new ArrayList<IdeDisk>();
       for (int count = 0; count < controllers.size(); count++) {
-         for (Object deviceOrDisk : controllers.get(count).deviceOrDisks()) {
-            if (deviceOrDisk instanceof IdeDisk) {
-               IdeDisk ideDisk = (IdeDisk) deviceOrDisk;
+         for (IdeDeviceOrDisk deviceOrDisk : controllers.get(count).deviceOrDisks()) {
+            if (deviceOrDisk.disk() != null) {
+               IdeDisk ideDisk = deviceOrDisk.disk();
                diskList.add(IdeDisk.create(ideDisk.id(),
                      constructUniqueVolumeIdentifier(controllers.get(count).key(), ideDisk.slot()), ideDisk.sizeGb(),
                      ideDisk.speed(), ideDisk.state()));
@@ -160,9 +162,9 @@ public class ServerToHardware implements Function<Server, Hardware> {
    private List<IdeDevice> buildIdeDeviceList(final List<IdeController> controllers) {
       final List<IdeDevice> deviceList = new ArrayList<IdeDevice>();
       for (int count = 0; count < controllers.size(); count++) {
-         for (Object deviceOrDisk : controllers.get(count).deviceOrDisks()) {
-            if (deviceOrDisk instanceof IdeDevice) {
-               IdeDevice ideDevice = (IdeDevice) deviceOrDisk;
+         for (IdeDeviceOrDisk deviceOrDisk : controllers.get(count).deviceOrDisks()) {
+            if (deviceOrDisk.device() != null) {
+               IdeDevice ideDevice = deviceOrDisk.device();
                if (ideDevice.sizeGb() > 0) {
                   deviceList.add(IdeDevice.create(ideDevice.id(),
                         constructUniqueVolumeIdentifier(controllers.get(count).key(), ideDevice.slot()),
@@ -177,9 +179,9 @@ public class ServerToHardware implements Function<Server, Hardware> {
    private List<SataDisk> buildSataDiskList(final List<SataController> controllers) {
       final List<SataDisk> diskList = new ArrayList<SataDisk>();
       for (int count = 0; count < controllers.size(); count++) {
-         for (Object deviceOrDisk : controllers.get(count).deviceOrDisks()) {
-            if (deviceOrDisk instanceof SataDisk) {
-               SataDisk sataDisk = (SataDisk) deviceOrDisk;
+         for (SataDeviceOrDisk deviceOrDisk : controllers.get(count).deviceOrDisks()) {
+            if (deviceOrDisk.disk() != null) {
+               SataDisk sataDisk = deviceOrDisk.disk();
                diskList.add(SataDisk.create(sataDisk.id(),
                      constructUniqueVolumeIdentifier(controllers.get(count).key(), sataDisk.sataId()),
                      sataDisk.sizeGb(), sataDisk.speed(), sataDisk.state()));
@@ -192,9 +194,9 @@ public class ServerToHardware implements Function<Server, Hardware> {
    private List<SataDevice> buildSataDeviceList(final List<SataController> controllers) {
       final List<SataDevice> deviceList = new ArrayList<SataDevice>();
       for (int count = 0; count < controllers.size(); count++) {
-         for (Object deviceOrDisk : controllers.get(count).deviceOrDisks()) {
-            if (deviceOrDisk instanceof SataDevice) {
-               SataDevice sataDevice = (SataDevice) deviceOrDisk;
+         for (SataDeviceOrDisk deviceOrDisk : controllers.get(count).deviceOrDisks()) {
+            if (deviceOrDisk.device() != null) {
+               SataDevice sataDevice = deviceOrDisk.device();
                if (sataDevice.sizeGb() > 0) {
                   deviceList.add(SataDevice.create(sataDevice.id(),
                         constructUniqueVolumeIdentifier(controllers.get(count).key(), sataDevice.sataId()),

@@ -1,110 +1,165 @@
 {
-    "name": "Test Server",
-    "cluster": {
-        "id": "DEV_LAB1_N2_VMWARE_1-01",
-        "name": "DEV_LAB1_N2_VMWARE_1-01"
-    },
-    "cpu": {
-        "count": 2,
-        "speed": "STANDARD",
-        "coresPerSocket": 1
-    },
-    "memoryGb": 4,
-    "scsiController": [
+  "name": "parser-test-server-name",
+  "description": "parser-test-server-description",
+  "cluster": {
+    "id": "NA9-01",
+    "name": "SAP Cluster"
+  },
+  "cpu": {
+    "count": 2,
+    "speed": "STANDARD",
+    "coresPerSocket": 1
+  },
+  "memoryGb": 4,
+  "scsiController": [
+    {
+      "state": "NORMAL",
+      "id": "def96a02-d1ee-48b9-b07d-3993594724d2",
+      "adapterType": "BUS_LOGIC",
+      "key": 1000,
+      "disk": [
         {
-            "state": "NORMAL",
-            "id": "8a8301f3-58e6-449b-b048-0169f2540a08",
-            "adapterType": "LSI_LOGIC_PARALLEL",
-            "key": 1000,
-            "disk": [
-                {
-                    "state": "NORMAL",
-                    "id": "577be19d-dd68-48ff-a3a0-963f20b0b51b",
-                    "sizeGb": 10,
-                    "speed": "STANDARD",
-                    "scsiId": 0
-                }
-            ],
-            "busNumber": 0
+          "state": "NORMAL",
+          "id": "98299855-37a3-4ebe-9cf1-090da9ae42a4",
+          "sizeGb": 30,
+          "speed": "HIGHPERFORMANCE",
+          "scsiId": 0
         }
-    ],
-    "sataController": [],
-    "ideController": [
+      ],
+      "busNumber": 0
+    }
+  ],
+  "sataController": [
+    {
+      "state": "NORMAL",
+      "id": "def96a01-d1ee-48b9-b07d-3993594724d1",
+      "adapterType": "AHCI_CONTROLLER",
+      "key": 15000,
+      "deviceOrDisk": [
         {
+          "disk": {
             "state": "NORMAL",
-            "id": "5bdfc88c-5509-420c-8c5d-cc7876dacfbe",
-            "adapterType": "IDE",
-            "key": 200,
-            "deviceOrDisk": [],
-            "channel": 0
+            "id": "98299853-37a3-4ebe-9cf1-090da9ae42a2",
+            "sizeGb": 20,
+            "speed": "STANDARD",
+            "sataId": 0
+          }
         },
         {
+          "device": {
             "state": "NORMAL",
-            "id": "ec0f6488-21aa-4bf6-8bce-8ce752391cf8",
-            "adapterType": "IDE",
-            "key": 201,
-            "deviceOrDisk": [
-                {
-                    "state": "NORMAL",
-                    "id": "fd70be3c-f068-4bbf-a55c-8c776a66ed5a",
-                    "type": "CDROM",
-                    "slot": 0
-                }
-            ],
-            "channel": 1
+            "id": "98299854-37a3-4ebe-9cf1-090da9ae42a3",
+            "type": "DVD",
+            "sataId": 1,
+            "fileName": "WIN10CE",
+            "sizeGb": 1
+          }
         }
-    ],
-    "floppy": [
-        {
-            "state": "NORMAL",
-            "id": "afeafa7e-742d-4902-a3f8-67d9bec5c160",
-            "driveNumber": 0,
-            "key": 8000
-        }
-    ],
-    "networkInfo": {
-        "primaryNic": {
-            "id": "4f5d52a3-f842-4f3b-80dd-efbf07afe751",
-            "privateIpv4": "10.0.0.6",
-            "ipv6": "2607:f480:1111:1245:158d:2474:5fb2:b187",
-            "vlanId": "fdece27c-65bd-4af8-af01-40161b50179d",
-            "vlanName": "Test Server Vlan",
-            "networkAdapter": "VMXNET3",
-            "macAddress": "00:50:56:84:7f:16",
-            "key": 4000,
-            "state": "NORMAL"
-        },
-        "additionalNic": [],
-        "networkDomainId": "7c5e9c4d-641c-4be1-b688-73c4c87260c0"
+      ],
+      "busNumber": 0
+    }
+  ],
+  "ideController": [
+    {
+      "state": "NORMAL",
+      "id": "5bdfc88c-5509-420c-8c5d-cc7876dacfbe",
+      "adapterType": "IDE_CONTROLLER_XXX",
+      "key": 3000,
+      "deviceOrDisk": [],
+      "channel": 0
     },
-    "softwareLabel": [],
+    {
+      "state": "NORMAL",
+      "id": "def96a00-d1ee-48b9-b07d-3993594724d0",
+      "adapterType": "IDE_CONTROLLER_XXX",
+      "key": 3001,
+      "deviceOrDisk": [
+        {
+          "device": {
+            "state": "NORMAL",
+            "id": "fd70be3c-f068-4bbf-a55c-8c776a66ed5a",
+            "type": "DVD",
+            "fileName": "WIN8DE",
+            "sizeGb": 1,
+            "slot": 0
+          }
+        },
+        {
+          "disk": {
+            "state": "NORMAL",
+            "id": "98299851-37a3-4ebe-9cf1-090da9ae42a0",
+            "speed": "ECONOMY",
+            "sizeGb": 10,
+            "slot": 1
+          }
+        }
+      ],
+      "channel": 1
+    }
+  ],
+  "floppy": [
+    {
+      "state": "NORMAL",
+      "id": "afeafa7e-742d-4902-a3f8-67d9bec5c160",
+      "driveNumber": 0,
+      "key": 8000
+    }
+  ],
+  "networkInfo": {
+    "primaryNic": {
+      "id": "980a9fdd-4ea2-478b-85b4-f016349f1738",
+      "privateIpv4": "10.0.0.8",
+      "ipv6": "2607:f480:111:1575:c47:7479:2af8:3f1a",
+      "vlanId": "6b25b02e-d3a2-4e69-8ca7-9bab605deebd",
+      "vlanName": "vlan1",
+      "networkAdapter": "E1000",
+      "macAddress": "11-2A-3B-C4-E5-66",
+      "key": "4000",
+      "state": "NORMAL"
+    },
+    "additionalNic": null,
+    "networkDomainId": "690de302-bb80-49c6-b401-8c02bbefb945"
+  },
+  "softwareLabel": [],
   "source": {
     "type": "IMAGE_ID",
-    "value": "7f336a98-6ef2-11e2-b29c-001517c4643e"
+    "value": "1e44ab3f-2426-45ec-a1b5-827b2ce58836"
   },
-    "createTime": "2017-06-30T12:54:24.000Z",
-    "deployed": true,
-    "started": true,
-    "state": "NORMAL",
-    "guest": {
-        "operatingSystem": {
-            "id": "UBUNTU1264",
-            "displayName": "UBUNTU12/64",
-            "family": "UNIX"
-        },
-        "vmTools": {
-            "type": "VMWARE_TOOLS",
-            "versionStatus": "CURRENT",
-            "runningStatus": "RUNNING",
-            "apiVersion": 9354
-        },
-        "osCustomization": true
+  "createTime": "2016-03-10T13:05:21.000Z",
+  "deployed": true,
+  "started": true,
+  "state": "NORMAL",
+  "guest": {
+    "operatingSystem": {
+      "id": "CENTOS564",
+      "displayName": "CENTOS5/64",
+      "family": "UNIX"
     },
-    "virtualHardware": {
-        "version": "vmx-08",
-        "upToDate": false
+    "vmTools": {
+      "type": "VMWARE_TOOLS",
+      "versionStatus": "NEED_UPGRADE",
+      "runningStatus": "RUNNING",
+      "apiVersion": 9354
     },
-    "tag": [],
-    "id": "84363cf0-3aad-4b93-96e8-b76d68d43261",
-    "datacenterId": "NA9"
+    "osCustomization": true
+  },
+  "virtualHardware": {
+    "version": "vmx-08",
+    "upToDate": false
+  },
+  "consistencyGroup": {
+    "id": "1234ef-1238933-2344adce-1098",
+    "name": "Test Consistency Group",
+    "status": "DRS_MODE",
+    "serverRole": "TARGET"
+  },
+  "tag": [
+    {
+      "tagKeyId": "883b91b3-702f-11e6-81fa-acaf67f59a21",
+      "tagKeyName": "Department",
+      "value": "IT"
+    }
+  ],
+  "id": "b8246ba4-847d-475b-b296-f76787a69ca8",
+  "datacenterId": "NA9"
 }

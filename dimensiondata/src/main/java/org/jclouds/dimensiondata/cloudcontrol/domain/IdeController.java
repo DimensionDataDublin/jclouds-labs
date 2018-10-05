@@ -18,6 +18,7 @@ package org.jclouds.dimensiondata.cloudcontrol.domain;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
 import java.util.List;
@@ -31,13 +32,12 @@ public abstract class IdeController {
 
    public abstract int channel();
 
-   public abstract int virtualControllerId();
-
    public abstract State state();
 
    public abstract String adapterType();
 
-   public abstract List<Object> deviceOrDisks();
+   @Nullable
+   public abstract List<IdeDeviceOrDisk> deviceOrDisks();
 
    @AutoValue.Builder
    public abstract static class Builder {
@@ -48,20 +48,20 @@ public abstract class IdeController {
 
       public abstract Builder channel(int channel);
 
-      public abstract Builder virtualControllerId(int virtualControllerId);
-
       public abstract Builder state(State state);
 
       public abstract Builder adapterType(String adapterType);
 
-      public abstract Builder deviceOrDisks(List<Object> deviceOrDisks);
+      public abstract Builder deviceOrDisks(List<IdeDeviceOrDisk> deviceOrDisks);
 
       abstract IdeController autoBuild();
 
-      abstract List<Object> deviceOrDisks();
+      abstract List<IdeDeviceOrDisk> deviceOrDisks();
 
       public IdeController build() {
-         deviceOrDisks(deviceOrDisks() != null ? ImmutableList.copyOf(deviceOrDisks()) : ImmutableList.of());
+         deviceOrDisks(deviceOrDisks() != null ?
+               ImmutableList.copyOf(deviceOrDisks()) :
+               ImmutableList.<IdeDeviceOrDisk>of());
          return autoBuild();
       }
    }
@@ -70,11 +70,11 @@ public abstract class IdeController {
       return new AutoValue_IdeController.Builder();
    }
 
-   @SerializedNames({ "id", "key", "channel", "virtualControllerId", "state", "adapterType", "deviceOrDisks" })
-   public static IdeController create(String id, int key, int channel, int virtualControllerId, State state,
-         String adapterType, List<Object> deviceOrDisks) {
-      return builder().id(id).key(key).channel(channel).virtualControllerId(virtualControllerId).state(state)
-            .adapterType(adapterType).deviceOrDisks(deviceOrDisks).build();
+   @SerializedNames({ "id", "key", "channel", "state", "adapterType", "deviceOrDisk" })
+   public static IdeController create(String id, int key, int channel, State state, String adapterType,
+         List<IdeDeviceOrDisk> deviceOrDisks) {
+      return builder().id(id).key(key).channel(channel).state(state).adapterType(adapterType)
+            .deviceOrDisks(deviceOrDisks).build();
    }
 
 }

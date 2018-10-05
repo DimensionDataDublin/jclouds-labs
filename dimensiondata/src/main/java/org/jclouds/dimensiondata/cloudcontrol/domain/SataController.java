@@ -18,6 +18,7 @@ package org.jclouds.dimensiondata.cloudcontrol.domain;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
 import java.util.List;
@@ -31,13 +32,12 @@ public abstract class SataController {
 
    public abstract int busNumber();
 
-   public abstract int virtualControllerId();
-
    public abstract State state();
 
    public abstract String adapterType();
 
-   public abstract List<Object> deviceOrDisks();
+   @Nullable
+   public abstract List<SataDeviceOrDisk> deviceOrDisks();
 
    @AutoValue.Builder
    public abstract static class Builder {
@@ -48,20 +48,18 @@ public abstract class SataController {
 
       public abstract Builder busNumber(int busNumber);
 
-      public abstract Builder virtualControllerId(int virtualControllerId);
-
       public abstract Builder state(State state);
 
       public abstract Builder adapterType(String adapterType);
 
-      public abstract Builder deviceOrDisks(List<Object> deviceOrDisks);
+      public abstract Builder deviceOrDisks(List<SataDeviceOrDisk> deviceOrDisks);
 
-      abstract List<Object> deviceOrDisks();
+      abstract List<SataDeviceOrDisk> deviceOrDisks();
 
       public abstract SataController autoBuild();
 
       public SataController build() {
-         deviceOrDisks(deviceOrDisks() != null ? ImmutableList.copyOf(deviceOrDisks()) : ImmutableList.of());
+         deviceOrDisks(deviceOrDisks() != null ? ImmutableList.copyOf(deviceOrDisks()) : ImmutableList.<SataDeviceOrDisk>of());
          return autoBuild();
       }
    }
@@ -70,11 +68,11 @@ public abstract class SataController {
       return new AutoValue_SataController.Builder();
    }
 
-   @SerializedNames({ "id", "key", "busNumber", "virtualControllerId", "state", "adapterType", "deviceOrDisks" })
-   public static SataController create(String id, int key, int busNumber, int virtualControllerId, State state,
-         String adapterType, List<Object> deviceOrDisks) {
-      return builder().id(id).key(key).busNumber(busNumber).virtualControllerId(virtualControllerId).state(state)
-            .adapterType(adapterType).deviceOrDisks(deviceOrDisks).build();
+   @SerializedNames({ "id", "key", "busNumber", "state", "adapterType", "deviceOrDisk" })
+   public static SataController create(String id, int key, int busNumber, State state, String adapterType,
+         List<SataDeviceOrDisk> deviceOrDisks) {
+      return builder().id(id).key(key).busNumber(busNumber).state(state).adapterType(adapterType)
+            .deviceOrDisks(deviceOrDisks).build();
    }
 
 }

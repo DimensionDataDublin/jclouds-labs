@@ -26,12 +26,14 @@ import org.jclouds.dimensiondata.cloudcontrol.domain.Floppy;
 import org.jclouds.dimensiondata.cloudcontrol.domain.Guest;
 import org.jclouds.dimensiondata.cloudcontrol.domain.IdeController;
 import org.jclouds.dimensiondata.cloudcontrol.domain.IdeDevice;
+import org.jclouds.dimensiondata.cloudcontrol.domain.IdeDeviceOrDisk;
 import org.jclouds.dimensiondata.cloudcontrol.domain.IdeDisk;
 import org.jclouds.dimensiondata.cloudcontrol.domain.NIC;
 import org.jclouds.dimensiondata.cloudcontrol.domain.NetworkInfo;
 import org.jclouds.dimensiondata.cloudcontrol.domain.OperatingSystem;
 import org.jclouds.dimensiondata.cloudcontrol.domain.SataController;
 import org.jclouds.dimensiondata.cloudcontrol.domain.SataDevice;
+import org.jclouds.dimensiondata.cloudcontrol.domain.SataDeviceOrDisk;
 import org.jclouds.dimensiondata.cloudcontrol.domain.SataDisk;
 import org.jclouds.dimensiondata.cloudcontrol.domain.ScsiController;
 import org.jclouds.dimensiondata.cloudcontrol.domain.ScsiDisk;
@@ -59,20 +61,25 @@ public class ServerToHardwareTest {
    @Test
    public void testApplyServer() {
 
-      List ideDisksOrDevices = Lists.newArrayList(
-            IdeDisk.builder().id("98299851-37a3-4ebe-9cf1-090da9ae42a0").slot("0").sizeGb(10).speed("ECONOMY").state(State.NORMAL).build(),
-            IdeDevice.builder().id("98299852-37a3-4ebe-9cf1-090da9ae42a1").slot("1").sizeGb(1).fileName("WIN8DE").state(State.NORMAL)
-                  .type("DVD").build());
+      List<IdeDeviceOrDisk> ideDisksOrDevices = Lists.newArrayList();
+      ideDisksOrDevices.add(IdeDeviceOrDisk.builder()
+            .disk(IdeDisk.builder().id("98299851-37a3-4ebe-9cf1-090da9ae42a0").slot("0").sizeGb(10).speed("ECONOMY")
+                  .state(State.NORMAL).build()).build());
+      ideDisksOrDevices.add(IdeDeviceOrDisk.builder().device(
+            IdeDevice.builder().id("98299852-37a3-4ebe-9cf1-090da9ae42a1").slot("1").sizeGb(1).fileName("WIN8DE")
+                  .state(State.NORMAL).type("DVD").build()).build());
 
-      List sataDisksOrDevices = Lists.newArrayList(
+      List<SataDeviceOrDisk> sataDisksOrDevices = Lists.newArrayList();
+      sataDisksOrDevices.add(SataDeviceOrDisk.builder().disk(
             SataDisk.builder().id("98299853-37a3-4ebe-9cf1-090da9ae42a2").sataId("0").sizeGb(20).speed("STANDARD").state(State.NORMAL)
-                  .build(),
+                  .build()).build());
+      sataDisksOrDevices.add(SataDeviceOrDisk.builder().device(
             SataDevice.builder().id("98299854-37a3-4ebe-9cf1-090da9ae42a3").sataId("1").sizeGb(1).fileName("WIN10CE").state(State.NORMAL)
-                  .type("DVD").build());
+                  .type("DVD").build()).build());
 
-      List scsiDisks = Lists.newArrayList(
-            ScsiDisk.builder().id("98299855-37a3-4ebe-9cf1-090da9ae42a4").scsiId("0").sizeGb(30).speed("HIGHPERFORMANCE").state(State.NORMAL)
-                  .build());
+      List<ScsiDisk> scsiDisks = Lists.newArrayList(
+            ScsiDisk.builder().id("98299855-37a3-4ebe-9cf1-090da9ae42a4").scsiId("0").sizeGb(30)
+                  .speed("HIGHPERFORMANCE").state(State.NORMAL).build());
 
       final Server server = Server.builder().id("12ea8472-6e4e-4068-b2cb-f04ecacd3962").name("CentOS 5 64-bit")
             .description("DRaaS CentOS Release 5.9 64-bit").guest(Guest.builder().osCustomization(false)
@@ -83,20 +90,21 @@ public class ServerToHardwareTest {
                   NIC.builder().id("def96a04-d1ee-48b9-b07d-3993594724d2").privateIpv4("192.168.1.2")
                         .vlanId("19737c24-259a-49e2-a5b7-a8a042a96108").build())
                   .additionalNic(Lists.<NIC>newArrayList()).networkDomainId("testNetworkDomain").build())
-            .ideControllers(ImmutableList
-                  .of(IdeController.builder().id("def96a00-d1ee-48b9-b07d-3993594724d0").adapterType("IDE_CONTROLLER_XXX").channel(0).key(3001)
-                        .deviceOrDisks(ideDisksOrDevices).virtualControllerId(3001).state(State.NORMAL).build()))
-            .sataControllers(ImmutableList
-                  .of(SataController.builder().id("def96a01-d1ee-48b9-b07d-3993594724d1").adapterType("AHCI_CONTROLLER").busNumber(0).key(15000)
-                        .deviceOrDisks(sataDisksOrDevices).virtualControllerId(15000).state(State.NORMAL).build()))
+            .ideControllers(ImmutableList.of(IdeController.builder().id("def96a00-d1ee-48b9-b07d-3993594724d0")
+                  .adapterType("IDE_CONTROLLER_XXX").channel(0).key(3001).deviceOrDisks(ideDisksOrDevices)
+                  .state(State.NORMAL).build())).sataControllers(ImmutableList
+                  .of(SataController.builder().id("def96a01-d1ee-48b9-b07d-3993594724d1").adapterType("AHCI_CONTROLLER")
+                        .busNumber(0).key(15000).deviceOrDisks(sataDisksOrDevices).state(State.NORMAL).build()))
             .scsiControllers(ImmutableList
-                              .of(ScsiController.builder().id("def96a02-d1ee-48b9-b07d-3993594724d2").adapterType("BUS_LOGIC").busNumber(0).key(1000)
-                                    .disks(scsiDisks).virtualControllerId(1000).state(State.NORMAL).build()))
-            .floppies(ImmutableList.of(Floppy.builder().id("def96a03-d1ee-48b9-b07d-3993594724d3").driveNumber(0).key(8000).fileName("floppy.flp").sizeGb(1).state(State.NORMAL).build()))
+                  .of(ScsiController.builder().id("def96a02-d1ee-48b9-b07d-3993594724d2").adapterType("BUS_LOGIC")
+                        .busNumber(0).key(1000).disks(scsiDisks).state(State.NORMAL).build())).floppies(ImmutableList
+                  .of(Floppy.builder().id("def96a03-d1ee-48b9-b07d-3993594724d3").driveNumber(0).key(8000)
+                        .fileName("floppy.flp").sizeGb(1).state(State.NORMAL).build()))
             .softwareLabels(Lists.newArrayList())
             .createTime(DatatypeConverter.parseDateTime("2016-06-09T17:36:31.000Z").getTime()).datacenterId("EU6")
-            .state(State.NORMAL).source(ServerSource.builder().type("IMAGE_ID").value("1806fe4a-0400-46ad-a6ab-1fe3c9ebc947").build()).started(false).deployed(true)
-            .build();
+            .state(State.NORMAL)
+            .source(ServerSource.builder().type("IMAGE_ID").value("1806fe4a-0400-46ad-a6ab-1fe3c9ebc947").build())
+            .started(false).deployed(true).build();
       applyAndAssert(server);
    }
 

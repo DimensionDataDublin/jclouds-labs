@@ -18,6 +18,7 @@ package org.jclouds.dimensiondata.cloudcontrol.domain;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
 import java.util.ArrayList;
@@ -32,12 +33,11 @@ public abstract class ScsiController {
 
    public abstract int busNumber();
 
-   public abstract int virtualControllerId();
-
    public abstract State state();
 
    public abstract String adapterType();
 
+   @Nullable
    public abstract List<ScsiDisk> disks();
 
    @AutoValue.Builder
@@ -48,8 +48,6 @@ public abstract class ScsiController {
       public abstract Builder key(int key);
 
       public abstract Builder busNumber(int busNumber);
-
-      public abstract Builder virtualControllerId(int virtualControllerId);
 
       public abstract Builder state(State state);
 
@@ -71,10 +69,9 @@ public abstract class ScsiController {
       return new AutoValue_ScsiController.Builder();
    }
 
-   @SerializedNames({ "id", "key", "busNumber", "virtualControllerId", "state", "adapterType", "disks" })
-   public static ScsiController create(String id, int key, int busNumber, int virtualControllerId, State state,
-         String adapterType, List<ScsiDisk> disks) {
-      return builder().id(id).key(key).busNumber(busNumber).virtualControllerId(virtualControllerId)
-            .adapterType(adapterType).state(state).disks(disks).build();
+   @SerializedNames({ "id", "key", "busNumber", "state", "adapterType", "disk" })
+   public static ScsiController create(String id, int key, int busNumber, State state, String adapterType,
+         List<ScsiDisk> disks) {
+      return builder().id(id).key(key).busNumber(busNumber).adapterType(adapterType).state(state).disks(disks).build();
    }
 }
