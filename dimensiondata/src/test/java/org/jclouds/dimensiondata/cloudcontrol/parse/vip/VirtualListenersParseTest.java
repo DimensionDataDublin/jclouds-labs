@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableList;
 import org.jclouds.dimensiondata.cloudcontrol.domain.State;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.HealthMonitor;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.Pool;
+import org.jclouds.dimensiondata.cloudcontrol.domain.vip.SslOffloadProfile;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.VirtualListener;
 import org.jclouds.dimensiondata.cloudcontrol.domain.vip.VirtualListeners;
 import org.jclouds.dimensiondata.cloudcontrol.internal.BaseDimensionDataCloudControlParseTest;
@@ -85,7 +86,10 @@ public class VirtualListenersParseTest extends BaseDimensionDataCloudControlPars
                         .name("dest_addr")
                         .build())
                   .optimizationProfile(VirtualListener.OptimizationProfile.TCP)
-                  // .sslOffloadProfile(SslOffloadProfile.builder().....build())
+                  .sslOffloadProfile(SslOffloadProfile.builder()
+                        .id("9e6b496d-5261-4542-91aa-b50c7f569c55")
+                        .name("mySslProfile")
+                        .build())
                   .irules(Collections.singletonList(VirtualListener.Irule.builder()
                         .id("9e6b496d-5261-4542-91aa-b50c7f569982")
                         .name("defaultiRule20")

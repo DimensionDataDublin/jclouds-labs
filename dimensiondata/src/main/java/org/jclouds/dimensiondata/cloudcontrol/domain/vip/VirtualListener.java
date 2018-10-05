@@ -58,7 +58,7 @@ public abstract class VirtualListener {
          "persistenceProfile",
          "fallbackPersistenceProfile",
          "optimizationProfile",
-         //         "sslOffloadProfile",
+         "sslOffloadProfile",
          "irule"
    })
    public static VirtualListener create(
@@ -83,7 +83,7 @@ public abstract class VirtualListener {
          @Nullable PersistenceProfile persistenceProfile,
          @Nullable PersistenceProfile fallbackPersistenceProfile,
          @Nullable OptimizationProfile optimizationProfile,
-         //         @Nullable SslOffloadProfile sslOffloadProfile,
+         @Nullable SslOffloadProfile sslOffloadProfile,
          List<Irule> irules
    ) {
 
@@ -109,7 +109,7 @@ public abstract class VirtualListener {
             .persistenceProfile(persistenceProfile)
             .fallbackPersistenceProfile(fallbackPersistenceProfile)
             .optimizationProfile(optimizationProfile)
-            //            .sslOffloadProfile(sslOffloadProfile)
+            .sslOffloadProfile(sslOffloadProfile)
             .irules(irules)
             .build();
    }
@@ -163,8 +163,8 @@ public abstract class VirtualListener {
    @Nullable
    public abstract OptimizationProfile optimizationProfile();
 
-   //   @Nullable
-   //   public abstract SslOffloadProfile sslOffloadProfile();
+   @Nullable
+   public abstract SslOffloadProfile sslOffloadProfile();
 
    @Nullable
    public abstract List<Irule> irules();
@@ -359,7 +359,7 @@ public abstract class VirtualListener {
       @Nullable
       public abstract Builder optimizationProfile(OptimizationProfile optimizationProfile);
 
-      //      public abstract Builder sslOffloadProfile(SslOffloadProfile sslOffloadProfile);
+      public abstract Builder sslOffloadProfile(SslOffloadProfile sslOffloadProfile);
 
       public abstract Builder irules(List<Irule> irules);
 

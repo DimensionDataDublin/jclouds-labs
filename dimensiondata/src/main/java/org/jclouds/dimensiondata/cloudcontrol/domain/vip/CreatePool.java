@@ -17,6 +17,7 @@
 package org.jclouds.dimensiondata.cloudcontrol.domain.vip;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableList;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
@@ -95,7 +96,13 @@ public abstract class CreatePool {
 
       public abstract Builder slowRampTime(int slowRampTime);
 
-      public abstract CreatePool build();
-   }
+      public abstract CreatePool autoBuild();
 
+      abstract List<String> healthMonitorIds();
+
+      public CreatePool build() {
+         healthMonitorIds(healthMonitorIds() != null ? ImmutableList.copyOf(healthMonitorIds()) : null);
+         return autoBuild();
+      }
+   }
 }

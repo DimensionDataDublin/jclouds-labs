@@ -49,7 +49,7 @@ public abstract class CreateVirtualListener {
          "persistenceProfileId",
          "fallbackPersistenceProfileId",
          "optimizationProfile",
-         // "sslOffloadProfileId",
+         "sslOffloadProfileId",
          "iruleId"
    })
    public static CreateVirtualListener create(
@@ -69,7 +69,7 @@ public abstract class CreateVirtualListener {
          @Nullable String persistenceProfileId,
          @Nullable String fallbackPersistenceProfileId,
          @Nullable VirtualListener.OptimizationProfile optimizationProfile,
-         // @Nullable String sslOffloadProfileId,
+         @Nullable String sslOffloadProfileId,
          @Nullable List<String> iruleIds
    ) {
 
@@ -90,7 +90,7 @@ public abstract class CreateVirtualListener {
             .persistenceProfileId(persistenceProfileId)
             .fallbackPersistenceProfileId(fallbackPersistenceProfileId)
             .optimizationProfile(optimizationProfile)
-            // .sslOffloadProfileIdsslOffloadProfileId)
+            .sslOffloadProfileId(sslOffloadProfileId)
             .iruleIds(iruleIds)
             .build();
    }
@@ -134,8 +134,8 @@ public abstract class CreateVirtualListener {
    @Nullable
    public abstract VirtualListener.OptimizationProfile optimizationProfile();
 
-   //   @Nullable
-   //   public abstract String sslOffloadProfileId();
+   @Nullable
+   public abstract String sslOffloadProfileId();
 
    @Nullable
    public abstract List<String> iruleIds();
@@ -182,8 +182,8 @@ public abstract class CreateVirtualListener {
       @Nullable
       public abstract Builder optimizationProfile(VirtualListener.OptimizationProfile optimizationProfile);
 
-//      @Nullable
-//      public abstract Builder sslOffloadProfileId(String sslOffloadProfileId);
+      @Nullable
+      public abstract Builder sslOffloadProfileId(String sslOffloadProfileId);
 
       public abstract Builder iruleIds(List<String> iruleIds);
 

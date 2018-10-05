@@ -66,7 +66,6 @@ public interface VirtualListenerApi {
    @ResponseParser(VirtualListenerId.class)
    String createVirtualListener(@BinderParam(BindToJsonPayload.class) CreateVirtualListener createVirtualListener);
 
-   // FIXME JCLOUDS-1432 handle RESOURCE_NOT_FOUND and write Mock test
    @Named("virtualListener:get")
    @GET
    @Path("/virtualListener/{id}")

@@ -27,7 +27,6 @@ import org.jclouds.location.suppliers.ZoneIdsSupplier;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.HttpMethod;
-
 import java.util.Collections;
 
 import static org.testng.Assert.assertEquals;
@@ -56,7 +55,7 @@ public class VirtualListenerApiMockTest extends BaseAccountAwareCloudControlMock
             .persistenceProfileId("a34ca25c-f3db-11e4-b010-005056806999")
             .fallbackPersistenceProfileId("6f2f5d7b-cdd9-4d84-8ad7-999b64a87978")
             .optimizationProfile(VirtualListener.OptimizationProfile.TCP)
-            // .sslOffloadProfile(SslOffloadProfile.builder().....build())
+            .sslOffloadProfileId("133a97dc-ee9b-4808-97ea-50b06624fd21")
             .iruleIds(Collections.singletonList("2b20abd9-ffdc-11e4-b010-005056806999"))
             .build());
       assertEquals(virtualListenerId, "virtualListenerId1");
