@@ -27,22 +27,22 @@ import org.jclouds.dimensiondata.cloudcontrol.domain.internal.ServerWithExternal
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 @Singleton
 public class ServerToServerWithExternalIp implements Function<Server, ServerWithExternalIp> {
 
-    private final DimensionDataCloudControlApi api;
+   private final DimensionDataCloudControlApi api;
 
-    @Inject
-    ServerToServerWithExternalIp(DimensionDataCloudControlApi api) {
-        this.api = checkNotNull(api, "api");
-    }
+   @Inject
+   ServerToServerWithExternalIp(DimensionDataCloudControlApi api) {
+      this.api = api;
+   }
 
-    @Override
-    public ServerWithExternalIp apply(final Server server) {
-        if (server == null) return null;
-        ServerWithExternalIp.Builder builder = ServerWithExternalIp.builder().server(server);
+   @Override
+   public ServerWithExternalIp apply(final Server server) {
+      if (server == null) {
+         return null;
+      }
+      ServerWithExternalIp.Builder builder = ServerWithExternalIp.builder().server(server);
 
         if (server.networkInfo() != null) {
             Optional<NatRule> natRuleOptional = api.getNetworkApi().listNatRules(server.networkInfo().networkDomainId())

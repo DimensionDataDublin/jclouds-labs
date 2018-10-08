@@ -115,4 +115,30 @@ public class ServerToServerWithExternalIpTest {
       assertEquals(result.server(), server);
       assertNull(result.externalIp());
    }
+
+   @Test(dependsOnMethods = "testServerToServerWithExternalIpApplyNetworkInfoNull")
+   public void testServerToServerWithExternalIpApplyNoMathingNatRuleFound() {
+      String internalIp = "192.168.1.1";
+      String natIp = "192.168.1.2";
+      String networkDomainId = "NetworkDomain1";
+
+      server = Server.builder().id("serverId").name("serverName").datacenterId("NA1")
+            .networkInfo(NetworkInfo.create(networkDomainId, nic, new ArrayList<NIC>())).cpu(cpu).deployed(true)
+            .state(State.NORMAL).sourceImageId("imageId").started(false).createTime(new Date()).memoryGb(1024)
+            .guest(Guest.builder().osCustomization(false).operatingSystem(os).build()).build();
+
+      PagedIterable<NatRule> natRules = PagedIterables.onlyPage(IterableWithMarkers.from(Lists.newArrayList(natRule)));
+
+      expect(dimensionDataCloudControlApi.getNetworkApi()).andReturn(networkApi);
+      expect(networkApi.listNatRules(networkDomainId)).andReturn(natRules);
+      expect(nic.privateIpv4()).andReturn(internalIp);
+      expect(natRule.internalIp()).andReturn(natIp);
+
+      EasyMock.replay(dimensionDataCloudControlApi, networkApi, natRule, nic);
+
+      ServerWithExternalIp result = new ServerToServerWithExternalIp(dimensionDataCloudControlApi).apply(server);
+      assertNotNull(result);
+      assertEquals(result.server(), server);
+      assertNull(result.externalIp());
+   }
 }
