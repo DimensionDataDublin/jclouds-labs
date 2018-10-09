@@ -34,6 +34,7 @@ public abstract class Floppy {
    @Nullable
    public abstract String fileName();
 
+   @Nullable
    public abstract State state();
 
    public abstract Floppy.Builder toBuilder();

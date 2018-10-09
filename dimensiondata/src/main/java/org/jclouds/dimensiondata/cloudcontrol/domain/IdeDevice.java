@@ -34,6 +34,7 @@ public abstract class IdeDevice {
    @Nullable
    public abstract String fileName();
 
+   @Nullable
    public abstract State state();
 
    public abstract IdeDevice.Builder toBuilder();

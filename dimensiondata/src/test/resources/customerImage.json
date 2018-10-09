@@ -1,39 +1,11 @@
 {
-  "name": "CloneForDrs",
-  "cluster": {
-    "id": "QA1_N2_VMWARE_1-01",
-    "name": "QA1_N2_VMWARE_1-01"
-  },
-  "cpu": {
-    "count": 2,
-    "speed": "STANDARD",
-    "coresPerSocket": 1
-  },
-  "memoryGb": 4,
-  "disk": [
-    {
-      "id": "1bddd4ed-67dc-4e5e-a0d5-b5a6c012ec14",
-      "scsiId": 0,
-      "sizeGb": 50,
-      "speed": "HIGHPERFORMANCE"
-    }
-  ],
-  "nic": [
-    {
-      "networkAdapter": "E1000",
-      "key": 4000
-    }
-  ],
-  "softwareLabel": [],
-  "createTime": "2016-07-17T23:53:48.000Z",
-  "id": "f27b7ead-9cdc-4cee-be50-8f8e6cec8534",
-  "datacenterId": "QA1_N2_VMWARE_1",
-  "state": "FAILED_ADD",
+  "state": "NORMAL",
   "guest": {
     "operatingSystem": {
-      "id": "WIN2012DC64",
-      "displayName": "WIN2012DC/64",
-      "family": "WINDOWS"
+      "id": "REDHAT664",
+      "displayName": "REDHAT6/64",
+      "family": "UNIX",
+      "osUnitsGroupId": "REDHAT"
     },
     "vmTools": {
       "type": "VMWARE_TOOLS",
@@ -50,27 +22,124 @@
   "source": {
     "artifact": [
       {
-        "type": "SERVER_ID",
-        "value": "cb4b8674-09a4-4194-9593-9cdc81489de1"
+        "type": "IMAGE_ID",
+        "value": "4200ed7c-bd86-4c3f-9cf0-2d67bc65370d"
+      },
+      {
+        "type": "OVF_PACKAGE_PREFIX",
+        "value": "copy-my-customer-image3"
       }
     ],
-    "type": "CLONE"
+    "type": "COPY"
   },
   "tag": [
     {
-      "tagKeyName": "DdTest3",
-      "tagKeyId": "ee58176e-305b-4ec2-85e0-330a33729a94"
+      "tagKeyName": "Location",
+      "value": "Office",
+      "tagKeyId": "1b424566-2857-48cf-b04d-df69a3c9b8d4"
     },
     {
-      "tagKeyName": "Lukas11",
-      "value": "j",
-      "tagKeyId": "c5480364-d3cd-4391-9536-5c1af683a8f1"
-    },
-    {
-      "tagKeyName": "Lukas5",
-      "tagKeyId": "a3e869df-6427-404f-99c2-b50f526369aa"
+      "tagKeyName": "Region",
+      "value": "EU",
+      "tagKeyId": "525d9244-510d-4fac-a8bd-0ae59fad8f50"
     }
   ],
+  "name": "Trevor West Side Source Image",
+  "description": "This is a description",
+  "cpu": {
+    "count": 2,
+    "speed": "STANDARD",
+    "coresPerSocket": 1
+  },
+  "memoryGb": 4,
+  "scsiController": [
+    {
+      "disk": [
+        {
+          "id": "06529bf0-4e8e-4993-81bd-ef25ebbaf0aa",
+          "sizeGb": 10,
+          "speed": "STANDARD",
+          "scsiId": 0
+        }
+      ],
+      "id": "c6435bc1-fda1-4bdf-907b-17fefde4d828",
+      "adapterType": "BUS_LOGIC",
+      "key": 1000,
+      "busNumber": 0
+    }
+  ],
+  "sataController": [
+    {
+      "id": "ee1cb5bb-65a2-4839-9d81-9e7a71b35915",
+      "adapterType": "AHCI",
+      "key": 15000,
+      "busNumber": 0
+    },
+    {
+      "deviceOrDisk": [
+        {
+          "device": {
+            "id": "56ad67b1-5bf9-424c-9c6a-9e3f49decaeb",
+            "type": "CDROM",
+            "sizeGb": 1,
+            "fileName": "_deviceImage-0.iso",
+            "sataId": 0
+          }
+        },
+        {
+          "device": {
+            "id": "e8479b19-ec65-45e8-a70d-24d6115e368c",
+            "type": "CDROM",
+            "sataId": 1
+          }
+        }
+      ],
+      "id": "146187c0-3676-452a-a68d-e02e74daab60",
+      "adapterType": "AHCI",
+      "key": 15001,
+      "busNumber": 1
+    }
+  ],
+  "ideController": [
+    {
+      "deviceOrDisk": [
+        {
+          "device": {
+            "id": "4e384cf6-4c70-11e7-898e-005056986f6c",
+            "type": "CDROM",
+            "slot": 0
+          }
+        }
+      ],
+      "id": "4e37fec9-4c70-11e7-898e-005056986f6c",
+      "adapterType": "IDE",
+      "key": 200,
+      "channel": 0
+    },
+    {
+      "id": "4e3810ec-4c70-11e7-898e-005056986f6c",
+      "adapterType": "IDE",
+      "key": 201,
+      "channel": 1
+    }
+  ],
+  "floppy": [
+    {
+      "id": "4e387f74-4c70-11e7-898e-005056986f6c",
+      "driveNumber": 0,
+      "key": 8000
+    }
+  ],
+  "nic": [
+    {
+      "networkAdapter": "E1000",
+      "key": 4000
+    }
+  ],
+  "softwareLabel": [],
+  "createTime": "2017-02-03T10:25:33.000Z",
+  "id": "43a721a7-b23b-4da7-b78d-a38a6c5562d6",
+  "datacenterId": "DEV1_DR_WEST",
   "progress": {
     "action": "DELETE_SERVER_IMAGE",
     "requestTime": "2017-03-15T07:47:26.000Z",

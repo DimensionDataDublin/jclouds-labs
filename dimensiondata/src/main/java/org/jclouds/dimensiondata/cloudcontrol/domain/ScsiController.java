@@ -33,6 +33,7 @@ public abstract class ScsiController {
 
    public abstract int busNumber();
 
+   @Nullable
    public abstract State state();
 
    public abstract String adapterType();

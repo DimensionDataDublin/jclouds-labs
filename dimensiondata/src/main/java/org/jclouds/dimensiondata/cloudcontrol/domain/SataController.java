@@ -32,6 +32,7 @@ public abstract class SataController {
 
    public abstract int busNumber();
 
+   @Nullable
    public abstract State state();
 
    public abstract String adapterType();

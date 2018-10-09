@@ -32,6 +32,7 @@ public abstract class IdeController {
 
    public abstract int channel();
 
+   @Nullable
    public abstract State state();
 
    public abstract String adapterType();

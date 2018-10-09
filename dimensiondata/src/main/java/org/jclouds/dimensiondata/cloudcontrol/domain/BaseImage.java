@@ -21,7 +21,6 @@ import org.jclouds.javax.annotation.Nullable;
 import java.util.Date;
 import java.util.List;
 
-
 public abstract class BaseImage {
 
    public String type;
@@ -51,9 +50,20 @@ public abstract class BaseImage {
    @Nullable
    public abstract List<ImageNic> nics();
 
-   public abstract List<Disk> disks();
+   @Nullable
+   public abstract List<ScsiController> scsiControllers();
 
-   public abstract List<String> softwareLabels();
+   @Nullable
+   public abstract List<SataController> sataControllers();
+
+   @Nullable
+   public abstract List<IdeController> ideControllers();
+
+   @Nullable
+   public abstract List<Floppy> floppies();
+
+   @Nullable
+   public abstract List<Object> softwareLabels();
 
    public abstract Date createTime();
 
