@@ -230,12 +230,12 @@ public class ServerApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest 
    public void testListCustomerImages() {
       FluentIterable<CustomerImage> customerImages = api.getServerImageApi().listCustomerImages().concat();
       assertNotNull(customerImages);
-      customerImages.anyMatch(new Predicate<CustomerImage>() {
+      assertTrue(customerImages.anyMatch(new Predicate<CustomerImage>() {
          @Override
          public boolean apply(CustomerImage input) {
             return input.id().equals(cloneImageId);
          }
-      });
+      }));
    }
 
    @Test(dependsOnMethods = "testCloneServerToMakeCustomerImage")
