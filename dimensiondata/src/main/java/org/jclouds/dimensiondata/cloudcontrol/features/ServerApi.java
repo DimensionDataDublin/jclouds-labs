@@ -61,7 +61,7 @@ import java.util.List;
 
 @RequestFilters({ BasicAuthentication.class, OrganisationIdFilter.class })
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/caas/{jclouds.api-version}/server")
+@Path("/caas/2.7/server")
 public interface ServerApi {
 
    @Named("server:list")

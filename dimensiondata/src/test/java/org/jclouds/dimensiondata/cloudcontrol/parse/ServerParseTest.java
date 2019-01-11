@@ -105,9 +105,9 @@ public class ServerParseTest extends BaseDimensionDataCloudControlParseTest<Serv
                   .of(Floppy.builder().id("afeafa7e-742d-4902-a3f8-67d9bec5c160").driveNumber(0).key(8000).sizeGb(0)
                         .state(State.NORMAL).build())).networkInfo(NetworkInfo.builder().primaryNic(
                   NIC.builder().id("980a9fdd-4ea2-478b-85b4-f016349f1738").privateIpv4("10.0.0.8")
-                        .ipv6("2607:f480:111:1575:c47:7479:2af8:3f1a").vlanId("6b25b02e-d3a2-4e69-8ca7-9bab605deebd")
-                        .vlanId("6b25b02e-d3a2-4e69-8ca7-9bab605deebd").vlanName("vlan1").state("NORMAL").build())
-                  .additionalNic(null).networkDomainId("690de302-bb80-49c6-b401-8c02bbefb945").build())
+                        .ipv6("2a00:47c0:111:1131:5851:1950:411c:3dd8").vlanId("7bd12a4d-4e83-4254-a266-174aa5f55187")
+                        .vlanName("jclouds vlan").state("NORMAL").build()).additionalNic(null)
+                  .networkDomainId("d122949b-8990-46d6-98f0-91c8676fc720").build())
             .virtualHardware(VirtualHardware.builder().upToDate(false).version("vmx-08").build())
             .softwareLabels(Collections.emptyList()).build();
    }

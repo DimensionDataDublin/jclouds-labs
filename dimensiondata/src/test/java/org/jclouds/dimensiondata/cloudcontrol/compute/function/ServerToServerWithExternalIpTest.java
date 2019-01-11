@@ -31,6 +31,7 @@ import org.jclouds.dimensiondata.cloudcontrol.domain.NatRule;
 import org.jclouds.dimensiondata.cloudcontrol.domain.NetworkInfo;
 import org.jclouds.dimensiondata.cloudcontrol.domain.OperatingSystem;
 import org.jclouds.dimensiondata.cloudcontrol.domain.Server;
+import org.jclouds.dimensiondata.cloudcontrol.domain.ServerSource;
 import org.jclouds.dimensiondata.cloudcontrol.domain.State;
 import org.jclouds.dimensiondata.cloudcontrol.domain.internal.ServerWithExternalIp;
 import org.jclouds.dimensiondata.cloudcontrol.features.NetworkApi;
@@ -78,7 +79,8 @@ public class ServerToServerWithExternalIpTest {
 
       server = Server.builder().id("serverId").name("serverName").datacenterId("NA1")
             .networkInfo(NetworkInfo.create(networkDomainId, nic, new ArrayList<NIC>())).cpu(cpu).deployed(true)
-            .state(State.NORMAL).sourceImageId("imageId").started(false).createTime(new Date()).memoryGb(1024)
+            .state(State.NORMAL).source(ServerSource.builder().type("Image").value("imageId").build()).started(false)
+            .createTime(new Date()).memoryGb(1024)
             .guest(Guest.builder().osCustomization(false).operatingSystem(os).build()).build();
 
       PagedIterable<NatRule> natRules = PagedIterables.onlyPage(IterableWithMarkers.from(Lists.newArrayList(natRule)));
@@ -107,8 +109,9 @@ public class ServerToServerWithExternalIpTest {
    @Test(dependsOnMethods = "testServerToServerWithExternalIpApplyNotNull")
    public void testServerToServerWithExternalIpApplyNetworkInfoNull() {
       server = Server.builder().id("serverId").name("serverName").datacenterId("NA1").networkInfo(null).cpu(cpu)
-            .deployed(true).state(State.NORMAL).sourceImageId("imageId").started(false).createTime(new Date())
-            .memoryGb(1024).guest(Guest.builder().osCustomization(false).operatingSystem(os).build()).build();
+            .deployed(true).state(State.NORMAL).source(ServerSource.builder().type("Image").value("imageId").build())
+            .started(false).createTime(new Date()).memoryGb(1024)
+            .guest(Guest.builder().osCustomization(false).operatingSystem(os).build()).build();
 
       ServerWithExternalIp result = new ServerToServerWithExternalIp(dimensionDataCloudControlApi).apply(server);
       assertNotNull(result);
@@ -124,7 +127,8 @@ public class ServerToServerWithExternalIpTest {
 
       server = Server.builder().id("serverId").name("serverName").datacenterId("NA1")
             .networkInfo(NetworkInfo.create(networkDomainId, nic, new ArrayList<NIC>())).cpu(cpu).deployed(true)
-            .state(State.NORMAL).sourceImageId("imageId").started(false).createTime(new Date()).memoryGb(1024)
+            .state(State.NORMAL).source(ServerSource.builder().type("Image").value("imageId").build()).started(false)
+            .createTime(new Date()).memoryGb(1024)
             .guest(Guest.builder().osCustomization(false).operatingSystem(os).build()).build();
 
       PagedIterable<NatRule> natRules = PagedIterables.onlyPage(IterableWithMarkers.from(Lists.newArrayList(natRule)));

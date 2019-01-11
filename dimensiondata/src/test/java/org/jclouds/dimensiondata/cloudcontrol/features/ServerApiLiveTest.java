@@ -72,6 +72,21 @@ public class ServerApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest 
       tagKeyId = createTagKey();
    }
 
+   private static final String IMAGE_DISK_ID = "311da971-fe68-4cf4-a315-ed8cfea0c4fe";
+
+   @Test
+   public void testDeployAndStartServer() {
+      Boolean started = Boolean.TRUE;
+      NetworkInfo networkInfo = NetworkInfo
+            .create(networkDomainId, NIC.builder().vlanId(vlanId).build(), Lists.<NIC>newArrayList());
+      List<Disk> disks = ImmutableList.of(Disk.builder().scsiId(0).speed("STANDARD").id(IMAGE_DISK_ID).build());
+      serverId = api.getServerApi()
+            .deployServer(deployedServerName, imageId, started, networkInfo, "P$$ssWwrrdGoDd!", disks, null);
+      assertNotNull(serverId);
+      assertTrue(serverStartedPredicate.apply(serverId), "server did not start after timeout");
+      assertTrue(serverNormalPredicate.apply(serverId), "server was not NORMAL after timeout");
+   }
+
    @Test(dependsOnMethods = "testDeployAndStartServer")
    public void testListServers() {
       List<Server> servers = api.getServerApi().listServers().concat().toList();
@@ -84,19 +99,6 @@ public class ServerApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest 
          }
       }
       assertTrue(foundDeployedServer, "Did not find deployed server " + deployedServerName);
-   }
-
-   @Test
-   public void testDeployAndStartServer() {
-      Boolean started = Boolean.TRUE;
-      NetworkInfo networkInfo = NetworkInfo
-            .create(networkDomainId, NIC.builder().vlanId(vlanId).build(), Lists.<NIC>newArrayList());
-      List<Disk> disks = ImmutableList.of(Disk.builder().scsiId(0).speed("STANDARD").build());
-      serverId = api.getServerApi()
-            .deployServer(deployedServerName, imageId, started, networkInfo, "P$$ssWwrrdGoDd!", disks, null);
-      assertNotNull(serverId);
-      assertTrue(serverStartedPredicate.apply(serverId), "server did not start after timeout");
-      assertTrue(serverNormalPredicate.apply(serverId), "server was not NORMAL after timeout");
    }
 
    @Test(dependsOnMethods = "testDeployAndStartServer")

@@ -198,7 +198,7 @@ public class ServerApiMockTest extends BaseAccountAwareCloudControlMockTest {
       server.enqueue(jsonResponse("/cleanServer.json"));
       serverApi().cleanServer("12345");
       final RecordedRequest recordedRequest = assertSent(POST,
-            "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/cleanServer");
+            "/caas/2.7/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/cleanServer");
       assertBodyContains(recordedRequest, "{\"id\":\"12345\"}");
    }
 
