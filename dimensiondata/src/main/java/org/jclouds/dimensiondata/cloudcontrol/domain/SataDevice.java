@@ -34,6 +34,7 @@ public abstract class SataDevice {
    @Nullable
    public abstract String fileName();
 
+   @Nullable
    public abstract State state();
 
    public abstract SataDevice.Builder toBuilder();

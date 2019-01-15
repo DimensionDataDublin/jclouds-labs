@@ -12,12 +12,85 @@
         "coresPerSocket": 1
       },
       "memoryGb": 4,
-      "disk": [
+      "scsiController": [
         {
-          "id": "1bddd4ed-67dc-4e5e-a0d5-b5a6c012ec14",
-          "scsiId": 0,
-          "sizeGb": 50,
-          "speed": "HIGHPERFORMANCE"
+          "disk": [
+            {
+              "id": "9202553b-9f5a-4503-b87f-353fbc7e0751",
+              "sizeGb": 4,
+              "speed": "STANDARD",
+              "scsiId": 0
+            }
+          ],
+          "id": "23f3237d-6059-4d64-886b-3fa3510546f5",
+          "adapterType": "LSI_LOGIC_PARALLEL",
+          "key": 1000,
+          "busNumber": 0
+        }
+      ],
+      "sataController": [
+        {
+          "id": "ee1cb5bb-65a2-4839-9d81-9e7a71b35915",
+          "adapterType": "AHCI",
+          "key": 15000,
+          "busNumber": 0
+        },
+        {
+          "deviceOrDisk": [
+            {
+              "device": {
+                "id": "56ad67b1-5bf9-424c-9c6a-9e3f49decaeb",
+                "type": "CDROM",
+                "sizeGb": 1,
+                "fileName": "_deviceImage-0.iso",
+                "sataId": 0
+              }
+            },
+            {
+              "device": {
+                "id": "e8479b19-ec65-45e8-a70d-24d6115e368c",
+                "type": "CDROM",
+                "sataId": 1
+              }
+            }
+          ],
+          "id": "146187c0-3676-452a-a68d-e02e74daab60",
+          "adapterType": "AHCI",
+          "key": 15001,
+          "busNumber": 1
+        }
+      ],
+      "ideController": [
+        {
+          "deviceOrDisk": [
+            {
+              "device": {
+                "id": "11f3dfc4-06ec-4fe4-837c-2b87d8ac1920",
+                "type": "CDROM",
+                "sizeGb": 1,
+                "fileName": "_deviceImage-0.iso",
+                "slot": 0
+              }
+            }
+          ],
+          "id": "03530062-1ee3-4c2a-8eaa-1541156cf3f6",
+          "adapterType": "IDE",
+          "key": 200,
+          "channel": 0
+        }
+      ],
+      "floppy": [
+        {
+          "id": "b673422c-ad55-4465-b229-44255ae51b68",
+          "driveNumber": 0,
+          "key": 8000
+        },
+        {
+          "id": "8c9d0747-5773-4d6f-88f4-cdf68360ab47",
+          "driveNumber": 1,
+          "key": 8001,
+          "sizeGb": 1,
+          "fileName": "rhel764_2d.flp"
         }
       ],
       "nic": [],

@@ -17,6 +17,7 @@
 package org.jclouds.dimensiondata.cloudcontrol.domain;
 
 import com.google.auto.value.AutoValue;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
 @AutoValue
@@ -30,6 +31,7 @@ public abstract class IdeDisk {
 
    public abstract String speed();
 
+   @Nullable
    public abstract State state();
 
    public abstract IdeDisk.Builder toBuilder();

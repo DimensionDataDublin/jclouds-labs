@@ -50,7 +50,7 @@ import javax.ws.rs.core.MediaType;
 
 @RequestFilters({ BasicAuthentication.class, OrganisationIdFilter.class })
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/caas/{jclouds.api-version}/image")
+@Path("/caas/2.7/image")
 public interface ServerImageApi {
 
    @Named("image:listOsImages")

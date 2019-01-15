@@ -1,61 +1,139 @@
 {
-  "name": "SB Dummy RedHat 6 64-bit 1 CPU-test in Prod",
-  "description": "SB latest RH 6-tested-jol in Prod",
-  "cluster": {
-    "id": "QA1_N2_VMWARE_1-01",
-    "name": "QA1_N2_VMWARE_1-01"
-  },
-  "cpu": {
-    "count": 4,
-    "speed": "STANDARD",
-    "coresPerSocket": 1
-  },
-  "memoryGb": 8,
-  "disk": [
-    {
-      "id": "e7ba6dda-434c-464b-a052-3364dff936f7",
-      "scsiId": 0,
-      "sizeGb": 70,
-      "speed": "STANDARD"
+    "osImageKey": "T-RHEL-7-64-1-1-6",
+    "sortOrder": 3,
+    "guest": {
+        "operatingSystem": {
+            "id": "REDHAT764",
+            "displayName": "REDHAT7/64",
+            "family": "UNIX",
+            "osUnitsGroupId": "REDHAT"
+        },
+        "osCustomization": true
     },
-    {
-      "id": "eb29716e-d41d-4f61-ab5b-22903ada9f75",
-      "scsiId": 1,
-      "sizeGb": 10,
-      "speed": "STANDARD"
+    "name": "RedHat 7 64-bit 2 disk",
+    "description": "RedHat 7.5 64 Enterprise 2 DISK",
+    "cluster": {
+        "id": "DEVLAB1_N2P_VMWARE_2-01",
+        "name": "DEVLAB1_N2P_VMWARE_2-01"
     },
-    {
-      "id": "70d4c71a-82e8-408f-8656-6d01a0665fa0",
-      "scsiId": 2,
-      "sizeGb": 10,
-      "speed": "STANDARD"
-    }
-  ],
-  "nic": [
-    {
-      "networkAdapter": "E1000",
-      "key": 4000
+    "cpu": {
+        "count": 1,
+        "speed": "STANDARD",
+        "coresPerSocket": 1
     },
-    {
-      "networkAdapter": "E1000",
-      "key": 4001
-    }
-  ],
-  "softwareLabel": [
-    "MSSQL2008R2E",
-    "MSSQL2012S"
-  ],
-  "createTime": "2017-01-16T12:56:57.000Z",
-  "id": "9cb7024d-250c-49d3-bb5d-7727cab4ad70",
-  "datacenterId": "QA1_N2_VMWARE_1",
-  "osImageKey": "T-CENT-5-32-1-2-10",
-  "sortOrder": 5,
-  "guest": {
-    "operatingSystem": {
-      "id": "REDHAT664",
-      "displayName": "REDHAT6/64",
-      "family": "UNIX"
-    },
-    "osCustomization": false
-  }
+    "memoryGb": 1,
+    "scsiController": [
+        {
+            "disk": [
+                {
+                    "id": "9202553b-9f5a-4503-b87f-353fbc7e0751",
+                    "sizeGb": 4,
+                    "speed": "STANDARD",
+                    "scsiId": 0
+                }
+            ],
+            "id": "23f3237d-6059-4d64-886b-3fa3510546f5",
+            "adapterType": "LSI_LOGIC_PARALLEL",
+            "key": 1000,
+            "busNumber": 0
+        },
+        {
+            "disk": [
+                {
+                    "id": "facbb2eb-f7ad-411d-b01c-0f2d3ca2db8e",
+                    "sizeGb": 1,
+                    "speed": "STANDARD",
+                    "scsiId": 3
+                }
+            ],
+            "id": "03c0f650-c1e5-4b8a-8b6c-d3c882d24f25",
+            "adapterType": "LSI_LOGIC_SAS",
+            "key": 1001,
+            "busNumber": 1
+        }
+    ],
+    "sataController": [
+        {
+            "id": "ee1cb5bb-65a2-4839-9d81-9e7a71b35915",
+            "adapterType": "AHCI",
+            "key": 15000,
+            "busNumber": 0
+        },
+        {
+            "deviceOrDisk": [
+                {
+                    "device": {
+                        "id": "56ad67b1-5bf9-424c-9c6a-9e3f49decaeb",
+                        "type": "CDROM",
+                        "sizeGb": 1,
+                        "fileName": "_deviceImage-0.iso",
+                        "sataId": 0
+                    }
+                },
+                {
+                    "device": {
+                        "id": "e8479b19-ec65-45e8-a70d-24d6115e368c",
+                        "type": "CDROM",
+                        "sataId": 1
+                    }
+                }
+            ],
+            "id": "146187c0-3676-452a-a68d-e02e74daab60",
+            "adapterType": "AHCI",
+            "key": 15001,
+            "busNumber": 1
+        }
+    ],
+    "ideController": [
+        {
+            "deviceOrDisk": [
+                {
+                    "device": {
+                        "id": "11f3dfc4-06ec-4fe4-837c-2b87d8ac1920",
+                        "type": "CDROM",
+                        "sizeGb": 1,
+                        "fileName": "_deviceImage-0.iso",
+                        "slot": 0
+                    }
+                }
+            ],
+            "id": "03530062-1ee3-4c2a-8eaa-1541156cf3f6",
+            "adapterType": "IDE",
+            "key": 200,
+            "channel": 0
+        },
+        {
+            "deviceOrDisk": [
+                {
+                    "device": {
+                        "id": "43afb506-d1b2-4a0a-9bb5-1338149f3ae2",
+                        "type": "CDROM",
+                        "slot": 0
+                    }
+                }
+            ],
+            "id": "157688d7-78c3-47d2-a992-bccbd42c9b16",
+            "adapterType": "IDE",
+            "key": 201,
+            "channel": 1
+        }
+    ],
+    "floppy": [
+        {
+            "id": "b673422c-ad55-4465-b229-44255ae51b68",
+            "driveNumber": 0,
+            "key": 8000
+        },
+        {
+            "id": "8c9d0747-5773-4d6f-88f4-cdf68360ab47",
+            "driveNumber": 1,
+            "key": 8001,
+            "sizeGb": 1,
+            "fileName": "rhel764_2d.flp"
+        }
+    ],
+    "softwareLabel": [],
+    "createTime": "2018-09-11T04:43:30.000Z",
+    "id": "53ffd713-0af3-468a-9a38-d74b816c0b22",
+    "datacenterId": "DEVLAB1_N2P_VMWARE_2"
 }

@@ -140,13 +140,13 @@ public class ServerImageApiMockTest extends BaseAccountAwareCloudControlMockTest
 
    private Uris.UriBuilder getOsImageUrl() {
       Uris.UriBuilder uriBuilder = Uris
-            .uriBuilder("/caas/" + VERSION + "/6ac1e746-b1ea-4da5-a24e-caf1a978789d/image/osImage");
+            .uriBuilder("/caas/2.7/6ac1e746-b1ea-4da5-a24e-caf1a978789d/image/osImage");
       return uriBuilder;
    }
 
    private Uris.UriBuilder getCustomerImageUrl() {
       Uris.UriBuilder uriBuilder = Uris
-            .uriBuilder("/caas/" + VERSION + "/6ac1e746-b1ea-4da5-a24e-caf1a978789d/image/customerImage");
+            .uriBuilder("/caas/2.7/6ac1e746-b1ea-4da5-a24e-caf1a978789d/image/customerImage");
       return uriBuilder;
    }
 

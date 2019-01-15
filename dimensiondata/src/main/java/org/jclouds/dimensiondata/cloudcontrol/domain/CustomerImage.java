@@ -37,16 +37,19 @@ public abstract class CustomerImage extends BaseImage {
       return new AutoValue_CustomerImage.Builder();
    }
 
-   @SerializedNames({ "id", "name", "description", "cluster", "guest", "datacenterId", "cpu", "memoryGb", "nic", "disk",
-         "softwareLabel", "createTime", "state", "tag", "progress", "virtualHardware", "source" })
+   @SerializedNames({ "id", "name", "description", "cluster", "guest", "datacenterId", "cpu", "memoryGb", "nic",
+         "softwareLabel", "createTime", "state", "tag", "progress", "virtualHardware", "source", "scsiController",
+         "sataController", "ideController", "floppies" })
    public static CustomerImage create(String id, String name, String description, Cluster cluster, Guest guest,
-         String datacenterId, CPU cpu, int memoryGb, List<ImageNic> nics, List<Disk> disk, List<String> softwareLabel,
-         Date createTime, State state, List<TagWithIdAndName> tags, Progress progress, VirtualHardware virtualHardware,
-         Source source) {
+         String datacenterId, CPU cpu, int memoryGb, List<ImageNic> nics, List<Object> softwareLabel, Date createTime,
+         State state, List<TagWithIdAndName> tags, Progress progress, VirtualHardware virtualHardware, Source source,
+         List<ScsiController> scsiControllers, List<SataController> sataControllers, List<IdeController> ideControllers,
+         List<Floppy> floppies) {
       return builder().id(id).datacenterId(datacenterId).name(name).description(description).cluster(cluster)
-            .guest(guest).cpu(cpu).memoryGb(memoryGb).nics(nics).disks(disk).softwareLabels(softwareLabel)
-            .createTime(createTime).state(state).tags(tags).progress(progress).virtualHardware(virtualHardware)
-            .source(source).build();
+            .guest(guest).cpu(cpu).memoryGb(memoryGb).nics(nics).scsiControllers(scsiControllers)
+            .sataControllers(sataControllers).floppies(floppies).ideControllers(ideControllers)
+            .softwareLabels(softwareLabel).createTime(createTime).state(state).tags(tags).progress(progress)
+            .virtualHardware(virtualHardware).source(source).build();
    }
 
    public abstract State state();
@@ -84,11 +87,9 @@ public abstract class CustomerImage extends BaseImage {
 
       public abstract Builder nics(List<ImageNic> nics);
 
-      public abstract Builder disks(List<Disk> disks);
-
       public abstract Builder tags(List<TagWithIdAndName> tags);
 
-      public abstract Builder softwareLabels(List<String> softwareLabels);
+      public abstract Builder softwareLabels(List<Object> softwareLabels);
 
       public abstract Builder virtualHardware(VirtualHardware virtualHardware);
 
@@ -102,19 +103,36 @@ public abstract class CustomerImage extends BaseImage {
 
       abstract CustomerImage autoBuild();
 
-      abstract List<Disk> disks();
-
-      abstract List<String> softwareLabels();
+      abstract List<Object> softwareLabels();
 
       abstract List<ImageNic> nics();
 
       abstract List<TagWithIdAndName> tags();
 
+      abstract List<ScsiController> scsiControllers();
+
+      abstract List<SataController> sataControllers();
+
+      abstract List<IdeController> ideControllers();
+
+      abstract List<Floppy> floppies();
+
+      public abstract Builder scsiControllers(List<ScsiController> scsiControllers);
+
+      public abstract Builder sataControllers(List<SataController> sataControllers);
+
+      public abstract Builder ideControllers(List<IdeController> ideControllers);
+
+      public abstract Builder floppies(List<Floppy> floppies);
+
       public CustomerImage build() {
-         disks(disks() != null ? ImmutableList.copyOf(disks()) : ImmutableList.<Disk>of());
-         softwareLabels(softwareLabels() != null ? ImmutableList.copyOf(softwareLabels()) : ImmutableList.<String>of());
+         scsiControllers(scsiControllers() != null ? ImmutableList.copyOf(scsiControllers()) : ImmutableList.<ScsiController>of());
+         sataControllers(sataControllers() != null ? ImmutableList.copyOf(sataControllers()) : ImmutableList.<SataController>of());
+         ideControllers(ideControllers() != null ? ImmutableList.copyOf(ideControllers()) : ImmutableList.<IdeController>of());
+         floppies(floppies() != null ? ImmutableList.copyOf(floppies()) : ImmutableList.<Floppy>of());
+         softwareLabels(softwareLabels() != null ? ImmutableList.copyOf(softwareLabels()) : ImmutableList.of());
          nics(nics() != null ? ImmutableList.copyOf(nics()) : ImmutableList.<ImageNic>of());
-         tags(tags() != null ? ImmutableList.copyOf(tags()) : null);
+         tags(tags() != null ? ImmutableList.copyOf(tags()) : ImmutableList.<TagWithIdAndName>of());
          return autoBuild();
       }
    }
@@ -198,7 +216,7 @@ public abstract class CustomerImage extends BaseImage {
    public abstract static class Artifact {
 
       public enum Type {
-         MF, OVF, VMDK, REFERENCE, SERVER_ID, LEGACY_IMPORT_ID, IMAGE_ID, OVF_PACKAGE_PREFIX
+         MF, OVF, VMDK, REFERENCE, SERVER_ID, LEGACY_IMPORT_ID, IMAGE_ID, OVF_PACKAGE_PREFIX, ISO, FLP
       }
 
       public abstract Type type();

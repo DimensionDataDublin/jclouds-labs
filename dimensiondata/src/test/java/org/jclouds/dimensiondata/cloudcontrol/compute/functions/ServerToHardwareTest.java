@@ -70,12 +70,12 @@ public class ServerToHardwareTest {
                   .state(State.NORMAL).type("DVD").build()).build());
 
       List<SataDeviceOrDisk> sataDisksOrDevices = Lists.newArrayList();
-      sataDisksOrDevices.add(SataDeviceOrDisk.builder().disk(
-            SataDisk.builder().id("98299853-37a3-4ebe-9cf1-090da9ae42a2").sataId("0").sizeGb(20).speed("STANDARD").state(State.NORMAL)
-                  .build()).build());
+      sataDisksOrDevices.add(SataDeviceOrDisk.builder()
+            .disk(SataDisk.builder().id("98299853-37a3-4ebe-9cf1-090da9ae42a2").sataId("0").sizeGb(20).speed("STANDARD")
+                  .state(State.NORMAL).build()).build());
       sataDisksOrDevices.add(SataDeviceOrDisk.builder().device(
-            SataDevice.builder().id("98299854-37a3-4ebe-9cf1-090da9ae42a3").sataId("1").sizeGb(1).fileName("WIN10CE").state(State.NORMAL)
-                  .type("DVD").build()).build());
+            SataDevice.builder().id("98299854-37a3-4ebe-9cf1-090da9ae42a3").sataId("1").sizeGb(1).fileName("WIN10CE")
+                  .state(State.NORMAL).type("DVD").build()).build());
 
       List<ScsiDisk> scsiDisks = Lists.newArrayList(
             ScsiDisk.builder().id("98299855-37a3-4ebe-9cf1-090da9ae42a4").scsiId("0").sizeGb(30)
