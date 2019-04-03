@@ -59,6 +59,7 @@ public class ServerApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest 
    private String vlanId;
    private String networkDomainId;
    private String imageId;
+   private String imageDiskId;
    private String tagKeyId;
    private String publicIpv4BlockId;
    private PublicIpBlock publicIpBlock;
@@ -91,7 +92,7 @@ public class ServerApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest 
       Boolean started = Boolean.TRUE;
       NetworkInfo networkInfo = NetworkInfo
             .create(networkDomainId, NIC.builder().vlanId(vlanId).build(), Lists.<NIC>newArrayList());
-      List<Disk> disks = ImmutableList.of(Disk.builder().scsiId(0).speed("STANDARD").build());
+      List<Disk> disks = ImmutableList.of(Disk.builder().scsiId(0).speed("STANDARD").id(imageDiskId).build());
       serverId = api.getServerApi()
             .deployServer(deployedServerName, imageId, started, networkInfo, "P$$ssWwrrdGoDd!", disks, null);
       assertNotNull(serverId);
@@ -279,6 +280,7 @@ public class ServerApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest 
             .listOsImages(DatacenterIdListFilters.Builder.datacenterId(datacenterId)).first();
       assertTrue(osImageOptional.isPresent(), "unable to find compatible image for datacenter");
       imageId = osImageOptional.get().id();
+      imageDiskId = osImageOptional.get().disks().get(0).id();
    }
 
    private void deployVlan() {

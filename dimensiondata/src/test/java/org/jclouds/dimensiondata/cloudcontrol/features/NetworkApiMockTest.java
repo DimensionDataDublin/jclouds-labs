@@ -20,6 +20,7 @@ import com.google.common.collect.Lists;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
 import org.jclouds.dimensiondata.cloudcontrol.domain.FirewallRule;
+import org.jclouds.dimensiondata.cloudcontrol.domain.FirewallRuleProtocol;
 import org.jclouds.dimensiondata.cloudcontrol.domain.FirewallRuleTarget;
 import org.jclouds.dimensiondata.cloudcontrol.domain.IpRange;
 import org.jclouds.dimensiondata.cloudcontrol.domain.NatRule;
@@ -36,7 +37,6 @@ import org.testng.annotations.Test;
 import javax.ws.rs.HttpMethod;
 import java.util.List;
 
-import static ch.qos.logback.core.net.ssl.SSL.DEFAULT_PROTOCOL;
 import static com.google.common.collect.Iterables.size;
 import static javax.ws.rs.HttpMethod.GET;
 import static javax.ws.rs.HttpMethod.POST;
@@ -193,7 +193,7 @@ public class NetworkApiMockTest extends BaseAccountAwareCloudControlMockTest {
                   + "} ],\n" + "\"warning\": [],\n" + "\"error\": [],\n"
                   + "\"requestId\": \"NA9/2015-03-05T13:46:34.848-05:00/f8fdef24-8a12-45ea-a831-\n"
                   + "d5463212ef6a\" }"));
-      api().createFirewallRule("123456", "test", DEFAULT_ACTION, DEFAULT_IP_VERSION, DEFAULT_PROTOCOL,
+      api().createFirewallRule("123456", "test", DEFAULT_ACTION, DEFAULT_IP_VERSION, FirewallRuleProtocol.TCP.name(),
             FirewallRuleTarget.builder().ip(IpRange.create("ANY", null)).build(),
             FirewallRuleTarget.builder().ip(IpRange.create("ANY", null)).build(), true,
             Placement.builder().position("LAST").build());

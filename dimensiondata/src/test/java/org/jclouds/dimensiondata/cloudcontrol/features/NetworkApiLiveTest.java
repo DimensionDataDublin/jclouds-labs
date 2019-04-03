@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.dimensiondata.cloudcontrol.domain.FirewallRule;
+import org.jclouds.dimensiondata.cloudcontrol.domain.FirewallRuleProtocol;
 import org.jclouds.dimensiondata.cloudcontrol.domain.FirewallRuleTarget;
 import org.jclouds.dimensiondata.cloudcontrol.domain.IpRange;
 import org.jclouds.dimensiondata.cloudcontrol.domain.Placement;
@@ -32,6 +33,8 @@ import org.testng.annotations.Test;
 import java.util.Date;
 import java.util.List;
 
+import static org.jclouds.dimensiondata.cloudcontrol.compute.options.DimensionDataCloudControlTemplateOptions.DEFAULT_PRIVATE_IPV4_BASE_ADDRESS;
+import static org.jclouds.dimensiondata.cloudcontrol.compute.options.DimensionDataCloudControlTemplateOptions.DEFAULT_PRIVATE_IPV4_PREFIX_SIZE;
 import static org.jclouds.dimensiondata.cloudcontrol.features.NetworkApiMockTest.DEFAULT_ACTION;
 import static org.jclouds.dimensiondata.cloudcontrol.features.NetworkApiMockTest.DEFAULT_IP_VERSION;
 import static org.jclouds.dimensiondata.cloudcontrol.utils.DimensionDataCloudControlResponseUtils.generateFirewallRuleName;
@@ -75,7 +78,7 @@ public class NetworkApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest
    @Test(dependsOnMethods = "testGetPortList")
    public void testCreateFirewallRuleWithPortList() {
       firewallRuleId = api().createFirewallRule(networkDomainId, generateFirewallRuleName("server-id"), DEFAULT_ACTION,
-            DEFAULT_IP_VERSION, DEFAULT_PROTOCOL, FirewallRuleTarget.builder().ip(IpRange.create("ANY", null)).build(),
+            DEFAULT_IP_VERSION, FirewallRuleProtocol.TCP.name(), FirewallRuleTarget.builder().ip(IpRange.create("ANY", null)).build(),
             FirewallRuleTarget.builder().ip(IpRange.create("ANY", null)).portListId(portListId).build(), Boolean.TRUE,
             Placement.builder().position("LAST").build());
       firewallRuleIds.add(firewallRuleId);
@@ -101,7 +104,7 @@ public class NetworkApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest
             NetworkApiLiveTest.class.getSimpleName() + new Date().getTime(), DEFAULT_PRIVATE_IPV4_BASE_ADDRESS,
             DEFAULT_PRIVATE_IPV4_PREFIX_SIZE);
       assertNotNull(vlanId);
-      assertTrue(vlanNormalPredicate.apply(vlanId), "vlan is not in a NORMAL state after timeout");
+      assertTrue(api.vlanNormalPredicate().apply(vlanId), "vlan is not in a NORMAL state after timeout");
    }
 
    @Test
@@ -110,7 +113,7 @@ public class NetworkApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest
       networkDomainId = api().deployNetworkDomain(datacenters.iterator().next(), networkDomainName,
             NetworkApiLiveTest.class.getSimpleName() + new Date().getTime() + "description", "ESSENTIALS");
       assertNotNull(networkDomainId);
-      assertTrue(networkDomainNormalPredicate.apply(networkDomainId),
+      assertTrue(api.networkDomainNormalPredicate().apply(networkDomainId),
             "network domain is not in a NORMAL state after timeout");
    }
 
@@ -131,11 +134,11 @@ public class NetworkApiLiveTest extends BaseDimensionDataCloudControlApiLiveTest
       }
       if (vlanId != null) {
          api().deleteVlan(vlanId);
-         assertTrue(vlanDeletedPredicate.apply(vlanId), "vlan is not in a DELETED state after timeout");
+         assertTrue(api.vlanDeletedPredicate().apply(vlanId), "vlan is not in a DELETED state after timeout");
       }
       if (networkDomainId != null) {
          api().deleteNetworkDomain(networkDomainId);
-         assertTrue(networkDomainDeletedPredicate.apply(networkDomainId),
+         assertTrue(api.networkDomainDeletedPredicate().apply(networkDomainId),
                "network domain is not in a DELETED state after timeout");
       }
    }

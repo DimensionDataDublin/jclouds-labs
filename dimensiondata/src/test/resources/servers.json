@@ -13,13 +13,97 @@
         "coresPerSocket": 1
       },
       "memoryGb": 4,
-      "disk": [
+      "scsiController": [
         {
-          "id": "0ba67812-d7b7-4c3f-b114-870fbea24d42",
-          "scsiId": 0,
-          "sizeGb": 10,
-          "speed": "STANDARD",
-          "state": "NORMAL"
+          "state": "NORMAL",
+          "id": "def96a02-d1ee-48b9-b07d-3993594724d2",
+          "adapterType": "BUS_LOGIC",
+          "key": 1000,
+          "disk": [
+            {
+              "state": "NORMAL",
+              "id": "98299855-37a3-4ebe-9cf1-090da9ae42a4",
+              "sizeGb": 30,
+              "speed": "HIGHPERFORMANCE",
+              "scsiId": 0
+            }
+          ],
+          "busNumber": 0
+        }
+      ],
+      "sataController": [
+        {
+          "state": "NORMAL",
+          "id": "def96a01-d1ee-48b9-b07d-3993594724d1",
+          "adapterType": "AHCI_CONTROLLER",
+          "key": 15000,
+          "deviceOrDisk": [
+            {
+              "disk": {
+                "state": "NORMAL",
+                "id": "98299853-37a3-4ebe-9cf1-090da9ae42a2",
+                "sizeGb": 20,
+                "speed": "STANDARD",
+                "sataId": 0
+              }
+            },
+            {
+              "device": {
+                "state": "NORMAL",
+                "id": "98299854-37a3-4ebe-9cf1-090da9ae42a3",
+                "type": "DVD",
+                "sataId": 1,
+                "fileName": "WIN10CE",
+                "sizeGb": 1
+              }
+            }
+          ],
+          "busNumber": 0
+        }
+      ],
+      "ideController": [
+        {
+          "state": "NORMAL",
+          "id": "5bdfc88c-5509-420c-8c5d-cc7876dacfbe",
+          "adapterType": "IDE_CONTROLLER_XXX",
+          "key": 3000,
+          "channel": 0
+        },
+        {
+          "state": "NORMAL",
+          "id": "def96a00-d1ee-48b9-b07d-3993594724d0",
+          "adapterType": "IDE_CONTROLLER_XXX",
+          "key": 3001,
+          "deviceOrDisk": [
+            {
+              "device": {
+                "state": "NORMAL",
+                "id": "fd70be3c-f068-4bbf-a55c-8c776a66ed5a",
+                "type": "DVD",
+                "fileName": "WIN8DE",
+                "sizeGb": 1,
+                "slot": 0
+              }
+            },
+            {
+              "disk": {
+                "state": "NORMAL",
+                "id": "98299851-37a3-4ebe-9cf1-090da9ae42a0",
+                "speed": "ECONOMY",
+                "sizeGb": 10,
+                "slot": 1
+              }
+            }
+          ],
+          "channel": 1
+        }
+      ],
+      "floppy": [
+        {
+          "state": "NORMAL",
+          "id": "afeafa7e-742d-4902-a3f8-67d9bec5c160",
+          "driveNumber": 0,
+          "key": 8000
         }
       ],
       "networkInfo": {
@@ -38,7 +122,10 @@
         "networkDomainId": "690de302-bb80-49c6-b401-8c02bbefb945"
       },
       "softwareLabel": [],
-      "sourceImageId": "1e44ab3f-2426-45ec-a1b5-827b2ce58836",
+      "source": {
+        "type": "IMAGE_ID",
+        "value": "1e44ab3f-2426-45ec-a1b5-827b2ce58836"
+      },
       "createTime": "2016-03-10T13:05:21.000Z",
       "deployed": true,
       "started": true,

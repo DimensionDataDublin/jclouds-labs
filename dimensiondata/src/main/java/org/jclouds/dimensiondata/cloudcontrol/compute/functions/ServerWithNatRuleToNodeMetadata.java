@@ -78,7 +78,7 @@ class ServerWithNatRuleToNodeMetadata implements Function<ServerWithExternalIp, 
       builder.location(find(locations.get(), idEquals(nullToEmpty(server.datacenterId()))));
       builder.group(nodeNamingConvention.groupInUniqueNameOrNull(server.name()));
       builder.hardware(serverToHardware.apply(serverWithExternalIp.server()));
-      builder.imageId(server.sourceImageId());
+      builder.imageId(server.source().value());
       builder.operatingSystem(operatingSystemToOperatingSystem.apply(server.guest().operatingSystem()));
       builder.status(server.started() ?
             serverStateToNodeStatus.get(server.state()) :

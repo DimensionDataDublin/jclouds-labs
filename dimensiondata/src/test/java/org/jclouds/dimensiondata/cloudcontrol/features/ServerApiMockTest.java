@@ -58,7 +58,7 @@ public class ServerApiMockTest extends BaseAccountAwareCloudControlMockTest {
          failBecauseExceptionWasNotThrown(HttpResponseException.class);
       } catch (HttpResponseException e) {
          assertNotNull(e);
-         assertSent(POST, "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/deployServer");
+         assertSent(POST, "/caas/2.7/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/deployServer");
       }
    }
 
@@ -75,7 +75,7 @@ public class ServerApiMockTest extends BaseAccountAwareCloudControlMockTest {
                   "administratorPassword", Lists.<Disk>newArrayList(), createServerOptions);
       assertEquals(serverId, "7b62aae5-bdbe-4595-b58d-c78f95db2a7f");
       RecordedRequest recordedRequest = assertSent(POST,
-            "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/deployServer");
+            "/caas/2.7/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/deployServer");
       assertBodyContains(recordedRequest, "\"cpu\":{\"count\":1,\"speed\":\"HIGHPERFORMANCE\",\"coresPerSocket\":2}");
    }
 
@@ -88,7 +88,7 @@ public class ServerApiMockTest extends BaseAccountAwareCloudControlMockTest {
       assertEquals(imageId, "3389ffe8-c3fc-11e3-b29c-001517c4643e");
 
       RecordedRequest recordedRequest = assertSent(POST,
-            "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/cloneServer");
+            "/caas/2.7/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/cloneServer");
 
       assertBodyContains(recordedRequest,
             "{\"id\":\"9ed47330-5561-11e5-8c14-b8ca3a5d9ef8\",\"imageName\":\"serverNewImageName\","
@@ -118,7 +118,7 @@ public class ServerApiMockTest extends BaseAccountAwareCloudControlMockTest {
    }
 
    private Uris.UriBuilder getListServerUriBuilder() {
-      return Uris.uriBuilder("/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/server");
+      return Uris.uriBuilder("/caas/2.7/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/server");
    }
 
    public void testListServers_NoServersFound() {
@@ -129,7 +129,7 @@ public class ServerApiMockTest extends BaseAccountAwareCloudControlMockTest {
    public void testGetServer() throws Exception {
       server.enqueue(jsonResponse("/server.json"));
       Server found = serverApi().getServer("12345");
-      assertSent(GET, "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/server/12345");
+      assertSent(GET, "/caas/2.7/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/server/12345");
       assertNotNull(found);
       assertNotNull(found.guest().vmTools());
    }
@@ -144,7 +144,7 @@ public class ServerApiMockTest extends BaseAccountAwareCloudControlMockTest {
       server.enqueue(jsonResponse("/deleteServer.json"));
       serverApi().deleteServer("12345");
       final RecordedRequest recordedRequest = assertSent(POST,
-            "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/deleteServer");
+            "/caas/2.7/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/deleteServer");
       assertBodyContains(recordedRequest, "{\"id\":\"12345\"}");
    }
 
@@ -157,7 +157,7 @@ public class ServerApiMockTest extends BaseAccountAwareCloudControlMockTest {
       server.enqueue(jsonResponse("/powerOffServer.json"));
       serverApi().powerOffServer("12345");
       final RecordedRequest recordedRequest = assertSent(POST,
-            "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/powerOffServer");
+            "/caas/2.7/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/powerOffServer");
       assertBodyContains(recordedRequest, "{\"id\":\"12345\"}");
    }
 
@@ -165,7 +165,7 @@ public class ServerApiMockTest extends BaseAccountAwareCloudControlMockTest {
       server.enqueue(jsonResponse("/rebootServer.json"));
       serverApi().rebootServer("12345");
       final RecordedRequest recordedRequest = assertSent(POST,
-            "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/rebootServer");
+            "/caas/2.7/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/rebootServer");
       assertBodyContains(recordedRequest, "{\"id\":\"12345\"}");
    }
 
@@ -173,7 +173,7 @@ public class ServerApiMockTest extends BaseAccountAwareCloudControlMockTest {
       server.enqueue(jsonResponse("/reconfigureServer.json"));
       serverApi().reconfigureServer("12345", 2, "STANDARD", 2);
       final RecordedRequest recordedRequest = assertSent(POST,
-            "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/reconfigureServer");
+            "/caas/2.7/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/reconfigureServer");
       assertBodyContains(recordedRequest,
             "{\"id\":\"12345\",\"cpuCount\":2,\"cpuSpeed\":\"STANDARD\",\"coresPerSocket\":2}");
    }
@@ -182,7 +182,7 @@ public class ServerApiMockTest extends BaseAccountAwareCloudControlMockTest {
       server.enqueue(jsonResponse("/rebootServer.json"));
       serverApi().shutdownServer("12345");
       final RecordedRequest recordedRequest = assertSent(POST,
-            "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/shutdownServer");
+            "/caas/2.7/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/shutdownServer");
       assertBodyContains(recordedRequest, "{\"id\":\"12345\"}");
    }
 
@@ -190,7 +190,7 @@ public class ServerApiMockTest extends BaseAccountAwareCloudControlMockTest {
       server.enqueue(jsonResponse("/rebootServer.json"));
       serverApi().startServer("12345");
       final RecordedRequest recordedRequest = assertSent(POST,
-            "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/startServer");
+            "/caas/2.7/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/startServer");
       assertBodyContains(recordedRequest, "{\"id\":\"12345\"}");
    }
 
@@ -198,7 +198,7 @@ public class ServerApiMockTest extends BaseAccountAwareCloudControlMockTest {
       server.enqueue(jsonResponse("/cleanServer.json"));
       serverApi().cleanServer("12345");
       final RecordedRequest recordedRequest = assertSent(POST,
-            "/caas/2.4/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/cleanServer");
+            "/caas/2.7/6ac1e746-b1ea-4da5-a24e-caf1a978789d/server/cleanServer");
       assertBodyContains(recordedRequest, "{\"id\":\"12345\"}");
    }
 
